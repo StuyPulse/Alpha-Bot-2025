@@ -14,4 +14,25 @@ import com.stuypulse.stuylib.network.SmartNumber;
  * We use StuyLib's SmartNumber / SmartBoolean in order to have tunable
  * values that we can edit on Shuffleboard.
  */
-public interface Settings {}
+public interface Settings {
+
+    public interface Algae {
+        int ROLLER_ID = 0; // update ports later -- def won't be 0
+        int PIVOT_ID = 0; // update ports later
+        double TARGET_ANGLE = 30.0;
+
+        public interface PID {
+            double kP = 0.0;
+            double kI = 0.0;
+            double kD = 0.0;
+
+
+        }
+        public interface FF{
+            double kS = 0.0;
+            double kV = 0.0;
+            double kA = 0.0;
+            double kG = 0.0;
+        }
+    }
+}
