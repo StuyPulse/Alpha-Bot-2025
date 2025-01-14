@@ -1,0 +1,35 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Autonomous": "String Chooser",
+      "/SmartDashboard/Visualizers/Elevator": "Mechanism2d"
+    },
+    "windows": {
+      "/SmartDashboard/Visualizers/Elevator": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "LiveWindow": {
+        "open": true
+      },
+      "SmartDashboard": {
+        "Elevator": {
+          "open": true
+        },
+        "open": true
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  },
+  "NetworkTables View": {
+    "visible": false
+  }
+}
