@@ -8,9 +8,13 @@ import com.stuypulse.robot.constants.Settings;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class AlgaeImpl extends SubsystemBase {
+public class AlgaeImpl extends Algae {
+
+        // variable declaration
+        
 
     private SparkMax pivotMotor;
     private SparkMax rollerMotor;
@@ -23,7 +27,9 @@ public class AlgaeImpl extends SubsystemBase {
 
     private double targetAngle;
     //private int rollerState; // -1 is deacquire, 1 is acquire/intake, 0 is not moving
-        
+    
+        // constructor
+
     public AlgaeImpl() {
         pivotMotor = new SparkMax(Settings.Algae.PIVOT_ID, MotorType.kBrushless);
         rollerMotor = new SparkMax(Settings.Algae.ROLLER_ID, MotorType.kBrushless);
@@ -37,24 +43,24 @@ public class AlgaeImpl extends SubsystemBase {
 
     }
 
-        // getters
-
     // pivot
     public double getTargetAngle() {
-        return targetAngle; 
+        return targetAngle;
     }
 
     public double getCurrentAngle() {
-        return pivot.coder.get();
+        return Units.rotationsToDegrees(pivotEncoder.getPosition());
     }
+
+    public double getCurrentPivotVelocity() {
+        return pivotEncoder.getVelocity();
+    }
+
+
 
         // setters
     
     // rollers
-    public void setTargetAngle(double targetAngle) {
-        this.targetAngle = targetAngle;
-    }
-    
     public void acquire() { // only rollers
         rollerMotor.set(1);
     }
@@ -69,18 +75,20 @@ public class AlgaeImpl extends SubsystemBase {
     
     // pivot
 
+    public void setTargetAngle(double targetAngle) {
+        this.targetAngle = targetAngle;
+    }
 
 
     // periodic
-    @Override
-    public void periodic() {
-        pivotPIDController.calculate();
-        pivotFFController.calculate();
-    }
-    
-    
-    
-    
 
-    
+    @Override
+    public void periodic() { // check pararmeter types for our Controllers, probably FF
+        // --------------- CHECK EVERYTHING ---------------
+        pivotPIDController.calculate(getCurrentAngle(), getTargetAngle());
+        pivotFFController.calculate(Math.toRadians(getTargetAngle()), getCurrentPivotVelocity()); 
+        
+        
+    }
+
 }
