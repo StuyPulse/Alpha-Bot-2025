@@ -25,6 +25,8 @@ public class AlgaeImpl extends Algae {
     private PIDController pivotPIDController;
     private ArmFeedforward pivotFFController;
 
+    private final AlgaeVisualizer visualizer;
+
     private double targetAngle;
     //private int rollerState; // -1 is deacquire, 1 is acquire/intake, 0 is not moving
     
@@ -41,6 +43,8 @@ public class AlgaeImpl extends Algae {
         pivotFFController = new ArmFeedforward(Settings.Algae.FF.kS, Settings.Algae.FF.kG, Settings.Algae.FF.kV, Settings.Algae.FF.kA);
         targetAngle = Settings.Algae.TARGET_ANGLE; // abitrary target angle - change in settings
 
+
+        visualizer = new AlgaeVisualizer();
     }
 
     // pivot
@@ -88,6 +92,7 @@ public class AlgaeImpl extends Algae {
         pivotPIDController.calculate(getCurrentAngle(), getTargetAngle());
         pivotFFController.calculate(Math.toRadians(getTargetAngle()), getCurrentPivotVelocity()); 
         
+        visualizer.update();
         
     }
 

@@ -10,6 +10,8 @@ public class AlgaeStopRoller extends InstantCommand {
 
     public AlgaeStopRoller() {
         algae = Algae.getInstance();
+        
+        addRequirements(algae);
     }
 
     @Override

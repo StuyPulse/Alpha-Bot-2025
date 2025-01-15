@@ -35,3 +35,4 @@ public abstract class Algae extends SubsystemBase {
 
     public abstract void setTargetAngle(double targetAngle);
 }
+

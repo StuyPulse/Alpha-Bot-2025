@@ -18,10 +18,15 @@ public interface Settings {
 
     public interface Algae {
         int ROLLER_ID = 0; // update ports later -- def won't be 0
-        int PIVOT_ID = 0; // update ports later
-        double TARGET_ANGLE = 0.0; // CHANGE
-        double LOWERED_ANGLE = 0.0; // CHANGE
-        double RAISED_ANGLE = 0.0; // CHANGE
+        int PIVOT_ID = 1; // update ports later
+        double TARGET_ANGLE = 0.0;          // CHANGE
+        double LOWERED_ANGLE = 0.0;         // CHANGE
+        double RAISED_ANGLE = 0.0;          // CHANGE
+        double PROCESSOR_ANGLE = 0.0;       // CHANGE
+        double REEF_KNOCKOFF_ANGLE = 0.0;   // CHANGE
+        double GROUND_PICKUP_ANGLE = 0.0;   // CHANGE
+        double L2_ANGLE = 0.0;              // CHANGE
+        double L3_ANGLE = 0.0;              // CHANGE
 
         public interface PID {
             double kP = 0.0;
