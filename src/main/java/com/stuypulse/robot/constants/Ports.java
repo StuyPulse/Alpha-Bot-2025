@@ -14,8 +14,8 @@ public interface Ports {
     }
 
     public interface Elevator {
+        int LEFT = 0;
         int RIGHT = 1;
-        int LEFT = 2;
-        int SWITCH = 0;
+        int SWITCH = 2;
     }
 }

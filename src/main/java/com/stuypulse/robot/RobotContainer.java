@@ -46,7 +46,18 @@ public class RobotContainer {
     /*** BUTTONS ***/
     /***************/
 
-    private void configureButtonBindings() {}
+    private void configureButtonBindings() {
+        configureDriverBindings();
+        configureOperatorBindings();
+    }
+
+    private void configureDriverBindings() {
+
+    }
+
+    private void configureOperatorBindings() {
+
+    }
 
     /**************/
     /*** AUTONS ***/
