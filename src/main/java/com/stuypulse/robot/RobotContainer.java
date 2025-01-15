@@ -7,6 +7,11 @@ package com.stuypulse.robot;
 
 import java.lang.annotation.ElementType;
 
+import com.stuypulse.robot.commands.Elevator.ElevatorToBottom;
+import com.stuypulse.robot.commands.Elevator.ElevatorToLvl1;
+import com.stuypulse.robot.commands.Elevator.ElevatorToLvl2;
+import com.stuypulse.robot.commands.Elevator.ElevatorToLvl3;
+import com.stuypulse.robot.commands.Elevator.ElevatorToLvl4;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.Elevator.Elevator;
@@ -52,11 +57,26 @@ public class RobotContainer {
     }
 
     private void configureDriverBindings() {
-
+        
     }
 
     private void configureOperatorBindings() {
 
+        operator.getDPadDown()
+            .onTrue(new ElevatorToLvl1());
+
+        operator.getDPadLeft()
+            .onTrue(new ElevatorToLvl2());
+            
+        operator.getDPadRight()
+            .onTrue(new ElevatorToLvl3());    
+
+        operator.getDPadUp()
+            .onTrue(new ElevatorToLvl4());
+
+        operator.getLeftButton()
+            .onTrue(new ElevatorToBottom());
+        
     }
 
     /**************/

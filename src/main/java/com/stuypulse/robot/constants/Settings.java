@@ -48,6 +48,10 @@ public interface Settings {
         double MAX_VELOCITY = 1.0;
         double ENCODER_CONVERSION_FACTOR = 0;
 
+        double L1 = 0;
+        double L2 = 0;
+        double L3 = 0;
+        double L4 = 0;
          
         double POSITION_CONVERSION_FACTOR = 0.0;
         double VELOCITY_CONVERSION_FACTOR = 0.0;
