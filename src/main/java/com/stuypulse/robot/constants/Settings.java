@@ -10,8 +10,11 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 /*-
@@ -22,6 +25,8 @@ import edu.wpi.first.math.util.Units;
  */
 public interface Settings {
 
+
+    double DT = 0.02;
 
     public interface Swerve {
         // between wheel centers
@@ -67,6 +72,8 @@ public interface Settings {
             PIDConstants XY = new PIDConstants(2.5, 0, 0.02);
             PIDConstants THETA = new PIDConstants(4, 0, 0.1);
         }
+
+       
 
         public interface Encoder {
             public interface Drive {
@@ -127,6 +134,10 @@ public interface Settings {
             Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(38.232422);
             Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
         }
+    }
+
+    public interface Vision {        
+        Vector<N3> STDDEVS = VecBuilder.fill(0.3, 0.3, Math.toRadians(30));
     }
 
 }

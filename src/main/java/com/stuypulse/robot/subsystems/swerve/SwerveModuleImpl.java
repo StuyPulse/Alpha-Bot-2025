@@ -1,89 +1,59 @@
 package com.stuypulse.robot.subsystems.swerve;
 
-import com.ctre.phoenix.motorcontrol.StatusFrame;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.stuypulse.robot.constants.Motors;
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.Swerve;
-import com.stuypulse.robot.constants.Settings.Swerve.Encoder;
-import com.stuypulse.robot.constants.Settings.Swerve.Turn;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
-import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.stuylib.streams.numbers.filters.Derivative;
-import com.stuypulse.stuylib.streams.numbers.filters.IFilter;
-import com.stuypulse.stuylib.streams.numbers.filters.TimedMovingAverage;
+import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.proto.Controller;
+import edu.wpi.first.units.measure.Angle;
 
-public class SwerveModuleImpl extends SwerveModule {
+public class SwerveModuleImpl extends SwerveModule{
 
-    public static SwerveModule[] getTumblerModules() {
-        return new SwerveModule[] {
-            new SwerveModuleImpl("Front Right", Swerve.FrontRight.MODULE_OFFSET, Rotation2d.fromDegrees(-153.632812 + 180), 12, 15, 4),
-            new SwerveModuleImpl("Front Left",  Swerve.FrontLeft.MODULE_OFFSET,  Rotation2d.fromDegrees(147.919922 + 180),  10, 17, 2),
-            new SwerveModuleImpl("Back Left",   Swerve.BackLeft.MODULE_OFFSET,   Rotation2d.fromDegrees(73.125 + 180),      14, 11, 3),
-            new SwerveModuleImpl("Back Right",  Swerve.BackRight.MODULE_OFFSET,  Rotation2d.fromDegrees(-2.02184 + 180),    16, 13, 1)
-        };
-    }
+   
+    private final String name;
+    private final Translation2d location;
 
-    private final Rotation2d angleOffset;
+    private SwerveModuleState targetState;
 
+    // turn
+
+    private final SparkMax turnMotor;
+    private final CANcoder absoluteEncoder;
+    private final Angle angleOffset;
+
+    private final AngleController turnController;
+
+    // drive
     private final TalonFX driveMotor;
-    private final SparkMax pivotMotor;
-    private final CANcoder pivotEncoder;
+    private final RelativeEncoder driveEncoder;
 
-    private final AngleController pivotController;
+    private final Controller driveController;
 
-    private final IFilter targetAcceleration;
-
-    public SwerveModuleImpl(
-        String id, 
-        Translation2d location, 
-        Rotation2d angleOffset, 
-        int driveMotorID, 
-        int pivotMotorID, 
-        int pivotEncoderID){
-            super(id, location);
+   public SwerveModuleImpl(String name, int driveID, int turnID, int canCoderID, Translation2d location, Angle angleOffset, boolean driveInverted, boolean turnInverted) {
+        this.name = name;
+        this.location = location;
         this.angleOffset = angleOffset;
-     
 
-        driveMotor = new TalonFX(driveMotorID);
-        pivotMotor = new SparkMax(pivotMotorID, MotorType.kBrushless);
-
-        
-        pivotEncoder = new CANcoder(pivotEncoderID);
-
+        driveMotor = new TalonFX(driveID);
         TalonFXConfiguration driveConfig = new TalonFXConfiguration();
 
-        // PIDF values
-        Slot0Configs slot0 = new Slot0Configs();
-
-        slot0.kS = 0.14304; 
-        slot0.kV = 0.10884; 
-        slot0.kA = 0.023145; 
-        slot0.kP = 0.07; 
-        slot0.kI = 0; 
-        slot0.kD = 0; 
-
-
-        driveConfig.Slot0 = slot0;
+         driveConfig.Slot0 = Slot0
 
         // Direction and neutral mode
         driveConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -99,100 +69,56 @@ public class SwerveModuleImpl extends SwerveModule {
         driveConfig.CurrentLimits.StatorCurrentLimit = 65; // 65A stator current limit
         driveConfig.CurrentLimits.StatorCurrentLimitEnable = true; // Enable stator current limiting
 
-       
+
         driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = +400; // 40A peak forward torque current
         driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -400; // 40A peak reverse torque current
         driveConfig.TorqueCurrent.TorqueNeutralDeadband = 0.05; // 5% torque neutral deadband
 
+        driveEncoder = driveMotor.getEncoder();
+    
+        turnMotor = new SparkMax(turnID, MotorType.kBrushless);
+        SparkBaseConfig turnConfig = new SparkMaxConfig().inverted(turnInverted).idleMode(IdleMode.kBrake);
+        turnConfig.encoder.positionConversionFactor(.Turn.POSITION_CONVERSION).velocityConversionFactor(`.Turn.VELOCITY_CONVERSION);
+        turnMotor.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
+        this.driveController = new 
+        (Drive.kP, Drive.kP, Drive.kD)
+                                .add(new MotorFeedforward(Drive.kS, Drive.kV, Drive.kA).velocity());
+        this.turnController = new AnglePIDController(Turn.kP, Turn.kI, Turn.kD);
 
-        driveMotor.getConfigurator().apply(driveConfig);
-        driveMotor.setPosition(0);
+        absoluteEncoder = new CANcoder(canCoderID);
 
-        pivotController = new AnglePIDController(Turn.kP, Turn.kI, Turn.kD)
-            .setOutputFilter(x -> -x);
-
-        targetAcceleration = new Derivative()
-            .then(new TimedMovingAverage(0.1))
-            .then(x -> MathUtil.clamp(x, 0, Settings.Swerve.MAX_MODULE_ACCEL));
-
-        Motors.disableStatusFrames(pivotMotor, StatusFrame.ANALOG_SENSOR, StatusFrame.ALTERNATE_ENCODER, StatusFrame.ABS_ENCODER_POSIITION, StatusFrame.ABS_ENCODER_VELOCITY);
-
-        Motors.Swerve.TURN_CONFIG.configure(pivotMotor);
+        targetState = new SwerveModuleState();
     }
 
-    public double getPosition() {
-        return driveMotor.getPosition().getValueAsDouble() * Encoder.Drive.POSITION_CONVERSION;
+    @Override
+    public String getName() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getName'");
     }
 
-    public double getVelocity() {
-        return driveMotor.getVelocity().getValueAsDouble() * Encoder.Drive.POSITION_CONVERSION;
+    @Override
+    public Translation2d getOffset() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getOffset'");
     }
 
-    public Rotation2d getAngle() {
-        return Rotation2d.fromRotations(pivotEncoder.getAbsolutePosition().getValueAsDouble())
-            .minus(angleOffset);
+    @Override
+    public SwerveModuleState getState() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getState'");
     }
 
     @Override
     public SwerveModulePosition getModulePosition() {
-        return new SwerveModulePosition(getPosition(), getAngle());
-    }
-
-    private double convertDriveVel(double speedMetersPerSecond) {
-        return speedMetersPerSecond / Encoder.Drive.POSITION_CONVERSION;
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getModulePosition'");
     }
 
     @Override
-    public void periodic() {
-        super.periodic();
-
-        final boolean USE_ACCEL = true;
-        final boolean USE_ACCEL_IN_AUTON = true;
-        final boolean USE_FOC_IN_AUTON = true;
-
-        double velocity = convertDriveVel(getTargetState().speedMetersPerSecond);
-        double acceleration = targetAcceleration.get(velocity);
-        boolean useFOC = true;
-
-        if (!USE_ACCEL) {
-            acceleration = 0;
-        }
-
-        if (DriverStation.isAutonomousEnabled()) {
-            if (!USE_ACCEL_IN_AUTON) {
-                acceleration = 0;
-            }
-
-            if (!USE_FOC_IN_AUTON) {
-                useFOC = false;
-            }
-        }
-
-        VelocityVoltage driveOutput = new VelocityVoltage(velocity)
-            .withAcceleration(acceleration)
-            .withEnableFOC(useFOC);
-
-        pivotController.update(Angle.fromRotation2d(getTargetState().angle), Angle.fromRotation2d(getAngle()));
-
-        if (Math.abs(getTargetState().speedMetersPerSecond) < Settings.Swerve.MODULE_VELOCITY_DEADBAND) {
-            driveMotor.setControl(new VelocityVoltage(0));
-            pivotMotor.setVoltage(0);
-        } else {
-            driveMotor.setControl(driveOutput);
-            pivotMotor.setVoltage(pivotController.getOutput());
-        }
-
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Target Acceleration", acceleration * Encoder.Drive.POSITION_CONVERSION);
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Drive Current", driveMotor.getSupplyCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Drive Position", getPosition());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Velocity", getVelocity());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Drive Voltage", driveMotor.getMotorVoltage().getValueAsDouble());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Turn Voltage", pivotController.getOutput());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Turn Current", pivotMotor.getOutputCurrent());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Angle Error", pivotController.getError().toDegrees());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Raw Encoder Angle", Units.rotationsToDegrees(pivotEncoder.getAbsolutePosition().getValueAsDouble()));
+    public void setTargetState(SwerveModuleState swerveModuleState) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setTargetState'");
     }
-
     
 }
