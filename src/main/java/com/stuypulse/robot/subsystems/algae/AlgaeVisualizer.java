@@ -33,7 +33,6 @@ public class AlgaeVisualizer {
     
     public AlgaeVisualizer() {
         algae = new Mechanism2d(100, 100);
-        // the vaules here NEED to be checked
         baseRoot = algae.getRoot("base", 50, 50); 
         baseLigament = new MechanismLigament2d("baseLigament", 10, 90);
         
