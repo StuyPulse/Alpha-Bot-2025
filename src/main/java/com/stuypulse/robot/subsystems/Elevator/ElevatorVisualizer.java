@@ -3,6 +3,7 @@ package com.stuypulse.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.control.feedforward.ElevatorFeedforward;
 
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -13,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class ElevatorVisualizer {
 
     private final Mechanism2d elevator2d;
-    private final Elevator elevator;
+    private final ElevatorSimu elevatorSim;
 
     private final MechanismRoot2d elevatorBL;
     private final MechanismRoot2d elevatorTR;
@@ -24,12 +25,12 @@ public class ElevatorVisualizer {
     private final MechanismRoot2d innerBL;
     private final MechanismRoot2d innerTR;
 
-    public ElevatorVisualizer(Elevator elevator) {
+    public ElevatorVisualizer(ElevatorSimu elevatorSim) {
 
-        this.elevator = elevator;
+        this.elevatorSim = elevatorSim;
 
         // Mechanism2d
-        elevator2d = new Mechanism2d(6, 15);
+        elevator2d = new Mechanism2d(6, 25);
         
         // Elevator Frame
 
@@ -146,7 +147,14 @@ public class ElevatorVisualizer {
     }
 ;
     public void update() {
-        innerBL.setPosition(2, 2+elevator.getTargetHeight());
-        innerTR.setPosition(4, 4+elevator.getTargetHeight());
+        // the middle will be at targetHeight
+
+        innerBL.setPosition(2, elevatorSim.getHeight()+2);
+        innerTR.setPosition(4, elevatorSim.getHeight()+4);
+
+        outerBL.setPosition(1, 1 + elevatorSim.getHeight() * Settings.Elevator.SCALE_FACTOR);
+        outerTR.setPosition(5, 15 + elevatorSim.getHeight() * Settings.Elevator.SCALE_FACTOR);
+
+        
     }
 }
