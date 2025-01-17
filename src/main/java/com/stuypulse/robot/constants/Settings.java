@@ -25,7 +25,8 @@ import edu.wpi.first.math.util.Units;
  */
 public interface Settings {
 
-
+    double LENGTH = Units.inchesToMeters(29);
+    
     double DT = 0.02;
 
     public interface Swerve {

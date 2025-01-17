@@ -4,7 +4,7 @@
 /* that can be found in the repository LICENSE file.           */
 /***************************************************************/
 
-package com.stuypulse.robot.subsystems.swerve.modules;
+package com.stuypulse.robot.subsystems.swerve;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -46,7 +46,7 @@ public abstract class SwerveModule extends SubsystemBase {
     }
 
     public final void setTargetState(SwerveModuleState state) {
-        state.optimize(getAngle());s
+        state.optimize(getAngle());
         targetState = state;
     }
 
