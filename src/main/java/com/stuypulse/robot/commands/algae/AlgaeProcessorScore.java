@@ -8,7 +8,7 @@ public class AlgaeProcessorScore extends AlgaeSetPivot {
     public AlgaeProcessorScore(){
         super(Settings.Algae.PROCESSOR_ANGLE);
         
-        algae.deacquire();
+        algae.deacquireUnder();
     }
 
     public void initialize(){

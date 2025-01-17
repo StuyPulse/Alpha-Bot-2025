@@ -6,7 +6,7 @@ public class AlgaeL3 extends AlgaeSetPivot {
     
     public AlgaeL3(){
         super(Settings.Algae.L3_ANGLE);
-        algae.acquire();
+        algae.acquireOver();
     }
 
     public void initialize(){

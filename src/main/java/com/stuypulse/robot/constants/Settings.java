@@ -17,22 +17,24 @@ import com.stuypulse.stuylib.network.SmartNumber;
 public interface Settings {
 
     public interface Algae {
-        int ROLLER_ID = 0; // update ports later -- def won't be 0
-        int PIVOT_ID = 1; // update ports later
-        double TARGET_ANGLE = 0.0;          // CHANGE
-        double LOWERED_ANGLE = 0.0;         // CHANGE
         double RAISED_ANGLE = 0.0;          // CHANGE
-        double PROCESSOR_ANGLE = 0.0;       // CHANGE
+        double PROCESSOR_ANGLE = 0.0;       // CHANGE 
         double REEF_KNOCKOFF_ANGLE = 0.0;   // CHANGE
         double GROUND_PICKUP_ANGLE = 0.0;   // CHANGE
         double L2_ANGLE = 0.0;              // CHANGE
         double L3_ANGLE = 0.0;              // CHANGE
-
+        double STOW_ANGLE = 0.0;            // CHANGE 
+        double ACQUIRE_SPEED = 0.0;         // CHANGE
+        double DEACQUIRE_SPEED = 0.0;       // CHANGE
+    
         public interface PID {
             double kP = 0.0;
             double kI = 0.0;
             double kD = 0.0;
+            double MAX_VELOCITY = 0.0;
+            double MAX_ACCELERATION = 0.0;
         }
+        
 
         public interface FF{
             double kS = 0.0;
@@ -42,3 +44,4 @@ public interface Settings {
         }
     }
 }
+

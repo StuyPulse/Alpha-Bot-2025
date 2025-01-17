@@ -16,7 +16,7 @@ public class AlgaeVisualizer {
     // base declarations
     private MechanismRoot2d baseRoot;
     private MechanismLigament2d baseLigament;
-
+    
     // pivot declarations
     private MechanismRoot2d pivotRoot;
     private MechanismLigament2d pivotLigament;
@@ -53,10 +53,26 @@ public class AlgaeVisualizer {
         barRoot.append(barLigament);
         rightRollerRoot.append(rightRollerLigament); 
         leftRollerRoot.append(leftRollerLigament);
-}           
+    }
 
-public void update(){
-    SmartDashboard.putData("algae", algae);
-    
-}
+    public void spinVisualizerRollersIntake() {
+
+    }
+
+    public void spinVisualizerRollersOutake() {
+
+    }
+
+    public void lowerPivotVisualizer() {
+
+    }
+
+    public void raisePivotVisualizer() {
+        
+    }
+
+
+    public void update() {
+        SmartDashboard.putData("algae", algae);
+    }
 }

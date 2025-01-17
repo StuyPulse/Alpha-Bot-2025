@@ -25,11 +25,13 @@ public abstract class Algae extends SubsystemBase {
 
     public abstract double getCurrentAngle();
 
-    public abstract double getCurrentPivotVelocity();
+    public abstract void acquireUnder();
 
-    public abstract void acquire();
+    public abstract void acquireOver();
 
-    public abstract void deacquire();
+    public abstract void deacquireUnder();
+
+    public abstract void deacquireOver();
     
     public abstract void stopRollers();
 

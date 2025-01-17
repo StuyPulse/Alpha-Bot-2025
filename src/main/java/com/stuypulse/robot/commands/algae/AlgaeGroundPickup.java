@@ -6,7 +6,7 @@ public class AlgaeGroundPickup extends AlgaeSetPivot {
     
     public AlgaeGroundPickup(){
         super(Settings.Algae.GROUND_PICKUP_ANGLE);
-        algae.acquire();
+        algae.acquireUnder();
     }
     public void initialize(){
         super.initialize();

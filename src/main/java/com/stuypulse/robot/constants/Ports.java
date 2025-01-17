@@ -12,4 +12,9 @@ public interface Ports {
         int OPERATOR = 1;
         int DEBUGGER = 2;
     }
+
+    public interface Algae {
+        int ROLLER_ID = 0; // update ports later -- def won't be 0
+        int PIVOT_ID = 1; // update ports later
+    }
 }
