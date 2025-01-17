@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class ElevatorSimu extends Elevator {
-    private final ElevatorVisualizer visualizer;
     private final ElevatorSim sim;
     private final SmartNumber targetHeight;
     private final double minHeight, maxHeight;
@@ -30,7 +29,6 @@ public class ElevatorSimu extends Elevator {
     private PIDController PID;
     
     ElevatorSimu() {
-        visualizer = new ElevatorVisualizer(this);
         targetHeight = new SmartNumber("Elevator/Target Height", 0);
         minHeight = Settings.Elevator.MIN_HEIGHT;
         maxHeight = Settings.Elevator.MAX_HEIGHT;
@@ -95,6 +93,7 @@ public class ElevatorSimu extends Elevator {
     }
     
     public void periodic() {
+        super.periodic();
         double voltage = voltageOverride.orElse(calculateVoltage());
         
         if (atBottom() && voltage < 0 || elevatorTop() && voltage > 0) {
@@ -102,17 +101,12 @@ public class ElevatorSimu extends Elevator {
         } else {
             sim.setInputVoltage(voltage);
         }
-
         
         SmartDashboard.putNumber("Elevator/Target Height", getTargetHeight());
         SmartDashboard.putNumber("Elevator/Current", sim.getCurrentDrawAmps());
         SmartDashboard.putNumber("Elevator/Height", getHeight());
-
-        visualizer.update();
-
-
-
     }
+
     public void simulationPeriodic() {
         RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(sim.getCurrentDrawAmps()));
         sim.update(Settings.DT);
