@@ -56,19 +56,18 @@ public class AlgaeVisualizer {
     }
 
     public void spinVisualizerRollersIntake() {
-
+        rightRollerLigament.setAngle(rightRollerLigament.getAngle() - 5);
+        leftRollerLigament.setAngle(leftRollerLigament.getAngle() + 5);
     }
 
     public void spinVisualizerRollersOutake() {
-
+        rightRollerLigament.setAngle(rightRollerLigament.getAngle() + 5);
+        leftRollerLigament.setAngle(leftRollerLigament.getAngle() - 5);
     }
 
-    public void lowerPivotVisualizer() {
-
-    }
-
-    public void raisePivotVisualizer() {
-        
+    public void updatePivotAngle() {
+        pivotLigament.setAngle(Algae.getInstance().getCurrentAngle());
+        barRoot.setPosition(Math.cos(Algae.getInstance().getCurrentAngle()), Math.sin(Algae.getInstance().getCurrentAngle()));
     }
 
 
