@@ -11,7 +11,8 @@ public class AlgaeVisualizer {
 
     public static AlgaeVisualizer instance = new AlgaeVisualizer();  
 
-    private Mechanism2d algae;
+    private Mechanism2d algaeVis;
+    private Algae algae;
 
     // base declarations
     private MechanismRoot2d baseRoot;
@@ -28,25 +29,28 @@ public class AlgaeVisualizer {
     // roller declarations (2 rollers) - 4 declarations in this section
     private MechanismRoot2d leftRollerRoot;
     private MechanismLigament2d leftRollerLigament;
+    /* */
     private MechanismRoot2d rightRollerRoot;
     private MechanismLigament2d rightRollerLigament;
     
     public AlgaeVisualizer() {
-        algae = new Mechanism2d(100, 100);
-        baseRoot = algae.getRoot("base", 50, 50); 
+        algae = Algae.getInstance();
+
+        algaeVis = new Mechanism2d(100, 100);
+        baseRoot = algaeVis.getRoot("base", 50, 50); 
         baseLigament = new MechanismLigament2d("baseLigament", 10, 90);
         
-        pivotRoot = algae.getRoot("pivot", 50, 60);
+        pivotRoot = algaeVis.getRoot("pivot", 50, 60);
         pivotLigament = new MechanismLigament2d("pivotLigament", 10, 135);
 
-        barRoot = algae.getRoot("bar", 42.83, 67.07);
+        barRoot = algaeVis.getRoot("bar", 42.93, 67.07);
         barLigament = new MechanismLigament2d("barLigament", 10, 180);
         
-        leftRollerRoot = algae.getRoot("leftRoller", 34.5, 67.07);
-        leftRollerLigament  = new MechanismLigament2d("leftRollerLigament", 2, 260);
+        leftRollerRoot = algaeVis.getRoot("leftRoller", 34.5, 67.07);
+        leftRollerLigament  = new MechanismLigament2d("leftRollerLigament", 1, 260);
         
-        rightRollerRoot = algae.getRoot("rightRoller", 40.5, 67.07);
-        rightRollerLigament = new MechanismLigament2d("rightRollerLigament", 2, 280);
+        rightRollerRoot = algaeVis.getRoot("rightRoller", 40.5, 67.07);
+        rightRollerLigament = new MechanismLigament2d("rightRollerLigament", 1, 280);
 
         baseRoot.append(baseLigament);
         pivotRoot.append(pivotLigament);
@@ -67,11 +71,24 @@ public class AlgaeVisualizer {
 
     public void updatePivotAngle() {
         pivotLigament.setAngle(Algae.getInstance().getCurrentAngle());
-        barRoot.setPosition(Math.cos(Algae.getInstance().getCurrentAngle()), Math.sin(Algae.getInstance().getCurrentAngle()));
+    }
+
+    public void updateBarAngle(){
+        barLigament.setAngle(Algae.getInstance().getCurrentAngle() + 45);
+        barRoot.setPosition(
+            Math.cos(barLigament.getAngle()) * pivotLigament.getLength()  + 50,
+            Math.sin(barLigament.getAngle()) * pivotLigament.getLength()  + 67.07
+            );
+    }
+
+    public void updateRollerPositions() {
+
     }
 
 
     public void update() {
-        SmartDashboard.putData("algae", algae);
+        SmartDashboard.putData("algae", algaeVis);  
+        leftRollerLigament.setAngle(leftRollerLigament.getAngle()+30);
+        rightRollerLigament.setAngle(rightRollerLigament.getAngle()-30);
     }
 }

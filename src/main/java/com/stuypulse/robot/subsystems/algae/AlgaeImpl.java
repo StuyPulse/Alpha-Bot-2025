@@ -46,7 +46,7 @@ public class AlgaeImpl extends Algae {
         
         pivotPIDController = new ProfiledPIDController(Settings.Algae.PID.kP, Settings.Algae.PID.kI, Settings.Algae.PID.kD, constraints);
         pivotFFController = new ArmFeedforward(Settings.Algae.FF.kS, Settings.Algae.FF.kG, Settings.Algae.FF.kV, Settings.Algae.FF.kA);
-        targetAngle = 0; //?? lol ima tinker w ts until the red goes away
+        targetAngle = 0; 
 
         visualizer = new AlgaeVisualizer();
     }
@@ -57,7 +57,8 @@ public class AlgaeImpl extends Algae {
     }
 
     public double getCurrentAngle() {
-        return Units.rotationsToDegrees(pivotEncoder.getPosition()); //?
+        // return Units.rotationsToDegrees(pivotEncoder.getPosition()); 
+        return 135;
     }
 
         // setters
@@ -102,8 +103,7 @@ public class AlgaeImpl extends Algae {
     // periodic
 
     @Override
-    public void periodic() { // check pararmeter types for our Controllers, probably FF
-        // --------------- CHECK EVERYTHING ---------------
+    public void periodic() {
 
         pivotMotor.setVoltage(
             pivotPIDController.calculate(
@@ -117,7 +117,14 @@ public class AlgaeImpl extends Algae {
             )
         );
         
+
+        // visualizer updating stuff 
+
         visualizer.update();
+        visualizer.updateBarAngle();
+        visualizer.updatePivotAngle();
+        
+
         
     }
 }

@@ -5,15 +5,28 @@
 
 package com.stuypulse.robot;
 
+import javax.management.openmbean.OpenType;
+
+// Algae Commands
+import com.stuypulse.robot.commands.algae.AlgaeGroundPickup;
+import com.stuypulse.robot.commands.algae.AlgaeL2;
+import com.stuypulse.robot.commands.algae.AlgaeL3;
+import com.stuypulse.robot.commands.algae.AlgaeProcessorScore;
+import com.stuypulse.robot.commands.algae.AlgaeReefKnockoff;
+import com.stuypulse.robot.commands.algae.AlgaeStopRoller;
+import com.stuypulse.robot.commands.algae.AlgaeStow;
+
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.algae.Algae;
+
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+
 
 public class RobotContainer {
 
@@ -45,7 +58,37 @@ public class RobotContainer {
     /*** BUTTONS ***/
     /***************/
 
-    private void configureButtonBindings() {}
+
+    private void configureButtonBindings() {
+        configureDriverBindings();
+        configureOperatorBindings();
+    }
+
+    private void configureDriverBindings() {}
+
+    private void configureOperatorBindings() {
+
+        operator.getBottomButton()
+            .onTrue(new AlgaeStow());
+        
+        operator.getTopButton()
+            .onTrue(new AlgaeGroundPickup());
+        
+        operator.getLeftButton()
+            .onTrue(new AlgaeL2());
+        
+        operator.getRightButton()
+            .onTrue(new AlgaeL3());
+
+        operator.getLeftBumper()
+            .onTrue(new AlgaeProcessorScore());
+
+        operator.getRightBumper()
+            .onTrue(new AlgaeReefKnockoff());
+
+        operator.getLeftMenuButton()
+            .onTrue(new AlgaeStopRoller());
+    }
 
     /**************/
     /*** AUTONS ***/
