@@ -13,6 +13,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ElevatorVisualizer {
 
+    private static final ElevatorVisualizer instance;
+
+    static {
+        instance = new ElevatorVisualizer();
+    }
+
     private final Mechanism2d elevator2d;
 
     private final MechanismRoot2d elevatorBL;
@@ -23,6 +29,10 @@ public class ElevatorVisualizer {
 
     private final MechanismRoot2d innerBL;
     private final MechanismRoot2d innerTR;
+
+    public static ElevatorVisualizer getVisualizerInstance(){
+        return instance;
+    } 
 
     public ElevatorVisualizer() {
 
@@ -143,15 +153,16 @@ public class ElevatorVisualizer {
         SmartDashboard.putData("Visualizers/Elevator", elevator2d);
     }
 
-    public void update(double height) {
+    public void update() {
         // the middle will be at targetHeight
+        ElevatorSimu simu = ((ElevatorSimu) ElevatorSimu.getInstance());
+        System.out.println("distance: " + simu.getSimEncoder().getDistance());
 
-        innerBL.setPosition(2, height+2);
-        innerTR.setPosition(4, height+4);
+        innerBL.setPosition(2, simu.getSim().getPositionMeters() + 2);
+        innerTR.setPosition(4, simu.getSim().getPositionMeters() + 4);
 
-        outerBL.setPosition(1, 1 + height * Settings.Elevator.SCALE_FACTOR);
-        outerTR.setPosition(5, 15 + height * Settings.Elevator.SCALE_FACTOR);
-
-        
+        outerBL.setPosition(1, 1 + simu.getSim().getPositionMeters() * Settings.Elevator.SCALE_FACTOR);
+        outerTR.setPosition(5, 15 + simu.getSim().getPositionMeters() * Settings.Elevator.SCALE_FACTOR);
     }
+
 }

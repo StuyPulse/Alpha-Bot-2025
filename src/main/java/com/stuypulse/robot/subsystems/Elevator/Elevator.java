@@ -38,7 +38,7 @@ public abstract class Elevator extends SubsystemBase {
     public abstract boolean atBottom();
     
     public void periodic() {
-        visualizer.update(getHeight());
+        visualizer.update();
     }
 
 }

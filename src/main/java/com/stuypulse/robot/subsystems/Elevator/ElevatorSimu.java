@@ -15,8 +15,13 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.simulation.PWMSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
 
 public class ElevatorSimu extends Elevator {
@@ -27,6 +32,11 @@ public class ElevatorSimu extends Elevator {
     private Optional<Double> voltageOverride;
     private SimpleMotorFeedforward FF;
     private PIDController PID;
+    private final EncoderSim simEncoder;
+    private final Encoder encoder;
+    private final DCMotor gearbox;
+    private final PWMSparkMax motor;
+    private final PWMSim motorSim;
     
     ElevatorSimu() {
         targetHeight = new SmartNumber("Elevator/Target Height", 0);
@@ -34,18 +44,38 @@ public class ElevatorSimu extends Elevator {
         maxHeight = Settings.Elevator.MAX_HEIGHT;
         maxAccel = new SmartNumber("Elevator/Max Acceleration",Settings.Elevator.MAX_ACCELERATION);
         maxVel = new SmartNumber("Elevator/Max Velocity", Settings.Elevator.MAX_VELOCITY);
+        gearbox = DCMotor.getNEO(2);
+        
+        motor = new PWMSparkMax(3);
+        motorSim = new PWMSim(motor);
+
+
+        // magic numbers
+        encoder = new Encoder(0, 1);
+
+        simEncoder = new EncoderSim(encoder);
+        
         sim = new ElevatorSim(
-            DCMotor.getNEO(2),
+            gearbox,
             Settings.Elevator.GEARING,
             Settings.Elevator.MASS,
             Settings.Elevator.DRUM_RADIUS,
             Settings.Elevator.MIN_HEIGHT,
             Settings.Elevator.MAX_HEIGHT,
-            true,
+            false,
             0.0);
         FF = new SimpleMotorFeedforward(Settings.Elevator.FF.kS, Settings.Elevator.FF.kV, Settings.Elevator.FF.kA);
         PID = new PIDController(Settings.Elevator.PID.kP, Settings.Elevator.PID.kI, Settings.Elevator.PID.kD);
         voltageOverride = Optional.empty();
+
+        //
+        encoder.setDistancePerPulse(256);
+    }
+    public ElevatorSim getSim() {
+        return sim;
+    }
+    public EncoderSim getSimEncoder() {
+        return simEncoder;
     }
 
     @Override
@@ -89,12 +119,16 @@ public class ElevatorSimu extends Elevator {
         final double FFOutput = FF.calculate(Units.metersToInches(sim.getVelocityMetersPerSecond()));
         final double PIDOutput = PID.calculate(getHeight(), targetHeight.doubleValue());
         // Combine outputs and set motor voltage
+        System.out.println("ff: " + FFOutput);
+        System.out.println("pid: " + PIDOutput);
         return FFOutput + PIDOutput;
     }
     
     public void periodic() {
-        super.periodic();
-        double voltage = voltageOverride.orElse(calculateVoltage());
+        double voltage = calculateVoltage();
+
+        
+        // sim.update(Settings.DT);
         
         if (atBottom() && voltage < 0 || elevatorTop() && voltage > 0) {
             stopElevator();
@@ -102,13 +136,24 @@ public class ElevatorSimu extends Elevator {
             sim.setInputVoltage(voltage);
         }
         
+        ElevatorVisualizer.getVisualizerInstance().update();
+
         SmartDashboard.putNumber("Elevator/Target Height", getTargetHeight());
         SmartDashboard.putNumber("Elevator/Current", sim.getCurrentDrawAmps());
         SmartDashboard.putNumber("Elevator/Height", getHeight());
     }
 
     public void simulationPeriodic() {
-        RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(sim.getCurrentDrawAmps()));
+
+        // System.out.println(motorSim.getSpeed() + " * " + calculateVoltage() + " = " +motorSim.getSpeed() * calculateVoltage());
+        sim.setInput(motorSim.getSpeed() * calculateVoltage());
+        
         sim.update(Settings.DT);
+        
+        simEncoder.setDistance(getHeight());
+
+        motor.setVoltage(calculateVoltage());
+
+        RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(sim.getCurrentDrawAmps()));
     }
 }

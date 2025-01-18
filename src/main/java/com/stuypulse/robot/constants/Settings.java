@@ -38,7 +38,7 @@ public interface Settings {
         }
     }
 
-    double DT = 1.0/50.0;
+    double DT = 0.020;
 
     public interface Robot {
         double kG = 100.0;
