@@ -30,6 +30,9 @@
       "LiveWindow": {
         "open": true
       },
+      "Shuffleboard": {
+        "open": true
+      },
       "SmartDashboard": {
         "Elevator": {
           "open": true

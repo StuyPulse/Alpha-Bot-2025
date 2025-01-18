@@ -156,13 +156,13 @@ public class ElevatorVisualizer {
     public void update() {
         // the middle will be at targetHeight
         ElevatorSimu simu = ((ElevatorSimu) ElevatorSimu.getInstance());
-        System.out.println("distance: " + simu.getSimEncoder().getDistance());
+        System.out.println("distance: " + simu.getSim().getPositionMeters());
 
-        innerBL.setPosition(2, simu.getSim().getPositionMeters() + 2);
-        innerTR.setPosition(4, simu.getSim().getPositionMeters() + 4);
+        innerBL.setPosition(2, simu.getHeight() + 2);
+        innerTR.setPosition(4, simu.getHeight() + 4);
 
-        outerBL.setPosition(1, 1 + simu.getSim().getPositionMeters() * Settings.Elevator.SCALE_FACTOR);
-        outerTR.setPosition(5, 15 + simu.getSim().getPositionMeters() * Settings.Elevator.SCALE_FACTOR);
+        outerBL.setPosition(1, 1 + simu.getHeight() * Settings.Elevator.SCALE_FACTOR);
+        outerTR.setPosition(5, 15 + simu.getHeight() * Settings.Elevator.SCALE_FACTOR);
     }
 
 }

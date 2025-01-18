@@ -1,6 +1,10 @@
 package com.stuypulse.robot.subsystems.Elevator;
 
 import java.util.Optional;
+import java.util.zip.ZipException;
+import java.util.zip.ZipException;
+
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -9,6 +13,8 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.network.SmartNumber;
+
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -30,7 +36,7 @@ public class ElevatorSimu extends Elevator {
     private final double minHeight, maxHeight;
     private final SmartNumber maxAccel, maxVel;
     private Optional<Double> voltageOverride;
-    private SimpleMotorFeedforward FF;
+    private ElevatorFeedforward FF;
     private PIDController PID;
     private final EncoderSim simEncoder;
     private final Encoder encoder;
@@ -63,14 +69,26 @@ public class ElevatorSimu extends Elevator {
             Settings.Elevator.MIN_HEIGHT,
             Settings.Elevator.MAX_HEIGHT,
             false,
-            0.0);
-        FF = new SimpleMotorFeedforward(Settings.Elevator.FF.kS, Settings.Elevator.FF.kV, Settings.Elevator.FF.kA);
-        PID = new PIDController(Settings.Elevator.PID.kP, Settings.Elevator.PID.kI, Settings.Elevator.PID.kD);
+            0.0
+        );
+        FF = new ElevatorFeedforward(
+            Settings.Elevator.FF.kS.getAsDouble(), 
+            Settings.Elevator.FF.kG.getAsDouble(), 
+            Settings.Elevator.FF.kV.getAsDouble(), 
+            Settings.Elevator.FF.kA.getAsDouble()
+        );
+        PID = new PIDController(
+            Settings.Elevator.PID.kP.getAsDouble(), 
+            Settings.Elevator.PID.kI.getAsDouble(), 
+            Settings.Elevator.PID.kD.getAsDouble()
+        );
+
         voltageOverride = Optional.empty();
 
         //
         encoder.setDistancePerPulse(256);
     }
+
     public ElevatorSim getSim() {
         return sim;
     }
@@ -116,7 +134,7 @@ public class ElevatorSimu extends Elevator {
         this.maxAccel.set(maxAcceleration);
     }
     public double calculateVoltage() {
-        final double FFOutput = FF.calculate(Units.metersToInches(sim.getVelocityMetersPerSecond()));
+        final double FFOutput = FF.calculate(encoder.getDistance());
         final double PIDOutput = PID.calculate(getHeight(), targetHeight.doubleValue());
         // Combine outputs and set motor voltage
         System.out.println("ff: " + FFOutput);
@@ -125,9 +143,9 @@ public class ElevatorSimu extends Elevator {
     }
     
     public void periodic() {
+        super.periodic();
         double voltage = calculateVoltage();
 
-        
         // sim.update(Settings.DT);
         
         if (atBottom() && voltage < 0 || elevatorTop() && voltage > 0) {
@@ -146,14 +164,13 @@ public class ElevatorSimu extends Elevator {
     public void simulationPeriodic() {
 
         // System.out.println(motorSim.getSpeed() + " * " + calculateVoltage() + " = " +motorSim.getSpeed() * calculateVoltage());
-        sim.setInput(motorSim.getSpeed() * calculateVoltage());
+        // sim.setInput(motorSim.getSpeed() * calculateVoltage());
         
-        sim.update(Settings.DT);
-        
-        simEncoder.setDistance(getHeight());
+        // simEncoder.setDistance(getHeight());
 
-        motor.setVoltage(calculateVoltage());
+        // motor.setVoltage(calculateVoltage());
 
         RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(sim.getCurrentDrawAmps()));
+        sim.update(Settings.DT);
     }
 }

@@ -5,6 +5,8 @@
 
 package com.stuypulse.robot.constants;
 
+import com.stuypulse.stuylib.network.SmartNumber;
+
 import edu.wpi.first.math.util.Units;
 
 /*-
@@ -66,16 +68,16 @@ public interface Settings {
         double SCALE_FACTOR = 0.5;
     
         public interface PID {
-            double kP = 1.0;
-            double kI = 1.0;
-            double kD = 1.0;
+            SmartNumber kP = new SmartNumber("kP",1.0);
+            SmartNumber kI = new SmartNumber("kI",1.0);
+            SmartNumber kD = new SmartNumber("kD",1.0);
         }
 
         public interface FF {
-            double kS = 0.1;
-            double kV = 0.1;
-            double kA = 0.0;
-            double kG = 0.1;
+            SmartNumber kS = new SmartNumber("kS",0.1);
+            SmartNumber kV = new SmartNumber("kV",0.1);
+            SmartNumber kA = new SmartNumber("kA",0.1);
+            SmartNumber kG = new SmartNumber("kG",0.1);
         }
     }
 }

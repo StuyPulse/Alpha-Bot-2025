@@ -56,15 +56,15 @@ public class ElevatorImpl extends Elevator {
         leftMotor.configure(rightConfig, SparkMax.ResetMode.kResetSafeParameters, SparkMax.PersistMode.kPersistParameters);
 
          FF = new ElevatorFeedforward(
-            Settings.Elevator.FF.kS, 
-            Settings.Elevator.FF.kG, 
-            Settings.Elevator.FF.kV
+            Settings.Elevator.FF.kS.getAsDouble(), 
+            Settings.Elevator.FF.kG.getAsDouble(), 
+            Settings.Elevator.FF.kV.getAsDouble()
         );
 
         PID = new ProfiledPIDController(
-            Settings.Elevator.PID.kP, 
-            Settings.Elevator.PID.kI, 
-            Settings.Elevator.PID.kD, 
+            Settings.Elevator.PID.kP.getAsDouble(), 
+            Settings.Elevator.PID.kI.getAsDouble(), 
+            Settings.Elevator.PID.kD.getAsDouble(), 
             new TrapezoidProfile.Constraints(
                 Settings.Elevator.MAX_ACCELERATION, 
                 Settings.Elevator.MAX_VELOCITY
