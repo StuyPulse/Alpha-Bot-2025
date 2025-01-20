@@ -1,14 +1,7 @@
 package com.stuypulse.robot.subsystems.Elevator;
 
 import java.util.Optional;
-import java.util.zip.ZipException;
-import java.util.zip.ZipException;
 
-import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.sim.SparkMaxSim;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.stuylib.math.SLMath;
@@ -16,7 +9,6 @@ import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -26,7 +18,6 @@ import edu.wpi.first.wpilibj.simulation.PWMSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
 
@@ -68,7 +59,7 @@ public class ElevatorSimu extends Elevator {
             Settings.Elevator.DRUM_RADIUS,
             Settings.Elevator.MIN_HEIGHT,
             Settings.Elevator.MAX_HEIGHT,
-            false,
+            true,
             0.0
         );
         FF = new ElevatorFeedforward(

@@ -49,8 +49,8 @@ public interface Settings {
     public interface Elevator {
         double MIN_HEIGHT = 0.0;
         double MAX_HEIGHT = 12.0;
-        double MAX_ACCELERATION = 0.5;
-        double MAX_VELOCITY = 1.0;
+        double MAX_ACCELERATION = 2.0;
+        double MAX_VELOCITY = 3.0;
         double ENCODER_CONVERSION_FACTOR = 0;
         
         double MASS = 25.0;
@@ -68,16 +68,16 @@ public interface Settings {
         double SCALE_FACTOR = 0.5;
     
         public interface PID {
-            SmartNumber kP = new SmartNumber("kP",1.0);
-            SmartNumber kI = new SmartNumber("kI",1.0);
-            SmartNumber kD = new SmartNumber("kD",1.0);
+            SmartNumber kP = new SmartNumber("kP",1.5);
+            SmartNumber kI = new SmartNumber("kI",0.0);
+            SmartNumber kD = new SmartNumber("kD",0.2);
         }
 
         public interface FF {
-            SmartNumber kS = new SmartNumber("kS",0.1);
-            SmartNumber kV = new SmartNumber("kV",0.1);
-            SmartNumber kA = new SmartNumber("kA",0.1);
-            SmartNumber kG = new SmartNumber("kG",0.1);
+            SmartNumber kS = new SmartNumber("kS",0.20506);
+            SmartNumber kV = new SmartNumber("kV",3.7672);
+            SmartNumber kA = new SmartNumber("kA", 0.27);
+            SmartNumber kG = new SmartNumber("kG", 0.37);
         }
     }
 }
