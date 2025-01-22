@@ -80,7 +80,6 @@ public interface Settings {
             SmartNumber kG = new SmartNumber("kG", 0.37);
         }
     }
-}
 
     public interface Algae {
         double RAISED_ANGLE = 0.0;          // CHANGE

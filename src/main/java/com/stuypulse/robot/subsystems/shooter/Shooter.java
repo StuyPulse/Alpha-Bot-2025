@@ -19,7 +19,7 @@ public class Shooter extends SubsystemBase {
 
     public Shooter(){
         super();
-        shooterMotor = new SparkMax(Ports.Shooter.LEFT_MOTOR, MotorType.kBrushless);
+        shooterMotor = new SparkMax(Ports.Shooter.SHOOTER_MOTOR, MotorType.kBrushless);
     }
 
     public void shoot() {

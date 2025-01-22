@@ -14,13 +14,9 @@ public interface Ports {
     }
 
     public interface Shooter {
-        int LEFT_MOTOR = 0;
-        int RIGHT_MOTOR = 0;
-
-        int LEFT_ENCODER = 0;
-        int RIGHT_ENCODER = 0;
+        int SHOOTER_MOTOR = 0;
     }
-}
+
     public interface Elevator {
         int LEFT = 0;
         int RIGHT = 1;
@@ -32,3 +28,4 @@ public interface Ports {
         int PIVOT_ID = 1; // update ports later
     }
 }
+
