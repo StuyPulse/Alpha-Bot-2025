@@ -14,9 +14,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 
 public class AlgaeImpl extends Algae {
 
-        // variable declaration
-        
-
+    // variable declaration
     private SparkMax pivotMotor;
     private SparkMax rollerMotor;
 
