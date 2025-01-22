@@ -1,8 +1,24 @@
 {
+  "HALProvider": {
+    "Encoders": {
+      "window": {
+        "visible": true
+      }
+    },
+    "PWM Outputs": {
+      "window": {
+        "visible": true
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Autonomous": "String Chooser",
+      "/SmartDashboard/Visualizers/Elevator": "Mechanism2d"
+    },
+    "windows": {
+      "/SmartDashboard/Visualizers/Elevator": {
       "/SmartDashboard/algae": "Mechanism2d"
     },
     "windows": {
@@ -25,7 +41,10 @@
         "open": true
       },
       "SmartDashboard": {
+        "Elevator": {
+
         "algae": {
+
           "open": true
         },
         "open": true
@@ -37,8 +56,22 @@
       "open": true
     },
     "Server": {
+
+      "Publishers": {
+        "open": true
+      },
+      "Subscribers": {
+        "open": true
+      }
+    },
+    "visible": true
+  },
+  "NetworkTables View": {
+    "visible": false
+
       "open": true
     },
     "visible": true
+
   }
 }
