@@ -95,7 +95,6 @@ public class AlgaeVisualizer {
             -8.43 * Math.sin(Math.toRadians(pivotLigament.getAngle()-135)) + pivotLigament.getLength() * Math.sin(Math.toRadians(pivotLigament.getAngle()))+ 60
         );
     }
-// daniel ❤️ diddy
 
     public void update() {
         SmartDashboard.putData("algae", algaeVis);
