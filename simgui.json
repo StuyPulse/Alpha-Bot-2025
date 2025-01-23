@@ -1,13 +1,20 @@
 {
   "HALProvider": {
-    "Encoders": {
-      "window": {
-        "visible": true
-      }
-    },
-    "PWM Outputs": {
-      "window": {
-        "visible": true
+    "Other Devices": {
+      "SPARK MAX [0]": {
+        "header": {
+          "open": true
+        }
+      },
+      "SPARK MAX [1]": {
+        "header": {
+          "open": true
+        }
+      },
+      "SPARK MAX [1] RELATIVE ENCODER": {
+        "header": {
+          "open": true
+        }
       }
     }
   },
@@ -15,10 +22,7 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Autonomous": "String Chooser",
-      "/SmartDashboard/Visualizers/Elevator": "Mechanism2d"
-    },
-    "windows": {
-      "/SmartDashboard/Visualizers/Elevator": {
+      "/SmartDashboard/Visualizers/Elevator": "Mechanism2d",
       "/SmartDashboard/algae": "Mechanism2d"
     },
     "windows": {
@@ -31,47 +35,15 @@
   },
   "NetworkTables": {
     "transitory": {
-      "FMSInfo": {
-        "open": true
-      },
-      "LiveWindow": {
-        "open": true
-      },
       "Shuffleboard": {
-        "open": true
-      },
-      "SmartDashboard": {
-        "Elevator": {
-
-        "algae": {
-
-          "open": true
-        },
         "open": true
       }
     }
   },
   "NetworkTables Info": {
-    "Clients": {
-      "open": true
-    },
-    "Server": {
-
-      "Publishers": {
-        "open": true
-      },
-      "Subscribers": {
-        "open": true
-      }
-    },
     "visible": true
   },
   "NetworkTables View": {
     "visible": false
-
-      "open": true
-    },
-    "visible": true
-
   }
 }

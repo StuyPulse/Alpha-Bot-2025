@@ -29,7 +29,7 @@ public class AlgaeVisualizer {
     // roller declarations (2 rollers) - 4 declarations in this section
     private MechanismRoot2d leftRollerRoot;
     private MechanismLigament2d leftRollerLigament;
-    /* */
+    
     private MechanismRoot2d rightRollerRoot;
     private MechanismLigament2d rightRollerLigament;
     
@@ -75,20 +75,29 @@ public class AlgaeVisualizer {
 
     public void updateBarAngle(){
         barLigament.setAngle(Algae.getInstance().getCurrentAngle() + 45);
+        //aligns bar rotation and position to pivot ligament
         barRoot.setPosition(
-            Math.cos(barLigament.getAngle()) * pivotLigament.getLength()  + 50,
-            Math.sin(barLigament.getAngle()) * pivotLigament.getLength()  + 67.07
+            pivotLigament.getLength() * Math.cos(Math.toRadians(pivotLigament.getAngle())) + 50,
+            pivotLigament.getLength() * Math.sin(Math.toRadians(pivotLigament.getAngle())) + 60
             );
-    }
+        }
 
     public void updateRollerPositions() {
-
+        //rightRollerLigament.setAngle(Algae.getInstance());
+        //aligns right roller to bar
+        rightRollerRoot.setPosition(
+            -2.43 * Math.cos(Math.toRadians(pivotLigament.getAngle()-135)) + pivotLigament.getLength() * Math.cos(Math.toRadians(pivotLigament.getAngle())) + 50,
+            -2.43 * Math.sin(Math.toRadians(pivotLigament.getAngle()-135)) + pivotLigament.getLength() * Math.sin(Math.toRadians(pivotLigament.getAngle()))+ 60
+        );
+        // aligns left roller to bar 
+        leftRollerRoot.setPosition(
+            -8.43 * Math.cos(Math.toRadians(pivotLigament.getAngle()-135)) + pivotLigament.getLength() * Math.cos(Math.toRadians(pivotLigament.getAngle())) + 50,
+            -8.43 * Math.sin(Math.toRadians(pivotLigament.getAngle()-135)) + pivotLigament.getLength() * Math.sin(Math.toRadians(pivotLigament.getAngle()))+ 60
+        );
     }
-
+// daniel ❤️ diddy
 
     public void update() {
-        SmartDashboard.putData("algae", algaeVis);  
-        leftRollerLigament.setAngle(leftRollerLigament.getAngle()+30);
-        rightRollerLigament.setAngle(rightRollerLigament.getAngle()-30);
+        SmartDashboard.putData("algae", algaeVis);
     }
 }

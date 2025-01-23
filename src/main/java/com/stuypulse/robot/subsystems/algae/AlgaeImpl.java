@@ -120,11 +120,10 @@ public class AlgaeImpl extends Algae {
 
         // visualizer updating stuff 
 
-        visualizer.update();
         visualizer.updateBarAngle();
-        visualizer.updatePivotAngle();
+        visualizer.updatePivotAngle(); 
+        visualizer.updateRollerPositions();      
         
-
-        
+        visualizer.update();  
     }
 }
