@@ -70,12 +70,14 @@ public class AlgaeVisualizer {
     }
 
     public void updatePivotAngle() {
-        pivotLigament.setAngle(Algae.getInstance().getCurrentAngle());
+        //pivotLigament.setAngle(Algae.getInstance().getCurrentAngle());
+        pivotLigament.setAngle(pivotLigament.getAngle()+1);
     }
 
     public void updateBarAngle(){
-        barLigament.setAngle(Algae.getInstance().getCurrentAngle() + 45);
+        //barLigament.setAngle(Algae.getInstance().getCurrentAngle() + 45);
         //aligns bar rotation and position to pivot ligament
+        barLigament.setAngle(pivotLigament.getAngle()+45); 
         barRoot.setPosition(
             pivotLigament.getLength() * Math.cos(Math.toRadians(pivotLigament.getAngle())) + 50,
             pivotLigament.getLength() * Math.sin(Math.toRadians(pivotLigament.getAngle())) + 60
@@ -95,6 +97,7 @@ public class AlgaeVisualizer {
             -8.43 * Math.sin(Math.toRadians(pivotLigament.getAngle()-135)) + pivotLigament.getLength() * Math.sin(Math.toRadians(pivotLigament.getAngle()))+ 60
         );
     }
+// daniel ❤️ diddy
 
     public void update() {
         SmartDashboard.putData("algae", algaeVis);
