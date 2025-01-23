@@ -13,6 +13,10 @@ public interface Ports {
         int DEBUGGER = 2;
     }
 
+    public interface Shooter {
+        int SHOOTER_MOTOR = 0;
+    }
+
     public interface Elevator {
         int LEFT = 0;
         int RIGHT = 1;
@@ -24,3 +28,4 @@ public interface Ports {
         int PIVOT_ID = 1; // update ports later
     }
 }
+
