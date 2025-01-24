@@ -12,6 +12,7 @@ public interface Ports {
         int OPERATOR = 1;
         int DEBUGGER = 2;
     }
+  
     public interface Swerve {
         public interface FrontRight {
             int DRIVE = 10;
@@ -36,5 +37,20 @@ public interface Ports {
             int TURN = 17;
             int ENCODER = 4;
         }
+
+    public interface Shooter {
+        int SHOOTER_MOTOR = 0;
+    }
+
+    public interface Elevator {
+        int LEFT = 0;
+        int RIGHT = 1;
+        int SWITCH = 2;
+    }
+  
+    public interface Algae {
+        int ROLLER_ID = 0; // update ports later -- def won't be 0
+        int PIVOT_ID = 1; // update ports later
     }
 }
+

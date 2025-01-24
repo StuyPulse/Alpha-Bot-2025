@@ -6,6 +6,7 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Settings.RobotType;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -13,6 +14,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
+
+    public static final RobotType ROBOT;
+
+    static {
+        if (Robot.isSimulation())
+            ROBOT = RobotType.SIM;
+        else
+            ROBOT = RobotType.fromString(System.getenv("serialnum"));
+    }
 
     private RobotContainer robot;
     private Command auto;
