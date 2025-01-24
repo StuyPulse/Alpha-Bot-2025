@@ -28,20 +28,12 @@ public interface Settings {
         // between wheel centers
         double WIDTH = Units.inchesToMeters(20.75);
         double LENGTH = Units.inchesToMeters(20.75);
-        double CENTER_TO_INTAKE_FRONT = Units.inchesToMeters(13.0);
 
         double MAX_MODULE_SPEED = 4.9;
-        double MAX_MODULE_ACCEL = 15.0;
 
         double MODULE_VELOCITY_DEADBAND = 0.05;
 
-        SmartNumber ALIGN_OMEGA_DEADBAND = new SmartNumber("Swerve/Align Omega Deadband", 0.05); // TODO: make 0.25 and test
-
         public interface Assist {
-            SmartNumber ALIGN_MIN_SPEAKER_DIST = new SmartNumber("SwerveAssist/Minimum Distance to Speaker", 4); //change
-
-            double BUZZ_INTENSITY = 1;
-
             // angle PID
             SmartNumber kP = new SmartNumber("SwerveAssist/kP", 6.0);
             SmartNumber kI = new SmartNumber("SwerveAssist/kI", 0.0);
@@ -76,12 +68,6 @@ public interface Settings {
                 double GEAR_RATIO = 1.0 / 5.36;
 
                 double POSITION_CONVERSION = WHEEL_CIRCUMFERENCE * GEAR_RATIO;
-                double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
-            }
-
-            public interface Turn {
-                double POSITION_CONVERSION = 1;
-                double VELOCITY_CONVERSION = POSITION_CONVERSION / 60.0;
             }
         }
 
@@ -96,37 +82,37 @@ public interface Settings {
         }
 
         public interface Drive {
-            SmartNumber kP = new SmartNumber("Swerve/Drive/PID/kP", 0.31399);
+            double kP = 0.31399;
             double kI = 0.0;
             double kD = 0.0;
 
             double kS = 0.15618;
-            SmartNumber kV = new SmartNumber("Swerve/Drive/FF/kV", 0.00012288);
-            SmartNumber kA = new SmartNumber("Swerve/Drive/FF/kA", 0.0000259);
-        }
-
-        public interface FrontRight {
-            String ID = "Front Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(38.144531);
-            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * -0.5);
+            double kV = 0.00012288;
+            double kA = 0.0000259;
         }
 
         public interface FrontLeft {
             String ID = "Front Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(-173.408203);
-            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * +0.5, LENGTH * +0.5);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0.0);
+            Translation2d MODULE_OFFSET = new Translation2d(LENGTH * +0.5, WIDTH * +0.5);
         }
 
         public interface BackLeft {
             String ID = "Back Left";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(24.609375);
-            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * +0.5);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0.0);
+            Translation2d MODULE_OFFSET = new Translation2d(LENGTH * -0.5, WIDTH * +0.5);
         }
 
         public interface BackRight {
             String ID = "Back Right";
-            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(38.232422);
-            Translation2d MODULE_OFFSET = new Translation2d(WIDTH * -0.5, LENGTH * -0.5);
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0.0);
+            Translation2d MODULE_OFFSET = new Translation2d(LENGTH * -0.5, WIDTH * -0.5);
+        }
+
+        public interface FrontRight {
+            String ID = "Front Right";
+            Rotation2d ABSOLUTE_OFFSET = Rotation2d.fromDegrees(0.0);
+            Translation2d MODULE_OFFSET = new Translation2d(LENGTH * +0.5, WIDTH * -0.5);
         }
     }
 
@@ -148,6 +134,8 @@ public interface Settings {
         double L2_HEIGHT_METERS = 0.25;
         double L3_HEIGHT_METERS = 0.5;
         double L4_HEIGHT_METERS = 0.75;
+
+        double FEED_HEIGHT_METERS = 0.4;
 
         public interface Encoders {
             double POSITION_CONVERSION_FACTOR = 1.0;
@@ -172,34 +160,6 @@ public interface Settings {
         }
     }
 
-    public interface Algae {
-        // 0 degrees is as far into the robot as the arm can go
-        SmartNumber GROUND_PICKUP_ANGLE_DEGREES = new SmartNumber("Algae Mech/Ground Pickup Angle (deg)", 0);
-        SmartNumber L2_ANGLE_DEGREES = new SmartNumber("Algae Mech/L2 Angle (deg)", 0);
-        SmartNumber L3_ANGLE_DEGREES = new SmartNumber("Algae Mech/L3 Angle (deg)", 0);
-        SmartNumber PROCESSOR_ANGLE_DEGREES = new SmartNumber("Algae Mech/Processor Angle (deg)", 0);
-        SmartNumber ACQUIRE_SPEED = new SmartNumber("Algae Mech/Acquire Speed", 0.5);
-        SmartNumber DEACQUIRE_SPEED = new SmartNumber("Algae Mech/Deacquire Speed", 0.5);
-
-        double ENCODER_OFFSET_DEGREES = 0;
-
-        double MAX_ANGULAR_VELOCITY_RAD_PER_SECOND = 3.0;
-        double MAX_ANGULAR_ACCEL_RAD_PER_SECOND_PER_SECOND = 3.0;
-    
-        public interface PID {
-            SmartNumber kP = new SmartNumber("Algae Mech/PID/kP", 0.0);
-            SmartNumber kI = new SmartNumber("Algae Mech/PID/kI", 0.0);
-            SmartNumber kD = new SmartNumber("Algae Mech/PID/kD", 0.0);
-        }
-
-        public interface FF{
-            SmartNumber kS = new SmartNumber("Algae Mech/FF/kS", 0.0);
-            SmartNumber kV = new SmartNumber("Algae Mech/FF/kV", 0.0);
-            SmartNumber kA = new SmartNumber("Algae Mech/FF/kA", 0.0);
-            SmartNumber kG = new SmartNumber("Algae Mech/FF/kG", 0.0);
-        }
-    }
-
     public interface Shooter {
         SmartNumber ACQUIRE_SPEED = new SmartNumber("Shooter/Acquire Speed", 0.2);
         SmartNumber SHOOT_SPEED = new SmartNumber("Shooter/Shoot Speed", 0.5);
@@ -208,5 +168,27 @@ public interface Settings {
     public interface Funnel {
         SmartNumber ACQUIRE_SPEED = new SmartNumber("Funnel/Acquire Speed", 0.4);
         SmartNumber DEACQUIRE_SPEED = new SmartNumber("Funnel/Deacquire Speed", 0.4); 
+    }
+
+    public interface Driver {
+        public interface Drive {
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.05);
+
+            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.05);
+            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
+
+            SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Swerve.Motion.MAX_VELOCITY.get());
+            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", Swerve.Motion.MAX_ACCELERATION.get());
+        }
+
+        public interface Turn {
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.05);
+
+            SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.05);
+            SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
+
+            SmartNumber MAX_TELEOP_TURN_SPEED = new SmartNumber("Driver Settings/Turn/Max Turn Speed (rad/s)", Swerve.Motion.MAX_ANGULAR_VELOCITY.get());
+            SmartNumber MAX_TELEOP_TURN_ACCEL = new SmartNumber("Driver Settings/Turn/Max Turn Accel (rad/s^2)", Swerve.Motion.MAX_ANGULAR_ACCELERATION.get());
+        }
     }
 }

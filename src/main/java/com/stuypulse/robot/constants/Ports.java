@@ -37,6 +37,7 @@ public interface Ports {
             int TURN = 17;
             int ENCODER = 4;
         }
+    }
 
     public interface Shooter {
         int MOTOR = 0;
@@ -47,12 +48,6 @@ public interface Ports {
         int LEFT = 0;
         int RIGHT = 1;
         int SWITCH = 2;
-    }
-  
-    public interface Algae {
-        int ROLLER = 0;
-        int PIVOT = 1;
-        int ENCODER = 2;
     }
 
     public interface Funnel {
