@@ -4,21 +4,21 @@ import com.stuypulse.robot.subsystems.algae.*;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class AlgaeSetPivot extends InstantCommand {
+public class AlgaeSetAngle extends InstantCommand {
     
-    protected final Algae algae; 
-    private final double angle; //target angle
+    private final Algae algae; 
+    private final Number targetAngle;
 
-    public AlgaeSetPivot(double angle) {
+    public AlgaeSetAngle(Number targetAngle) {
         algae = Algae.getInstance();
 
-        this.angle = angle;
+        this.targetAngle = targetAngle;
         addRequirements(algae);
     }
 
     @Override
     public void initialize() {
-        algae.setTargetAngle(angle);
+        algae.setTargetAngle(targetAngle.doubleValue());
     }
 
 }

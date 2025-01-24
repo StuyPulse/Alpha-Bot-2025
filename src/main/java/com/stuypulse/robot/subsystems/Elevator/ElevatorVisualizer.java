@@ -1,4 +1,4 @@
-package com.stuypulse.robot.subsystems.Elevator;
+package com.stuypulse.robot.subsystems.elevator;
 
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
@@ -158,11 +158,11 @@ public class ElevatorVisualizer {
         ElevatorSimu simu = ((ElevatorSimu) ElevatorSimu.getInstance());
         System.out.println("distance: " + simu.getSim().getPositionMeters());
 
-        innerBL.setPosition(2, simu.getHeight() + 2);
-        innerTR.setPosition(4, simu.getHeight() + 4);
+        innerBL.setPosition(2, simu.getCurrentHeight() + 2);
+        innerTR.setPosition(4, simu.getCurrentHeight() + 4);
 
-        outerBL.setPosition(1, 1 + simu.getHeight() * Settings.Elevator.SCALE_FACTOR);
-        outerTR.setPosition(5, 15 + simu.getHeight() * Settings.Elevator.SCALE_FACTOR);
+        outerBL.setPosition(1, 1 + simu.getCurrentHeight() * Settings.Elevator.Simulation.SCALE_FACTOR);
+        outerTR.setPosition(5, 15 + simu.getCurrentHeight() * Settings.Elevator.Simulation.SCALE_FACTOR);
     }
 
 }

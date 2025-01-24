@@ -14,7 +14,8 @@ public interface Ports {
     }
 
     public interface Shooter {
-        int SHOOTER_MOTOR = 0;
+        int MOTOR = 0;
+        int IR_SENSOR = 1;
     }
 
     public interface Elevator {
@@ -24,8 +25,9 @@ public interface Ports {
     }
   
     public interface Algae {
-        int ROLLER_ID = 0; // update ports later -- def won't be 0
-        int PIVOT_ID = 1; // update ports later
+        int ROLLER = 0;
+        int PIVOT = 1;
+        int ENCODER = 2;
     }
 }
 

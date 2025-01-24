@@ -1,17 +1,21 @@
-package com.stuypulse.robot.subsystems.Elevator;
+package com.stuypulse.robot.subsystems.elevator;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.stuylib.control.Controller;
+import com.stuypulse.stuylib.control.feedback.PIDController;
+import com.stuypulse.stuylib.control.feedforward.ElevatorFeedforward;
+import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.network.SmartNumber;
+import com.stuypulse.stuylib.streams.numbers.filters.MotionProfile;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -26,49 +30,34 @@ public class ElevatorImpl extends Elevator {
 
     private final SmartNumber targetHeight;
 
-    private final SparkMaxConfig leftConfig;
-    private final SparkMaxConfig rightConfig;
+    private final Controller controller;
 
-    private ElevatorFeedforward FF;
-    private ProfiledPIDController PID;
+    private boolean hasBeenReset;
 
     public ElevatorImpl() {
         leftMotor = new SparkMax(Ports.Elevator.LEFT, MotorType.kBrushless);
+        Motors.Elevator.leftMotor.encoder.apply(Motors.Elevator.encoderConfig);
+        leftMotor.configure(Motors.Elevator.leftMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
         rightMotor = new SparkMax(Ports.Elevator.RIGHT, MotorType.kBrushless);
-
-        rightConfig = new SparkMaxConfig();
-        leftConfig = new SparkMaxConfig();
-
-        bumpSwitch = new DigitalInput(Ports.Elevator.SWITCH);
-
-        targetHeight = new SmartNumber("Elevator/Target Height", 0);
-
-        rightConfig.encoder.positionConversionFactor(Settings.Elevator.POSITION_CONVERSION_FACTOR);
-        leftConfig.encoder.positionConversionFactor(Settings.Elevator.POSITION_CONVERSION_FACTOR);
-        rightConfig.idleMode(SparkMaxConfig.IdleMode.kBrake);
-        leftConfig.idleMode(SparkMaxConfig.IdleMode.kBrake);
+        Motors.Elevator.rightMotor.encoder.apply(Motors.Elevator.encoderConfig);
+        rightMotor.configure(Motors.Elevator.rightMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
 
-        rightMotor.configure(leftConfig, SparkMax.ResetMode.kResetSafeParameters, SparkMax.PersistMode.kPersistParameters);
-        leftMotor.configure(rightConfig, SparkMax.ResetMode.kResetSafeParameters, SparkMax.PersistMode.kPersistParameters);
+        bumpSwitch = new DigitalInput(Ports.Elevator.SWITCH);
 
-         FF = new ElevatorFeedforward(
-            Settings.Elevator.FF.kS.getAsDouble(), 
-            Settings.Elevator.FF.kG.getAsDouble(), 
-            Settings.Elevator.FF.kV.getAsDouble()
-        );
+        targetHeight = new SmartNumber("Elevator/Target Height", Settings.Elevator.MIN_HEIGHT_METERS);
 
-        PID = new ProfiledPIDController(
-            Settings.Elevator.PID.kP.getAsDouble(), 
-            Settings.Elevator.PID.kI.getAsDouble(), 
-            Settings.Elevator.PID.kD.getAsDouble(), 
-            new TrapezoidProfile.Constraints(
-                Settings.Elevator.MAX_ACCELERATION, 
-                Settings.Elevator.MAX_VELOCITY
-            )
-        );
+        MotionProfile motionProfile = new MotionProfile(Settings.Elevator.MAX_VELOCITY_METERS_PER_SECOND, Settings.Elevator.MAX_ACCELERATION_METERS_PER_SECOND);
+        
+        controller = new MotorFeedforward(Settings.Elevator.FF.kS, Settings.Elevator.FF.kV, Settings.Elevator.FF.kA).position()
+            .add(new ElevatorFeedforward(Settings.Elevator.FF.kG))
+            .add(new PIDController(Settings.Elevator.PID.kP, Settings.Elevator.PID.kI, Settings.Elevator.PID.kD))
+            .setSetpointFilter(motionProfile);
+        
+        hasBeenReset = false;
     }
     
     @Override
@@ -76,8 +65,8 @@ public class ElevatorImpl extends Elevator {
         targetHeight.set(
             SLMath.clamp(
                 height, 
-                Settings.Elevator.MIN_HEIGHT, 
-                Settings.Elevator.MAX_HEIGHT
+                Settings.Elevator.MIN_HEIGHT_METERS, 
+                Settings.Elevator.MAX_HEIGHT_METERS
             )
         );
     }
@@ -88,40 +77,34 @@ public class ElevatorImpl extends Elevator {
     }
 
     @Override
-    public double getHeight() {
+    public double getCurrentHeight() {
         return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2.0;
     }
 
-    @Override
-    public void stopElevator() {
-        rightMotor.stopMotor();
-        leftMotor.stopMotor(); 
-    }
-    @Override
-    public boolean atBottom() {
-        return !bumpSwitch.get();
-    }
-    
-    public void reset() {
-        leftEncoder.setPosition(0);
-        rightEncoder.setPosition(0);
+    private void setVoltage(double voltage) {
+        leftMotor.setVoltage(voltage);
+        rightMotor.setVoltage(voltage);
     }
 
     @Override
     public void periodic() {
         super.periodic();
-        final double PIDOutput = PID.calculate(getHeight(), targetHeight.doubleValue());
-        final double FFOutput = FF.calculate(PID.getSetpoint().velocity);
 
-        if (atBottom() && (PIDOutput + FFOutput) < 0) {
-            stopElevator();
-            reset();
-        } else {
-            leftMotor.setVoltage(PIDOutput + FFOutput);
-            rightMotor.setVoltage(PIDOutput + FFOutput);
+        if (bumpSwitch.get()) {
+            hasBeenReset = true;
+            leftMotor.getEncoder().setPosition(Settings.Elevator.MIN_HEIGHT_METERS);
+            rightMotor.getEncoder().setPosition(Settings.Elevator.MIN_HEIGHT_METERS);
+        }
+
+        if (!hasBeenReset) {
+            setVoltage(-1);
+        }
+        else {
+            controller.update(getTargetHeight(), getCurrentHeight());
+            setVoltage(controller.getOutput());
         }
 
         SmartDashboard.putNumber("Elevator/Target Height", targetHeight.getAsDouble());
-        SmartDashboard.putNumber("Elevator/Height", getHeight());
+        SmartDashboard.putNumber("Elevator/Current Height", getCurrentHeight());
     }
 }
