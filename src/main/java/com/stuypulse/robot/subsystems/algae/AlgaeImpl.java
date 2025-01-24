@@ -1,128 +1,111 @@
 package com.stuypulse.robot.subsystems.algae;
 
-import com.revrobotics.RelativeEncoder;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.stuypulse.robot.constants.Motors;
+import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.util.ArmFeedForward;
+import com.stuypulse.stuylib.control.Controller;
+import com.stuypulse.stuylib.control.feedback.PIDController;
+import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
+import com.stuypulse.stuylib.network.SmartNumber;
+import com.stuypulse.stuylib.streams.numbers.filters.MotionProfile;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AlgaeImpl extends Algae {
 
-    // variable declaration
     private SparkMax pivotMotor;
     private SparkMax rollerMotor;
+    private CANcoder pivotEncoder;
 
-    private RelativeEncoder pivotEncoder;
+    private Controller pivotController;
 
-    private ProfiledPIDController pivotPIDController;
-    private ArmFeedforward pivotFFController;
+    private SmartNumber targetAngle;
 
     private final AlgaeVisualizer visualizer;
 
-    private double targetAngle;
-
-    private Constraints constraints;
-
-    //private int rollerState; // -1 is deacquire, 1 is acquire/intake, 0 is not moving
-    
-        // constructor
-
     public AlgaeImpl() {
-        pivotMotor = new SparkMax(com.stuypulse.robot.constants.Ports.Algae.PIVOT_ID, MotorType.kBrushless);
-        rollerMotor = new SparkMax(com.stuypulse.robot.constants.Ports.Algae.ROLLER_ID, MotorType.kBrushless);
-
+        pivotMotor = new SparkMax(com.stuypulse.robot.constants.Ports.Algae.PIVOT, MotorType.kBrushless);
+        pivotMotor.configure(Motors.Algae.pivotMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         
-        pivotEncoder = pivotMotor.getEncoder();
+        rollerMotor = new SparkMax(com.stuypulse.robot.constants.Ports.Algae.ROLLER, MotorType.kBrushless);
+        rollerMotor.configure(Motors.Algae.rollerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        constraints = new Constraints(Settings.Algae.PID.MAX_VELOCITY, Settings.Algae.PID.MAX_ACCELERATION);
+        pivotEncoder = new CANcoder(Ports.Algae.ENCODER);
+
+        MotionProfile motionProfile = new MotionProfile(Settings.Algae.MAX_ANGULAR_VELOCITY_RAD_PER_SECOND, Settings.Algae.MAX_ANGULAR_ACCEL_RAD_PER_SECOND_PER_SECOND);
         
-        pivotPIDController = new ProfiledPIDController(Settings.Algae.PID.kP, Settings.Algae.PID.kI, Settings.Algae.PID.kD, constraints);
-        pivotFFController = new ArmFeedforward(Settings.Algae.FF.kS, Settings.Algae.FF.kG, Settings.Algae.FF.kV, Settings.Algae.FF.kA);
-        targetAngle = 0; 
+        pivotController = new MotorFeedforward(Settings.Algae.FF.kS, Settings.Algae.FF.kV, Settings.Algae.FF.kA).position()
+            .add(new ArmFeedForward(Settings.Algae.FF.kG))
+            .add(new PIDController(Settings.Algae.PID.kP, Settings.Algae.PID.kI, Settings.Algae.PID.kD))
+            .setSetpointFilter(motionProfile);
+        
+        targetAngle = new SmartNumber("Algae Mech/Target Angle", 0); 
 
         visualizer = new AlgaeVisualizer();
     }
 
-    // pivot
+    @Override
     public double getTargetAngle() {
-        return targetAngle;
+        return targetAngle.get();
     }
 
+    @Override
     public double getCurrentAngle() {
-        // return Units.rotationsToDegrees(pivotEncoder.getPosition()); 
-        return 135;
+        return Units.rotationsToDegrees(pivotEncoder.getPosition().getValueAsDouble()) - Settings.Algae.ENCODER_OFFSET_DEGREES;
     }
 
-        // setters
+    @Override
+    public void setTargetAngle(double angle) {
+        this.targetAngle.set(angle);
+    }
+
+    @Override
+    public void acquireUnder() {
+        rollerMotor.set(Settings.Algae.ACQUIRE_SPEED.get());
+    }
+
+    @Override
+    public void acquireOver() {
+        rollerMotor.set(-Settings.Algae.ACQUIRE_SPEED.get());
+    }
+
+    @Override
+    public void deacquireUnder() {
+        rollerMotor.set(-Settings.Algae.DEACQUIRE_SPEED.get());
+    }
     
-    // rollers
-    public void acquireUnder() { // only rollers - GROUND AND L2
-        rollerMotor.set(Settings.Algae.ACQUIRE_SPEED);
+    @Override
+    public void deacquireOver() {
+        rollerMotor.set(Settings.Algae.DEACQUIRE_SPEED.get());
     }
 
-    public void acquireOver() { // only rollers - L3
-        rollerMotor.set(-Settings.Algae.ACQUIRE_SPEED);
-        // not sure if this should be negative or positive yet
-        // but it shoudl be opposite of Under
-        // Do we rename acquire speed to smth else
-        // Should probably rename aquire speed to smth else
-    }
-
-    public void deacquireUnder() { // only rollers - GROUND AND L2
-        rollerMotor.set(Settings.Algae.DEACQUIRE_SPEED);
-    }
-    
-    public void deacquireOver() { // L3
-        rollerMotor.set(-Settings.Algae.DEACQUIRE_SPEED);
-            // not sure if this should be negative or positive yet
-            // but it should be opposite of Under
-    }
-
+    @Override
     public void stopRollers() {
         rollerMotor.set(0);
     }
-    
-    // pivot
 
-    public void setTargetAngle(double targetAngle) {
-        this.targetAngle = targetAngle;
+    @Override
+    public boolean hasAlgae() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'hasAlgae'");
     }
-
-    private double getCurrentPivotVelocity(){
-        return pivotEncoder.getVelocity();
-    }
-
-    // periodic
 
     @Override
     public void periodic() {
-
-        pivotMotor.setVoltage(
-            pivotPIDController.calculate(
-                getCurrentAngle(),
-                getTargetAngle()
-            ) 
-            + 
-            pivotFFController.calculate(
-                Math.toRadians(getTargetAngle()),
-                getCurrentPivotVelocity()
-            )
-        );
+        pivotController.update(getTargetAngle(), getCurrentAngle());
+        pivotMotor.setVoltage(pivotController.getOutput());
         
-
-        // visualizer updating stuff 
-
         visualizer.update();
         visualizer.updateBarAngle();
         visualizer.updatePivotAngle();
-        
 
-        
+        // SmartDashboard.putBoolean("Algae Mech/Has Algae", hasAlgae());
     }
 }

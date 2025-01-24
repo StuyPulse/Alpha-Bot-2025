@@ -17,40 +17,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
-/*-
- * File containing tunable settings for every subsystem on the robot.
- *
- * We use StuyLib's SmartNumber / SmartBoolean in order to have tunable
- * values that we can edit on Shuffleboard.
- */
 public interface Settings {
 
-    double LENGTH = Units.inchesToMeters(29);
-    
-  // checks the current RIO's serial number to determine which robot is running
-    public enum RobotType {
-
-        AUNT_MARY("0000000"),
-        SIM("");
-
-        public final String serialNum;
-
-        RobotType(String serialNum) {
-            this.serialNum = serialNum;
-        }
-
-        public static RobotType fromString(String serialNum) {
-            for (RobotType robot : RobotType.values()) {
-                if (robot.serialNum.equals(serialNum.toUpperCase())) {
-                    return robot;
-                }
-            }
-
-            return RobotType.SIM;
-        }
-    }
-
     double DT = 0.020;
+  
+    double LENGTH_WITH_BUMPERS_METERS = Units.inchesToMeters(29);
+    double WIDTH_WITH_BUMPERS_METERS = Units.inchesToMeters(29);
 
     public interface Swerve {
         // between wheel centers
@@ -96,8 +68,6 @@ public interface Settings {
             PIDConstants XY = new PIDConstants(2.5, 0, 0.02);
             PIDConstants THETA = new PIDConstants(4, 0, 0.1);
         }
-
-       
 
         public interface Encoder {
             public interface Drive {
@@ -164,30 +134,25 @@ public interface Settings {
         Vector<N3> STDDEVS = VecBuilder.fill(0.3, 0.3, Math.toRadians(30));
     }
 
-    public interface Robot {
-        double kG = 100.0;
-    }
-
     public interface Elevator {
-        double MIN_HEIGHT = 0.0;
-        double MAX_HEIGHT = 12.0;
-        double MAX_ACCELERATION = 2.0;
-        double MAX_VELOCITY = 3.0;
-        double ENCODER_CONVERSION_FACTOR = 0;
+        double MIN_HEIGHT_METERS = 0.0; // FROM THE FLOOR TO TOP OF CARRIAGE
+        double MAX_HEIGHT_METERS = 12.0; // FROM THE FLOOR TO TOP OF CARRIAGE
+        double MAX_VELOCITY_METERS_PER_SECOND = 3.0;
+        double MAX_ACCELERATION_METERS_PER_SECOND = 2.0;
         
         double MASS = 25.0;
         double GEARING = 1.0/9.0;
         double DRUM_RADIUS = Units.inchesToMeters(1.0);
 
-        double L1 = 1;
-        double L2 = 2;
-        double L3 = 3;
-        double L4 = 4;
-         
-        double POSITION_CONVERSION_FACTOR = 1.0;
-        double VELOCITY_CONVERSION_FACTOR = 1.0;
+        double L1_HEIGHT_METERS = 0;
+        double L2_HEIGHT_METERS = 0.25;
+        double L3_HEIGHT_METERS = 0.5;
+        double L4_HEIGHT_METERS = 0.75;
 
-        double SCALE_FACTOR = 0.5;
+        public interface Encoders {
+            double POSITION_CONVERSION_FACTOR = 1.0;
+            double VELOCITY_CONVERSION_FACTOR = 1.0;
+        }
     
         public interface PID {
             SmartNumber kP = new SmartNumber("kP",1.5);
@@ -201,33 +166,47 @@ public interface Settings {
             SmartNumber kA = new SmartNumber("kA", 0.27);
             SmartNumber kG = new SmartNumber("kG", 0.37);
         }
+        
+        public interface Simulation {
+            double SCALE_FACTOR = 0.5;
+        }
     }
 
     public interface Algae {
-        double RAISED_ANGLE = 0.0;          // CHANGE
-        double PROCESSOR_ANGLE = 0.0;       // CHANGE 
-        double REEF_KNOCKOFF_ANGLE = 0.0;   // CHANGE
-        double GROUND_PICKUP_ANGLE = 0.0;   // CHANGE
-        double L2_ANGLE = 0.0;              // CHANGE
-        double L3_ANGLE = 0.0;              // CHANGE
-        double STOW_ANGLE = 0.0;            // CHANGE 
-        double ACQUIRE_SPEED = 0.0;         // CHANGE
-        double DEACQUIRE_SPEED = 0.0;       // CHANGE
+        // 0 degrees is as far into the robot as the arm can go
+        SmartNumber GROUND_PICKUP_ANGLE_DEGREES = new SmartNumber("Algae Mech/Ground Pickup Angle (deg)", 0);
+        SmartNumber L2_ANGLE_DEGREES = new SmartNumber("Algae Mech/L2 Angle (deg)", 0);
+        SmartNumber L3_ANGLE_DEGREES = new SmartNumber("Algae Mech/L3 Angle (deg)", 0);
+        SmartNumber PROCESSOR_ANGLE_DEGREES = new SmartNumber("Algae Mech/Processor Angle (deg)", 0);
+        SmartNumber ACQUIRE_SPEED = new SmartNumber("Algae Mech/Acquire Speed", 0.5);
+        SmartNumber DEACQUIRE_SPEED = new SmartNumber("Algae Mech/Deacquire Speed", 0.5);
+
+        double ENCODER_OFFSET_DEGREES = 0;
+
+        double MAX_ANGULAR_VELOCITY_RAD_PER_SECOND = 3.0;
+        double MAX_ANGULAR_ACCEL_RAD_PER_SECOND_PER_SECOND = 3.0;
     
         public interface PID {
-            double kP = 0.0;
-            double kI = 0.0;
-            double kD = 0.0;
-            double MAX_VELOCITY = 0.0;
-            double MAX_ACCELERATION = 0.0;
+            SmartNumber kP = new SmartNumber("Algae Mech/PID/kP", 0.0);
+            SmartNumber kI = new SmartNumber("Algae Mech/PID/kI", 0.0);
+            SmartNumber kD = new SmartNumber("Algae Mech/PID/kD", 0.0);
         }
-        
 
         public interface FF{
-            double kS = 0.0;
-            double kV = 0.0;
-            double kA = 0.0;
-            double kG = 0.0;
+            SmartNumber kS = new SmartNumber("Algae Mech/FF/kS", 0.0);
+            SmartNumber kV = new SmartNumber("Algae Mech/FF/kV", 0.0);
+            SmartNumber kA = new SmartNumber("Algae Mech/FF/kA", 0.0);
+            SmartNumber kG = new SmartNumber("Algae Mech/FF/kG", 0.0);
         }
+    }
+
+    public interface Shooter {
+        SmartNumber ACQUIRE_SPEED = new SmartNumber("Shooter/Acquire Speed", 0.2);
+        SmartNumber SHOOT_SPEED = new SmartNumber("Shooter/Shoot Speed", 0.5);
+    }
+
+    public interface Funnel {
+        SmartNumber ACQUIRE_SPEED = new SmartNumber("Funnel/Acquire Speed", 0.4);
+        SmartNumber DEACQUIRE_SPEED = new SmartNumber("Funnel/Deacquire Speed", 0.4); 
     }
 }
