@@ -92,8 +92,8 @@ public class ElevatorImpl extends Elevator {
 
         if (bumpSwitch.get()) {
             hasBeenReset = true;
-            leftMotor.getEncoder().setPosition(Settings.Elevator.MIN_HEIGHT_METERS);
-            rightMotor.getEncoder().setPosition(Settings.Elevator.MIN_HEIGHT_METERS);
+            leftEncoder.setPosition(Settings.Elevator.MIN_HEIGHT_METERS);
+            rightEncoder.setPosition(Settings.Elevator.MIN_HEIGHT_METERS);
         }
 
         if (!hasBeenReset) {

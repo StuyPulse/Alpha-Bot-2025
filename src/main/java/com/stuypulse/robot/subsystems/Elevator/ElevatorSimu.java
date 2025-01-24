@@ -53,9 +53,9 @@ public class ElevatorSimu extends Elevator {
         
         sim = new ElevatorSim(
             gearbox,
-            Settings.Elevator.GEARING,
-            Settings.Elevator.MASS,
-            Settings.Elevator.DRUM_RADIUS,
+            Settings.Elevator.Encoders.GEARING,
+            Settings.Elevator.MASS_KG,
+            Settings.Elevator.Encoders.DRUM_RADIUS_METERS,
             Settings.Elevator.MIN_HEIGHT_METERS,
             Settings.Elevator.MAX_HEIGHT_METERS,
             true,

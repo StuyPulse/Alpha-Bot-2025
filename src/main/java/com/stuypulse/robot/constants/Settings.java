@@ -121,14 +121,12 @@ public interface Settings {
     }
 
     public interface Elevator {
-        double MIN_HEIGHT_METERS = 0.0; // FROM THE FLOOR TO TOP OF CARRIAGE
-        double MAX_HEIGHT_METERS = 12.0; // FROM THE FLOOR TO TOP OF CARRIAGE
+        double MIN_HEIGHT_METERS = Units.inchesToMeters(9.09375); // FROM THE BOTTOM OF FIXED STAGE TO TOP OF CARRIAGE
+        double MAX_HEIGHT_METERS = 12.0; // FROM THE BOTTOM OF FIXED STAGE TO TOP OF CARRIAGE
         double MAX_VELOCITY_METERS_PER_SECOND = 3.0;
         double MAX_ACCELERATION_METERS_PER_SECOND = 2.0;
         
-        double MASS = 25.0;
-        double GEARING = 1.0/9.0;
-        double DRUM_RADIUS = Units.inchesToMeters(1.0);
+        double MASS_KG = 25.0;
 
         double L1_HEIGHT_METERS = 0;
         double L2_HEIGHT_METERS = 0.25;
@@ -138,8 +136,15 @@ public interface Settings {
         double FEED_HEIGHT_METERS = 0.4;
 
         public interface Encoders {
-            double POSITION_CONVERSION_FACTOR = 1.0;
-            double VELOCITY_CONVERSION_FACTOR = 1.0;
+            double GEARING = 4.0;
+
+            double NUM_ROTATIONS_TO_REACH_TOP = (6 + 9.0 / 24) * GEARING; // Number of rotations that the motor has to spin, NOT the gear
+
+            double DRUM_CIRCUMFERENCE_METERS = MAX_HEIGHT_METERS / NUM_ROTATIONS_TO_REACH_TOP * GEARING;
+            double DRUM_RADIUS_METERS = DRUM_CIRCUMFERENCE_METERS / 2 / Math.PI;
+
+            double POSITION_CONVERSION_FACTOR = MAX_HEIGHT_METERS / NUM_ROTATIONS_TO_REACH_TOP;
+            double VELOCITY_CONVERSION_FACTOR = MAX_HEIGHT_METERS / NUM_ROTATIONS_TO_REACH_TOP / 60;
         }
     
         public interface PID {
