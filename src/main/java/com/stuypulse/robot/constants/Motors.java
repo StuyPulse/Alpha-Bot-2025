@@ -35,4 +35,8 @@ public interface Motors {
     public interface Shooter {
         SparkBaseConfig motorConfig = new SparkMaxConfig().inverted(false).smartCurrentLimit(50).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
     }
+
+    public interface Funnel {
+        SparkBaseConfig motorConfig = new SparkMaxConfig().inverted(false).smartCurrentLimit(50).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
+    }
 }

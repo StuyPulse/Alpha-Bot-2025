@@ -86,4 +86,9 @@ public interface Settings {
         SmartNumber ACQUIRE_SPEED = new SmartNumber("Shooter/Acquire Speed", 0.2);
         SmartNumber SHOOT_SPEED = new SmartNumber("Shooter/Shoot Speed", 0.5);
     }
+
+    public interface Funnel {
+        SmartNumber ACQUIRE_SPEED = new SmartNumber("Funnel/Acquire Speed", 0.4);
+        SmartNumber DEACQUIRE_SPEED = new SmartNumber("Funnel/Deacquire Speed", 0.4); 
+    }
 }

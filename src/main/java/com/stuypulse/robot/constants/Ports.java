@@ -29,5 +29,9 @@ public interface Ports {
         int PIVOT = 1;
         int ENCODER = 2;
     }
+
+    public interface Funnel {
+        int MOTOR = 0;
+    }
 }
 
