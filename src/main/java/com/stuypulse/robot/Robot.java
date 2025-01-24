@@ -14,6 +14,11 @@ public class Robot extends TimedRobot {
     private RobotContainer robot;
     private Command auto;
 
+    public static boolean isBlue() {
+        return DriverStation.getAlliance().isPresent()
+                && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue;
+    }
+
     /*************************/
     /*** ROBOT SCHEDULEING ***/
     /*************************/
