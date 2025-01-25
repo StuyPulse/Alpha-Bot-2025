@@ -1,11 +1,11 @@
-package com.stuypulse.robot.subsystems.elevator;
+ package com.stuypulse.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.stuylib.control.feedforward.ElevatorFeedforward;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -37,132 +37,151 @@ public class ElevatorVisualizer {
     public ElevatorVisualizer() {
 
         // Mechanism2d
-        elevator2d = new Mechanism2d(6, 25);
+        elevator2d = new Mechanism2d(Units.inchesToMeters(17), Units.inchesToMeters(120));
         
-        // Elevator Frame
-
-        // bottom left node
-        elevatorBL = elevator2d.getRoot("Elevator BL", 0, 0);
+        // Stage One
+        // Bottom Left Node 
+        elevatorBL = elevator2d.getRoot("Elevator BL", Units.inchesToMeters(2), 0);
 
         elevatorBL.append(new MechanismLigament2d(
             "Left Tower",
-            14, 
+            Units.inchesToMeters(47), 
             90,
             10, 
             new Color8Bit(Color.kOrange)
-        ));
+            )
+        );
 
         elevatorBL.append(new MechanismLigament2d(
             "Bottom Tower",
-            6, 
+            Units.inchesToMeters(11), 
             0,
             10, 
             new Color8Bit(Color.kOrange)
-        ));
+            )
+        );
 
-        // top right node
-        elevatorTR = elevator2d.getRoot("Elevator TR", 6, 14);
+        // Top Right Node
+        elevatorTR = elevator2d.getRoot("Elevator TR", Units.inchesToMeters(13), Units.inchesToMeters(47));
 
         elevatorTR.append(new MechanismLigament2d(
             "Right Tower", 
-            14,
+            Units.inchesToMeters(47),
             -90,
             10,
             new Color8Bit(Color.kOrange)
-        ));
+            )
+        );
 
         elevatorTR.append(new MechanismLigament2d(
             "Top Side",
-            6,
+            Units.inchesToMeters(11),
             180, 
             10, 
-            new Color8Bit(Color.kOrange)));
+            new Color8Bit(Color.kOrange)
+            )
+        );
 
-        //outerFrame
+        // Stage Two
+        // Bottom Left Node
+        outerBL = elevator2d.getRoot("Outer BL", Units.inchesToMeters(3), Units.inchesToMeters(0));
 
-        // bottom left node
-        outerBL = elevator2d.getRoot("Outer BL", 1, 1);
         outerBL.append(new MechanismLigament2d(
             "Left Side",
-            14,
+            Units.inchesToMeters(47),
             90, 
             10,
-            new Color8Bit(Color.kYellow)));
+            new Color8Bit(Color.kYellow)
+            )
+        );
     
         outerBL.append(new MechanismLigament2d(
             "Bottom Side",
-            4,
+            Units.inchesToMeters(9),
             0,
             10,
-            new Color8Bit(Color.kYellow)));
+            new Color8Bit(Color.kYellow)
+            )
+        );
         
-        // top right node
-        outerTR = elevator2d.getRoot("Outer TR", 5, 15);
+        // Top Right Node
+        outerTR = elevator2d.getRoot("Outer TR", Units.inchesToMeters(12), Units.inchesToMeters(47));
+
         outerTR.append(new MechanismLigament2d(
             "Top Side",
-            4,
+            Units.inchesToMeters(9),
             180,
             10,
-            new Color8Bit(Color.kYellow)));
+            new Color8Bit(Color.kYellow)
+            )
+        );
 
         outerTR.append(new MechanismLigament2d(
             "Right Side",
-            14,
+            Units.inchesToMeters(47),
             -90,
             10,
-            new Color8Bit(Color.kYellow)));
+            new Color8Bit(Color.kYellow)
+            )
+        );
         
-
-        //innerFrame
-
-        // bottom left node
-        innerBL = elevator2d.getRoot("Inner BL", 2, 2);
+        // Carriage
+        // Bottom Left Node
+        innerBL = elevator2d.getRoot("Inner BL", Units.inchesToMeters(4), Units.inchesToMeters(1));
 
         innerBL.append(new MechanismLigament2d(
             "Left Side",
-            2,
+            Units.inchesToMeters(7),
             90, 
             10,
-            new Color8Bit(Color.kPink)));
+            new Color8Bit(Color.kPink)
+            )
+        );
 
         innerBL.append(new MechanismLigament2d(
             "Bottom Side",
-            2,
+            Units.inchesToMeters(7),
             0,
             10,
-            new Color8Bit(Color.kPink)));
+            new Color8Bit(Color.kPink)
+            )
+        );
 
-        // top right node
-        innerTR = elevator2d.getRoot("Inner TR", 4, 4);
+        // Top Right Node
+        innerTR = elevator2d.getRoot("Inner TR", Units.inchesToMeters(11), Units.inchesToMeters(8));
 
         innerTR.append(new MechanismLigament2d(
             "Top Side",
-            2,
+            Units.inchesToMeters(7),
             180,
             10,
-            new Color8Bit(Color.kPink)));
+            new Color8Bit(Color.kPink)
+            )
+        );
             
         innerTR.append(new MechanismLigament2d(
             "Right Side",
-            2,
+            Units.inchesToMeters(7),
             -90, 
             10,
-            new Color8Bit(Color.kPink)));
-
+            new Color8Bit(Color.kPink)
+            )
+        );
 
         SmartDashboard.putData("Visualizers/Elevator", elevator2d);
     }
 
     public void update() {
-        // the middle will be at targetHeight
+        // Middle of Inner Frame will be at Target Height
         ElevatorSimu simu = ((ElevatorSimu) ElevatorSimu.getInstance());
-        System.out.println("distance: " + simu.getSim().getPositionMeters());
+        // System.out.println("Distance: " + simu.getSim().getPositionMeters());
 
-        innerBL.setPosition(2, simu.getCurrentHeight() + 2);
-        innerTR.setPosition(4, simu.getCurrentHeight() + 4);
+        outerBL.setPosition(Units.inchesToMeters(3), simu.getHeight() * Settings.Elevator.STAGE_TWO_SCALE_FACTOR);
+        outerTR.setPosition(Units.inchesToMeters(12), simu.getHeight() * Settings.Elevator.STAGE_TWO_SCALE_FACTOR + Units.inchesToMeters(47));
 
-        outerBL.setPosition(1, 1 + simu.getCurrentHeight() * Settings.Elevator.Simulation.SCALE_FACTOR);
-        outerTR.setPosition(5, 15 + simu.getCurrentHeight() * Settings.Elevator.Simulation.SCALE_FACTOR);
+        innerBL.setPosition(Units.inchesToMeters(4), simu.getHeight() + Units.inchesToMeters(1));
+        innerTR.setPosition(Units.inchesToMeters(11), simu.getHeight() + Units.inchesToMeters(8));
+
     }
 
 }
