@@ -1,4 +1,4 @@
-package com.stuypulse.robot.subsystems.elevator;
+package com.stuypulse.robot.subsystems.Elevator;
 
 import java.util.Optional;
 
@@ -38,19 +38,9 @@ public class ElevatorSimu extends Elevator {
         maxHeight = Settings.Elevator.MAX_HEIGHT_METERS;
         maxAccel = new SmartNumber("Elevator/Max Acceleration",Settings.Elevator.MAX_ACCELERATION_METERS_PER_SECOND);
         maxVel = new SmartNumber("Elevator/Max Velocity", Settings.Elevator.MAX_VELOCITY_METERS_PER_SECOND);
-        gearbox = DCMotor.getNEO(2);
-        
-        motor = new PWMSparkMax(3);
-        motorSim = new PWMSim(motor);
-
-
-        // magic numbers
-        encoder = new Encoder(0, 1);
-
-        simEncoder = new EncoderSim(encoder);
         
         sim = new ElevatorSim(
-            gearbox,
+            DCMotor.getNEO(2),
             Settings.Elevator.Encoders.GEARING,
             Settings.Elevator.MASS_KG,
             Settings.Elevator.Encoders.DRUM_RADIUS_METERS,
@@ -59,13 +49,6 @@ public class ElevatorSimu extends Elevator {
             true,
             0.0
         );
-
-        minHeight = Settings.Elevator.MIN_HEIGHT;
-        maxHeight = Settings.Elevator.MAX_HEIGHT;
-
-        targetHeight = new SmartNumber("Elevator/Target Height", 0);
-        maxAccel = new SmartNumber("Elevator/Max Acceleration",Settings.Elevator.MAX_ACCELERATION);
-        maxVel = new SmartNumber("Elevator/Max Velocity", Settings.Elevator.MAX_VELOCITY);
         
         FF = new ElevatorFeedforward(
             Settings.Elevator.FF.kS.getAsDouble(), 
@@ -82,7 +65,6 @@ public class ElevatorSimu extends Elevator {
 
         voltageOverride = Optional.empty();
 
-        encoder.setDistancePerPulse(256);
     }
 
     public ElevatorSim getSim() {
@@ -133,7 +115,7 @@ public class ElevatorSimu extends Elevator {
 
 
     public double calculateVoltage() {
-        final double FFOutput = FF.calculate(encoder.getDistance());
+        final double FFOutput = FF.calculate(PID.getSetpoint());
         final double PIDOutput = PID.calculate(getCurrentHeight(), targetHeight.doubleValue());
         // Combine outputs and set motor voltage
         System.out.println("ff: " + FFOutput);

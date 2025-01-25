@@ -1,4 +1,4 @@
-package com.stuypulse.robot.subsystems.elevator;
+package com.stuypulse.robot.subsystems.Elevator;
 
 import com.stuypulse.robot.Robot;
 

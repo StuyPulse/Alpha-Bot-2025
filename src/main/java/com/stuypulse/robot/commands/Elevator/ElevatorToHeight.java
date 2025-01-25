@@ -1,6 +1,6 @@
-package com.stuypulse.robot.commands.elevator;
+package com.stuypulse.robot.commands.Elevator;
 
-import com.stuypulse.robot.subsystems.elevator.Elevator;
+import com.stuypulse.robot.subsystems.Elevator.Elevator;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;   
 

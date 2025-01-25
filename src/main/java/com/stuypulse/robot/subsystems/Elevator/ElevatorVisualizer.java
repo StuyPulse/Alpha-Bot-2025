@@ -176,11 +176,11 @@ public class ElevatorVisualizer {
         ElevatorSimu simu = ((ElevatorSimu) ElevatorSimu.getInstance());
         // System.out.println("Distance: " + simu.getSim().getPositionMeters());
 
-        outerBL.setPosition(Units.inchesToMeters(3), simu.getHeight() * Settings.Elevator.STAGE_TWO_SCALE_FACTOR);
-        outerTR.setPosition(Units.inchesToMeters(12), simu.getHeight() * Settings.Elevator.STAGE_TWO_SCALE_FACTOR + Units.inchesToMeters(47));
+        outerBL.setPosition(Units.inchesToMeters(3), simu.getCurrentHeight() * Settings.Elevator.Simulation.SCALE_FACTOR);
+        outerTR.setPosition(Units.inchesToMeters(12), simu.getCurrentHeight() * Settings.Elevator.Simulation.SCALE_FACTOR + Units.inchesToMeters(47));
 
-        innerBL.setPosition(Units.inchesToMeters(4), simu.getHeight() + Units.inchesToMeters(1));
-        innerTR.setPosition(Units.inchesToMeters(11), simu.getHeight() + Units.inchesToMeters(8));
+        innerBL.setPosition(Units.inchesToMeters(4), simu.getCurrentHeight() + Units.inchesToMeters(1));
+        innerTR.setPosition(Units.inchesToMeters(11), simu.getCurrentHeight() + Units.inchesToMeters(8));
 
     }
 
