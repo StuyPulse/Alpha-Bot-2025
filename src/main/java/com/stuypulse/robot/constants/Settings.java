@@ -7,7 +7,6 @@ package com.stuypulse.robot.constants;
 
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;
-import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.VecBuilder;
@@ -131,7 +130,7 @@ public interface Settings {
         double L1_HEIGHT_METERS = 0;
         double L2_HEIGHT_METERS = 0.25;
         double L3_HEIGHT_METERS = 0.5;
-        double L4_HEIGHT_METERS = 0.75;
+        double L4_HEIGHT_METERS = 0.75; // All in meters
 
         double FEED_HEIGHT_METERS = 0.4;
 

@@ -1,6 +1,8 @@
 package com.stuypulse.robot.subsystems.swerve;
 
-import com.stuypulse.stuylib.math.Vector2D;
+import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
@@ -11,6 +13,8 @@ import com.stuypulse.robot.constants.Settings.Swerve.BackRight;
 import com.stuypulse.robot.constants.Settings.Swerve.FrontLeft;
 import com.stuypulse.robot.constants.Settings.Swerve.FrontRight;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.stuylib.math.Vector2D;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,9 +27,8 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import com.kauailabs.navx.frc.AHRS;
 
 public class SwerveDrive extends SubsystemBase {
 
@@ -153,6 +156,11 @@ public class SwerveDrive extends SubsystemBase {
         for(int i = 0; i < modules.length; i++) {
             modules[i].setTargetState(filterModuleState(states[i]));
         }
+    }
+
+    /** PATH FOLLOWING **/
+    public Command followPathCommand(PathPlannerPath path) {
+        return AutoBuilder.followPath(path);
     }
 
     /** GYRO API **/
