@@ -1,4 +1,4 @@
-package com.stuypulse.robot.subsystems.Elevator;
+package com.stuypulse.robot.subsystems.elevator;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
