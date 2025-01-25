@@ -48,7 +48,7 @@ public interface Settings {
 
     public interface Elevator {
         double MIN_HEIGHT = 0.0;
-        double MAX_HEIGHT = 12.0;
+        double MAX_HEIGHT = Units.inchesToMeters(86);
         double MAX_ACCELERATION = 2.0;
         double MAX_VELOCITY = 3.0;
         double ENCODER_CONVERSION_FACTOR = 0;
@@ -65,7 +65,7 @@ public interface Settings {
         double POSITION_CONVERSION_FACTOR = 1.0;
         double VELOCITY_CONVERSION_FACTOR = 1.0;
 
-        double SCALE_FACTOR = 0.5;
+        double STAGE_TWO_SCALE_FACTOR = 0.5 + 3.5/86;
     
         public interface PID {
             SmartNumber kP = new SmartNumber("kP",1.5);

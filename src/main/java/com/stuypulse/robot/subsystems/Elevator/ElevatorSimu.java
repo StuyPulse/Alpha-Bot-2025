@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
@@ -73,13 +74,13 @@ public class ElevatorSimu extends Elevator {
     
     @Override
     public void setTargetHeight(double height) {
-        targetHeight.set(SLMath.clamp(height, minHeight, maxHeight));
+        targetHeight.set(SLMath.clamp(height, minHeight, Units.inchesToMeters(maxHeight)));
         voltageOverride = Optional.empty();
     }
 
     @Override
     public double getTargetHeight() {
-        return targetHeight.doubleValue();
+        return Units.inchesToMeters(targetHeight.doubleValue());
     }
 
     @Override
@@ -114,7 +115,7 @@ public class ElevatorSimu extends Elevator {
 
     public double calculateVoltage() {
         final double FFOutput = FF.calculate(PID.getSetpoint());
-        final double PIDOutput = PID.calculate(getHeight(), targetHeight.doubleValue());
+        final double PIDOutput = PID.calculate(getHeight(), Units.inchesToMeters(targetHeight.doubleValue()));
 
         return FFOutput + PIDOutput;
     }
