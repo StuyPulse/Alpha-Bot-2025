@@ -122,7 +122,7 @@ public interface Settings {
 
     public interface Elevator {
         double MIN_HEIGHT_METERS = Units.inchesToMeters(9.09375); // FROM THE BOTTOM OF FIXED STAGE TO TOP OF CARRIAGE
-        double MAX_HEIGHT_METERS = Units.inchesToMeters(90.59375); // ESTIMATE FROM THE BOTTOM OF FIXED STAGE TO TOP OF CARRIAGE 
+        double MAX_HEIGHT_METERS = Units.inchesToMeters(77); // FROM THE BOTTOM OF FIXED STAGE TO TOP ELEVATOR
         double MAX_VELOCITY_METERS_PER_SECOND = 3.0;
         double MAX_ACCELERATION_METERS_PER_SECOND = 2.0;
         double MASS_KG = 25.0;

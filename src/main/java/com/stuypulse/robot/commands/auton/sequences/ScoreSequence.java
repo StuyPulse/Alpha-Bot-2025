@@ -1,7 +1,7 @@
 package com.stuypulse.robot.commands.auton.sequences;
 
-import com.stuypulse.robot.commands.Elevator.ElevatorToFeed;
-import com.stuypulse.robot.commands.Elevator.ElevatorToLvl4;
+import com.stuypulse.robot.commands.elevator.ElevatorToFeed;
+import com.stuypulse.robot.commands.elevator.ElevatorToLvl4;
 import com.stuypulse.robot.commands.shooter.ShooterShoot;
 import com.stuypulse.robot.commands.shooter.ShooterStop;
 
