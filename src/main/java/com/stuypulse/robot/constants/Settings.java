@@ -160,7 +160,7 @@ public interface Settings {
         }
         
         public interface Simulation {
-            double SCALE_FACTOR = 0.5 + 2.5/87;
+            double SCALE_FACTOR = 0.5 + 2.5/77;
         }
     }
 
