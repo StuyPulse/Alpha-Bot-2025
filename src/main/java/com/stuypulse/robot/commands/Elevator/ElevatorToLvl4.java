@@ -1,4 +1,4 @@
-package com.stuypulse.robot.commands.elevator;
+package com.stuypulse.robot.commands.Elevator;
 
 import com.stuypulse.robot.constants.Settings.Elevator;
 
