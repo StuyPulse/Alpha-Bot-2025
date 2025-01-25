@@ -6,6 +6,7 @@
 package com.stuypulse.robot.constants;
 
 import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.path.PathConstraints;
 import com.stuypulse.stuylib.network.SmartNumber;
 
@@ -121,10 +122,9 @@ public interface Settings {
 
     public interface Elevator {
         double MIN_HEIGHT_METERS = Units.inchesToMeters(9.09375); // FROM THE BOTTOM OF FIXED STAGE TO TOP OF CARRIAGE
-        double MAX_HEIGHT_METERS = 12.0; // FROM THE BOTTOM OF FIXED STAGE TO TOP OF CARRIAGE
+        double MAX_HEIGHT_METERS = Units.inchesToMeters(90.59375); // ESTIMATE FROM THE BOTTOM OF FIXED STAGE TO TOP OF CARRIAGE 
         double MAX_VELOCITY_METERS_PER_SECOND = 3.0;
         double MAX_ACCELERATION_METERS_PER_SECOND = 2.0;
-        
         double MASS_KG = 25.0;
 
         double L1_HEIGHT_METERS = 0;
@@ -160,7 +160,7 @@ public interface Settings {
         }
         
         public interface Simulation {
-            double SCALE_FACTOR = 0.5;
+            double SCALE_FACTOR = 0.5 + 2.5/87;
         }
     }
 

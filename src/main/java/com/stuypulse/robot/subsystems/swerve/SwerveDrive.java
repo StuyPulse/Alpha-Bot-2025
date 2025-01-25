@@ -2,6 +2,9 @@ package com.stuypulse.robot.subsystems.swerve;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Field;
@@ -31,9 +34,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveDrive extends SubsystemBase {
-
-
     private static final SwerveDrive instance;
+    RobotConfig config;
 
     static {
         instance = new SwerveDrive(
@@ -193,6 +195,32 @@ public class SwerveDrive extends SubsystemBase {
             new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
         };
         setModuleStates(state);
+    }
+
+    public void configureAutoBuilder() {
+
+        Odometry odometry = Odometry.getInstance();
+        
+        try{
+          config = RobotConfig.fromGUISettings();
+        } catch (Exception e) {
+          // Handle exception as needed
+          e.printStackTrace();
+        }
+
+        AutoBuilder.configure(
+            odometry::getPose,
+            odometry::reset,
+            this::getChassisSpeeds,
+            (speeds, feedforwards) -> setChassisSpeeds(speeds),
+            new PPHolonomicDriveController(
+                new PIDConstants(Settings.Swerve.Drive.kP, Settings.Swerve.Drive.kI, Settings.Swerve.Drive.kD),
+                new PIDConstants(Settings.Swerve.Turn.kP, Settings.Swerve.Turn.kI, Settings.Swerve.Turn.kD)
+            ),
+            config,
+            () -> false,
+            instance
+        );
     }
 
     @Override

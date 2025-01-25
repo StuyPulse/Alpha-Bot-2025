@@ -2,7 +2,26 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Alerts": "Alerts",
+      "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Visualizers/Elevator": "Mechanism2d"
+    },
+    "windows": {
+      "/SmartDashboard/Visualizers/Elevator": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "Elevator": {
+          "open": true
+        },
+        "open": true
+      }
     }
   },
   "NetworkTables Info": {

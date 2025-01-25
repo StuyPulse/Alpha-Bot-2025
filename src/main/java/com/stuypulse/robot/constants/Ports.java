@@ -51,7 +51,7 @@ public interface Ports {
     }
 
     public interface Funnel {
-        int MOTOR = 0;
+        int MOTOR = 3;
     }
 }
 

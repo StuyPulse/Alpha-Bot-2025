@@ -37,11 +37,11 @@ public class ElevatorVisualizer {
     public ElevatorVisualizer() {
 
         // Mechanism2d
-        elevator2d = new Mechanism2d(Units.inchesToMeters(17), Units.inchesToMeters(120));
+        elevator2d = new Mechanism2d(Units.inchesToMeters(17), Units.inchesToMeters(150));
         
         // Stage One
         // Bottom Left Node 
-        elevatorBL = elevator2d.getRoot("Elevator BL", Units.inchesToMeters(2), 0);
+        elevatorBL = elevator2d.getRoot("Elevator BL", Units.inchesToMeters(2), Settings.Elevator.MIN_HEIGHT_METERS);
 
         elevatorBL.append(new MechanismLigament2d(
             "Left Tower",
@@ -62,7 +62,7 @@ public class ElevatorVisualizer {
         );
 
         // Top Right Node
-        elevatorTR = elevator2d.getRoot("Elevator TR", Units.inchesToMeters(13), Units.inchesToMeters(47));
+        elevatorTR = elevator2d.getRoot("Elevator TR", Units.inchesToMeters(13), Units.inchesToMeters(47) + Settings.Elevator.MIN_HEIGHT_METERS);
 
         elevatorTR.append(new MechanismLigament2d(
             "Right Tower", 
@@ -84,7 +84,7 @@ public class ElevatorVisualizer {
 
         // Stage Two
         // Bottom Left Node
-        outerBL = elevator2d.getRoot("Outer BL", Units.inchesToMeters(3), Units.inchesToMeters(0));
+        outerBL = elevator2d.getRoot("Outer BL", Units.inchesToMeters(3), Settings.Elevator.MIN_HEIGHT_METERS);
 
         outerBL.append(new MechanismLigament2d(
             "Left Side",
@@ -105,7 +105,7 @@ public class ElevatorVisualizer {
         );
         
         // Top Right Node
-        outerTR = elevator2d.getRoot("Outer TR", Units.inchesToMeters(12), Units.inchesToMeters(47));
+        outerTR = elevator2d.getRoot("Outer TR", Units.inchesToMeters(12), Units.inchesToMeters(47) + Settings.Elevator.MIN_HEIGHT_METERS);
 
         outerTR.append(new MechanismLigament2d(
             "Top Side",
@@ -127,7 +127,7 @@ public class ElevatorVisualizer {
         
         // Carriage
         // Bottom Left Node
-        innerBL = elevator2d.getRoot("Inner BL", Units.inchesToMeters(4), Units.inchesToMeters(1));
+        innerBL = elevator2d.getRoot("Inner BL", Units.inchesToMeters(4), Units.inchesToMeters(1) + Settings.Elevator.MIN_HEIGHT_METERS);
 
         innerBL.append(new MechanismLigament2d(
             "Left Side",
@@ -148,7 +148,7 @@ public class ElevatorVisualizer {
         );
 
         // Top Right Node
-        innerTR = elevator2d.getRoot("Inner TR", Units.inchesToMeters(11), Units.inchesToMeters(8));
+        innerTR = elevator2d.getRoot("Inner TR", Units.inchesToMeters(11), Units.inchesToMeters(8) + Settings.Elevator.MIN_HEIGHT_METERS);
 
         innerTR.append(new MechanismLigament2d(
             "Top Side",
@@ -172,12 +172,12 @@ public class ElevatorVisualizer {
     }
 
     public void update() {
-        // Middle of Inner Frame will be at Target Height
+        // Top of Carriage is Target Height
         ElevatorSimu simu = ((ElevatorSimu) ElevatorSimu.getInstance());
-        // System.out.println("Distance: " + simu.getSim().getPositionMeters());
+        
 
-        outerBL.setPosition(Units.inchesToMeters(3), simu.getCurrentHeight() * Settings.Elevator.Simulation.SCALE_FACTOR);
-        outerTR.setPosition(Units.inchesToMeters(12), simu.getCurrentHeight() * Settings.Elevator.Simulation.SCALE_FACTOR + Units.inchesToMeters(47));
+        outerBL.setPosition(Units.inchesToMeters(3), (simu.getCurrentHeight() - Settings.Elevator.MIN_HEIGHT_METERS) * Settings.Elevator.Simulation.SCALE_FACTOR + Settings.Elevator.MIN_HEIGHT_METERS);
+        outerTR.setPosition(Units.inchesToMeters(12), (simu.getCurrentHeight() - Settings.Elevator.MIN_HEIGHT_METERS) * Settings.Elevator.Simulation.SCALE_FACTOR + Units.inchesToMeters(47) + Settings.Elevator.MIN_HEIGHT_METERS);
 
         innerBL.setPosition(Units.inchesToMeters(4), simu.getCurrentHeight() + Units.inchesToMeters(1));
         innerTR.setPosition(Units.inchesToMeters(11), simu.getCurrentHeight() + Units.inchesToMeters(8));

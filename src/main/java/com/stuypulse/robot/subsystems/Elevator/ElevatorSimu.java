@@ -16,8 +16,6 @@ import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
 public class ElevatorSimu extends Elevator {
 
@@ -33,12 +31,7 @@ public class ElevatorSimu extends Elevator {
     private Optional<Double> voltageOverride;
     
     ElevatorSimu() {
-        targetHeight = new SmartNumber("Elevator/Target Height", 0);
-        minHeight = Settings.Elevator.MIN_HEIGHT_METERS;
-        maxHeight = Settings.Elevator.MAX_HEIGHT_METERS;
-        maxAccel = new SmartNumber("Elevator/Max Acceleration",Settings.Elevator.MAX_ACCELERATION_METERS_PER_SECOND);
-        maxVel = new SmartNumber("Elevator/Max Velocity", Settings.Elevator.MAX_VELOCITY_METERS_PER_SECOND);
-        
+
         sim = new ElevatorSim(
             DCMotor.getNEO(2),
             Settings.Elevator.Encoders.GEARING,
@@ -49,6 +42,13 @@ public class ElevatorSimu extends Elevator {
             true,
             0.0
         );
+        
+        minHeight = Settings.Elevator.MIN_HEIGHT_METERS;
+        maxHeight = Settings.Elevator.MAX_HEIGHT_METERS;
+
+        targetHeight = new SmartNumber("Elevator/Target Height", 0);
+        maxAccel = new SmartNumber("Elevator/Max Acceleration", Settings.Elevator.MAX_ACCELERATION_METERS_PER_SECOND);
+        maxVel = new SmartNumber("Elevator/Max Velocity", Settings.Elevator.MAX_VELOCITY_METERS_PER_SECOND);
         
         FF = new ElevatorFeedforward(
             Settings.Elevator.FF.kS.getAsDouble(), 
@@ -73,12 +73,13 @@ public class ElevatorSimu extends Elevator {
     
     @Override
     public void setTargetHeight(double height) {
-        targetHeight.set(SLMath.clamp(height, minHeight, Units.inchesToMeters(maxHeight)));
+        targetHeight.set(SLMath.clamp(height, minHeight, maxHeight));
         voltageOverride = Optional.empty();
     }
 
     @Override
     public double getTargetHeight() {
+        setTargetHeight(targetHeight.doubleValue());
         return Units.inchesToMeters(targetHeight.doubleValue());
     }
 
@@ -99,33 +100,28 @@ public class ElevatorSimu extends Elevator {
         sim.setInputVoltage(0.0);
     }
 
-
     public void elevatorIdleMode(IdleMode mode) {}
-
 
     public void setVoltageOverride(double voltage) {
         voltageOverride = Optional.of(voltage);
     }
-
 
     public void setConstraints(double maxVelocity, double maxAcceleration) {
         this.maxVel.set(maxVelocity);
         this.maxAccel.set(maxAcceleration);
     }
 
-
     public double calculateVoltage() {
         final double FFOutput = FF.calculate(PID.getSetpoint());
         final double PIDOutput = PID.calculate(getCurrentHeight(), targetHeight.doubleValue());
-        // Combine outputs and set motor voltage
-        System.out.println("ff: " + FFOutput);
-        System.out.println("pid: " + PIDOutput);
+
         return FFOutput + PIDOutput;
     }
     
     public void periodic() {
 
         super.periodic();
+        
         double voltage = calculateVoltage();
 
         if (atBottom() && voltage < 0 || elevatorTop() && voltage > 0) {
