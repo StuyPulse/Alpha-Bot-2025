@@ -1,4 +1,4 @@
-package com.stuypulse.robot.commands.auton;
+package com.stuypulse.robot.commands.auton.JKLA;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.stuypulse.robot.commands.auton.sequences.ScoreSequence;
@@ -8,9 +8,9 @@ import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class ThreePiece extends SequentialCommandGroup {
+public class ThreeHalfPieceJKL extends SequentialCommandGroup {
     
-    public ThreePiece(PathPlannerPath... paths) {
+    public ThreeHalfPieceJKL(PathPlannerPath... paths) {
 
         addCommands(
 
@@ -30,7 +30,10 @@ public class ThreePiece extends SequentialCommandGroup {
             
             SwerveDrive.getInstance().followPathCommand(paths[4]),
             new ScoreSequence(),
-            new ElevatorToFeed()
+            new ElevatorToFeed(),
+
+            SwerveDrive.getInstance().followPathCommand(paths[5]),
+            new ShooterAcquire()
             
 
         );

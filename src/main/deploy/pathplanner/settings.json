@@ -6,13 +6,15 @@
     "Blue To HP",
     "Blue To Reef",
     "Blue Utilities",
-    "Red Utilities",
+    "Tests",
     "Red To HP",
-    "Red To Reef"
+    "Red To Reef",
+    "Red Utilities"
   ],
   "autoFolders": [
-    "Blue Top Autons",
     "Blue Bottom Autons",
+    "Blue Top Autons",
+    "Tests",
     "Red Bottom Autons",
     "Red Top Autons"
   ],

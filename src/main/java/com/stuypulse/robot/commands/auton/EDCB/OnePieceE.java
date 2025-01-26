@@ -1,4 +1,4 @@
-package com.stuypulse.robot.commands.auton;
+package com.stuypulse.robot.commands.auton.EDCB;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.stuypulse.robot.commands.auton.sequences.ScoreSequence;
@@ -7,9 +7,9 @@ import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class OnePiece extends SequentialCommandGroup {
+public class OnePieceE extends SequentialCommandGroup {
     
-    public OnePiece(PathPlannerPath... paths) {
+    public OnePieceE(PathPlannerPath... paths) {
 
         addCommands(
 
