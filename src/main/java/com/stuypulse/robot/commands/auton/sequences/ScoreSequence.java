@@ -4,9 +4,11 @@ import com.stuypulse.robot.commands.elevator.ElevatorToFeed;
 import com.stuypulse.robot.commands.elevator.ElevatorToLvl4;
 import com.stuypulse.robot.commands.shooter.ShooterShoot;
 import com.stuypulse.robot.commands.shooter.ShooterStop;
+import com.stuypulse.robot.subsystems.shooter.Shooter;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public class ScoreSequence extends SequentialCommandGroup {
     
@@ -16,9 +18,8 @@ public class ScoreSequence extends SequentialCommandGroup {
 
             new ElevatorToLvl4(),
             new ShooterShoot(),
-            new WaitCommand(0.25),
-            new ShooterStop(),
-            new ElevatorToFeed()
+            new WaitUntilCommand(() -> !Shooter.getInstance().hasCoral()),
+            new ShooterStop()
 
         );
 

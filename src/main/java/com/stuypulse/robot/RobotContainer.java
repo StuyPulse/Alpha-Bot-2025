@@ -12,7 +12,6 @@ import com.stuypulse.robot.commands.auton.OnePiece;
 import com.stuypulse.robot.commands.auton.ThreeHalfPiece;
 import com.stuypulse.robot.commands.auton.ThreePiece;
 import com.stuypulse.robot.commands.auton.TwoPiece;
-import com.stuypulse.robot.commands.auton.sequences.AcquireSequence;
 import com.stuypulse.robot.commands.elevator.ElevatorToBottom;
 import com.stuypulse.robot.commands.elevator.ElevatorToLvl1;
 import com.stuypulse.robot.commands.elevator.ElevatorToLvl2;
@@ -20,6 +19,7 @@ import com.stuypulse.robot.commands.elevator.ElevatorToLvl3;
 import com.stuypulse.robot.commands.elevator.ElevatorToLvl4;
 import com.stuypulse.robot.commands.funnel.FunnelDeacquire;
 import com.stuypulse.robot.commands.funnel.FunnelStop;
+import com.stuypulse.robot.commands.shooter.ShooterAcquire;
 import com.stuypulse.robot.commands.shooter.ShooterShoot;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.constants.Ports;
@@ -96,8 +96,7 @@ public class RobotContainer {
             .whileTrue(new FunnelDeacquire());
 
         driver.getLeftBumper()
-            .whileTrue(new AcquireSequence())
-            .whileFalse(new FunnelStop());
+            .whileTrue(new ShooterAcquire());
 
         driver.getRightBumper()
             .whileTrue(new ShooterShoot());
