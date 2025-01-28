@@ -83,6 +83,8 @@ public interface Settings {
         double L4_HEIGHT_METERS = 0.75;
 
         double FEED_HEIGHT_METERS = 0.4;
+
+        SmartNumber HEIGHT_TOLERANCE_METERS = new SmartNumber("Elevator/Height Tolerance (m)", 0.02);
     
         public interface PID {
             SmartNumber kP = new SmartNumber("Elevator/Controller/kP",10);

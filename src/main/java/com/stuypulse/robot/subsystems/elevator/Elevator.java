@@ -23,12 +23,13 @@ public abstract class Elevator extends SubsystemBase {
     }    
 
     public Elevator() {
-        visualizer = new ElevatorVisualizer();
+        visualizer = ElevatorVisualizer.getInstance();
     }
 
     public abstract void setTargetHeight(double height);
     public abstract double getTargetHeight();
     public abstract double getCurrentHeight();
+    public abstract boolean atTargetHeight();
     
     public void periodic() {
         visualizer.update();

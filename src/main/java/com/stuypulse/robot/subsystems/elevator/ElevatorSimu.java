@@ -69,6 +69,11 @@ public class ElevatorSimu extends Elevator {
     public double getCurrentHeight() {
         return sim.getPositionMeters();
     }
+
+    @Override
+    public boolean atTargetHeight() {
+        return Math.abs(getTargetHeight() - getCurrentHeight()) < Settings.Elevator.HEIGHT_TOLERANCE_METERS.get();
+    }
     
     @Override
     public void periodic() {
@@ -79,7 +84,7 @@ public class ElevatorSimu extends Elevator {
         sim.update(Settings.DT);
         RoboRioSim.setVInVoltage(BatterySim.calculateDefaultBatteryLoadedVoltage(sim.getCurrentDrawAmps()));
         
-        ElevatorVisualizer.getVisualizerInstance().update();
+        ElevatorVisualizer.getInstance().update();
 
         SmartDashboard.putNumber("Elevator/Current Height", getCurrentHeight());
     }

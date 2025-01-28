@@ -79,7 +79,12 @@ public class ElevatorImpl extends Elevator {
 
     @Override
     public double getCurrentHeight() {
-        return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2.0;
+        return leftEncoder.getPosition();
+    }
+
+    @Override
+    public boolean atTargetHeight() {
+        return Math.abs(getTargetHeight() - getCurrentHeight()) < Settings.Elevator.HEIGHT_TOLERANCE_METERS.get();
     }
 
     private void setVoltage(double voltage) {

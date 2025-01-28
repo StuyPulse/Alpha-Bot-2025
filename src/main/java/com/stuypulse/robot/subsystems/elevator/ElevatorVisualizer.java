@@ -31,7 +31,7 @@ public class ElevatorVisualizer {
     private final MechanismRoot2d innerBL;
     private final MechanismRoot2d innerTR;
 
-    public static ElevatorVisualizer getVisualizerInstance(){
+    public static ElevatorVisualizer getInstance(){
         return instance;
     } 
 
@@ -174,14 +174,13 @@ public class ElevatorVisualizer {
 
     public void update() {
         // Top of Carriage is Target Height
-        ElevatorSimu simu = ((ElevatorSimu) ElevatorSimu.getInstance());
-        
+        Elevator elevator = Elevator.getInstance();
 
-        outerBL.setPosition(Units.inchesToMeters(3), (simu.getCurrentHeight() - Constants.Elevator.MIN_HEIGHT_METERS) * Settings.Elevator.Simulation.SCALE_FACTOR + Constants.Elevator.MIN_HEIGHT_METERS);
-        outerTR.setPosition(Units.inchesToMeters(12), (simu.getCurrentHeight() - Constants.Elevator.MIN_HEIGHT_METERS) * Settings.Elevator.Simulation.SCALE_FACTOR + Units.inchesToMeters(47) + Constants.Elevator.MIN_HEIGHT_METERS);
+        outerBL.setPosition(Units.inchesToMeters(3), (elevator.getCurrentHeight() - Constants.Elevator.MIN_HEIGHT_METERS) * Settings.Elevator.Simulation.SCALE_FACTOR + Constants.Elevator.MIN_HEIGHT_METERS);
+        outerTR.setPosition(Units.inchesToMeters(12), (elevator.getCurrentHeight() - Constants.Elevator.MIN_HEIGHT_METERS) * Settings.Elevator.Simulation.SCALE_FACTOR + Units.inchesToMeters(47) + Constants.Elevator.MIN_HEIGHT_METERS);
 
-        innerBL.setPosition(Units.inchesToMeters(4), simu.getCurrentHeight() + Units.inchesToMeters(1));
-        innerTR.setPosition(Units.inchesToMeters(11), simu.getCurrentHeight() + Units.inchesToMeters(8));
+        innerBL.setPosition(Units.inchesToMeters(4), elevator.getCurrentHeight() + Units.inchesToMeters(1));
+        innerTR.setPosition(Units.inchesToMeters(11), elevator.getCurrentHeight() + Units.inchesToMeters(8));
 
     }
 
