@@ -25,25 +25,14 @@ public interface Settings {
     double WIDTH_WITH_BUMPERS_METERS = Units.inchesToMeters(29);
 
     public interface Swerve {
-        // between wheel centers
         double WIDTH = Units.inchesToMeters(20.75);
         double LENGTH = Units.inchesToMeters(20.75);
 
-        double MAX_MODULE_SPEED = 4.9;
-
         double MODULE_VELOCITY_DEADBAND = 0.05;
 
-        public interface Assist {
-            // angle PID
-            SmartNumber kP = new SmartNumber("SwerveAssist/kP", 6.0);
-            SmartNumber kI = new SmartNumber("SwerveAssist/kI", 0.0);
-            SmartNumber kD = new SmartNumber("SwerveAssist/kD", 0.0);
+        public interface Constraints {
+            double MAX_MODULE_SPEED = 4.9;
 
-            double ANGLE_DERIV_RC = 0.05;
-            double REDUCED_FF_DIST = 0.75;
-        }
-
-        public interface Motion {
             SmartNumber MAX_VELOCITY = new SmartNumber("Swerve/Motion/Max Velocity (m per s)", 3.0);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Swerve/Motion/Max Acceleration (m per s^2)", 4.0);
             SmartNumber MAX_ANGULAR_VELOCITY = new SmartNumber("Swerve/Motion/Max Angular Velocity (rad per s)", Units.degreesToRadians(540));
@@ -55,9 +44,18 @@ public interface Settings {
                     MAX_ACCELERATION.get(),
                     MAX_ANGULAR_VELOCITY.get(),
                     MAX_ANGULAR_ACCELERATION.get());
+        }
 
+        public interface Alignment {
             PIDConstants XY = new PIDConstants(2.5, 0, 0.02);
             PIDConstants THETA = new PIDConstants(4, 0, 0.1);
+
+            SmartNumber X_TOLERANCE = new SmartNumber("Alignment/X Tolerance (m)", 0.05);
+            SmartNumber Y_TOLERANCE = new SmartNumber("Alignment/Y Tolerance (m)", 0.05);
+            SmartNumber THETA_TOLERANCE = new SmartNumber("Alignment/Theta Tolerance (rad)", 0.1);
+
+            double XY_DEBOUNCE = 0.05;
+            double THETA_DEBOUNCE = 0.05;
         }
 
         public interface Encoder {
@@ -120,12 +118,11 @@ public interface Settings {
         double MAX_HEIGHT_METERS = Units.inchesToMeters(77); // FROM THE BOTTOM OF FIXED STAGE TO TOP ELEVATOR
         SmartNumber MAX_VELOCITY_METERS_PER_SECOND = new SmartNumber("Elevator/Max Velocity (m per s)", 1.0);
         SmartNumber MAX_ACCEL_METERS_PER_SECOND_PER_SECOND = new SmartNumber("Elevator/Max Accel (m per s^2)", 2.0);
-        double MASS_KG = 10.0;
 
         double L1_HEIGHT_METERS = 0;
         double L2_HEIGHT_METERS = 0.25;
         double L3_HEIGHT_METERS = 0.5;
-        double L4_HEIGHT_METERS = 0.75; // All in meters
+        double L4_HEIGHT_METERS = 0.75;
 
         double FEED_HEIGHT_METERS = 0.4;
 
@@ -152,6 +149,7 @@ public interface Settings {
         }
         
         public interface Simulation {
+            double MASS_KG = 10.0;
             double DRUM_RADIUS_METERS = (MAX_HEIGHT_METERS / Encoders.NUM_ROTATIONS_TO_REACH_TOP * Encoders.GEARING) / 2 / Math.PI;
             double SCALE_FACTOR = 0.5 + 2.5/77;
         }
@@ -174,8 +172,8 @@ public interface Settings {
             SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.05);
             SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
 
-            SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Swerve.Motion.MAX_VELOCITY.get());
-            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", Swerve.Motion.MAX_ACCELERATION.get());
+            SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Swerve.Constraints.MAX_VELOCITY.get());
+            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", Swerve.Constraints.MAX_ACCELERATION.get());
         }
 
         public interface Turn {
@@ -184,8 +182,8 @@ public interface Settings {
             SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.05);
             SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
 
-            SmartNumber MAX_TELEOP_TURN_SPEED = new SmartNumber("Driver Settings/Turn/Max Turn Speed (rad per s)", Swerve.Motion.MAX_ANGULAR_VELOCITY.get());
-            SmartNumber MAX_TELEOP_TURN_ACCEL = new SmartNumber("Driver Settings/Turn/Max Turn Accel (rad per s^2)", Swerve.Motion.MAX_ANGULAR_ACCELERATION.get());
+            SmartNumber MAX_TELEOP_TURN_SPEED = new SmartNumber("Driver Settings/Turn/Max Turn Speed (rad per s)", Swerve.Constraints.MAX_ANGULAR_VELOCITY.get());
+            SmartNumber MAX_TELEOP_TURN_ACCEL = new SmartNumber("Driver Settings/Turn/Max Turn Accel (rad per s^2)", Swerve.Constraints.MAX_ANGULAR_ACCELERATION.get());
         }
     }
 }

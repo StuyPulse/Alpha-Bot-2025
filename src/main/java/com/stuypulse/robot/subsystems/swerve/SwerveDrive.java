@@ -161,7 +161,7 @@ public class SwerveDrive extends SubsystemBase {
             throw new IllegalArgumentException("Number of desired module states does not match number of modules (" + modules.length + ")");
         }
 
-        SwerveDriveKinematics.desaturateWheelSpeeds(states, Swerve.MAX_MODULE_SPEED);
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, Swerve.Constraints.MAX_MODULE_SPEED);
 
         for(int i = 0; i < modules.length; i++) {
             modules[i].setTargetState(filterModuleState(states[i]));
@@ -215,8 +215,8 @@ public class SwerveDrive extends SubsystemBase {
                 this::getChassisSpeeds,
                 (speeds, feedforwards) -> setChassisSpeeds(speeds),
                 new PPHolonomicDriveController(
-                    Settings.Swerve.Motion.XY,
-                    Settings.Swerve.Motion.THETA
+                    Settings.Swerve.Alignment.XY,
+                    Settings.Swerve.Alignment.THETA
                 ),
                 RobotConfig.fromGUISettings(),
                 () -> false,

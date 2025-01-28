@@ -29,7 +29,7 @@ public class ElevatorSimu extends Elevator {
         sim = new ElevatorSim(
             DCMotor.getNEO(2),
             Settings.Elevator.Encoders.GEARING,
-            Settings.Elevator.MASS_KG,
+            Settings.Elevator.Simulation.MASS_KG,
             Settings.Elevator.Simulation.DRUM_RADIUS_METERS,
             Settings.Elevator.MIN_HEIGHT_METERS,
             Settings.Elevator.MAX_HEIGHT_METERS,
