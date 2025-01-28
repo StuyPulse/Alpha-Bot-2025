@@ -4,7 +4,7 @@
 /* that can be found in the repository LICENSE file.           */
 /***************************************************************/
 
-package com.stuypulse.robot.subsystems.swerve;
+package com.stuypulse.robot.subsystems.swerve.modules;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -15,20 +15,21 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class SwerveModule extends SubsystemBase {
 
-    private final String id;
+    private final String name;
     private final Translation2d offset;
 
     private SwerveModuleState targetState;
 
-    public SwerveModule(String id, Translation2d offset) {
-        this.id = id;
+    public SwerveModule(String name, Translation2d offset) {
+        this.name = name;
         this.offset = offset;
 
         targetState = new SwerveModuleState();
     }
 
-    public final String getId() {
-        return this.id;
+    @Override
+    public final String getName() {
+        return this.name;
     }
 
     public final Translation2d getModuleOffset() {
@@ -47,6 +48,7 @@ public abstract class SwerveModule extends SubsystemBase {
 
     public final void setTargetState(SwerveModuleState state) {
         state.optimize(getAngle());
+        state.cosineScale(getAngle());
         targetState = state;
     }
 
@@ -56,9 +58,9 @@ public abstract class SwerveModule extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Target Angle", targetState.angle.getDegrees());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Angle", getAngle().getDegrees());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Target Velocity", targetState.speedMetersPerSecond);
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Velocity", getVelocity());
+        SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Target Angle", targetState.angle.getDegrees());
+        SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Angle", getAngle().getDegrees());
+        SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Target Velocity", targetState.speedMetersPerSecond);
+        SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Velocity", getVelocity());
     }
 }

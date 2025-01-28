@@ -16,6 +16,9 @@ import com.stuypulse.robot.constants.Settings.Swerve.BackRight;
 import com.stuypulse.robot.constants.Settings.Swerve.FrontLeft;
 import com.stuypulse.robot.constants.Settings.Swerve.FrontRight;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.swerve.modules.SimModule;
+import com.stuypulse.robot.subsystems.swerve.modules.SwerveModule;
+import com.stuypulse.robot.subsystems.swerve.modules.SwerveModuleImpl;
 import com.stuypulse.stuylib.math.Vector2D;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -34,30 +37,35 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveDrive extends SubsystemBase {
+    
     private static final SwerveDrive instance;
-    RobotConfig config;
 
     static {
-        instance = new SwerveDrive(
-            new SwerveModuleImpl(FrontLeft.ID, FrontLeft.MODULE_OFFSET, FrontLeft.ABSOLUTE_OFFSET, Ports.Swerve.FrontLeft.DRIVE, Ports.Swerve.FrontLeft.TURN, Ports.Swerve.FrontLeft.ENCODER),
-            new SwerveModuleImpl(BackLeft.ID, BackLeft.MODULE_OFFSET, BackLeft.ABSOLUTE_OFFSET, Ports.Swerve.BackLeft.DRIVE, Ports.Swerve.BackLeft.TURN, Ports.Swerve.BackLeft.ENCODER),
-            new SwerveModuleImpl(BackRight.ID, BackRight.MODULE_OFFSET, BackRight.ABSOLUTE_OFFSET, Ports.Swerve.BackRight.DRIVE, Ports.Swerve.BackRight.TURN, Ports.Swerve.BackRight.ENCODER),
-            new SwerveModuleImpl(FrontRight.ID, FrontRight.MODULE_OFFSET, FrontRight.ABSOLUTE_OFFSET, Ports.Swerve.FrontRight.DRIVE, Ports.Swerve.FrontRight.TURN, Ports.Swerve.FrontRight.ENCODER)
-        );
+        if (Robot.isReal()) {
+            instance = new SwerveDrive(
+                new SwerveModuleImpl(FrontLeft.ID, FrontLeft.MODULE_OFFSET, FrontLeft.ABSOLUTE_OFFSET, Ports.Swerve.FrontLeft.DRIVE, Ports.Swerve.FrontLeft.TURN, Ports.Swerve.FrontLeft.ENCODER),
+                new SwerveModuleImpl(BackLeft.ID, BackLeft.MODULE_OFFSET, BackLeft.ABSOLUTE_OFFSET, Ports.Swerve.BackLeft.DRIVE, Ports.Swerve.BackLeft.TURN, Ports.Swerve.BackLeft.ENCODER),
+                new SwerveModuleImpl(BackRight.ID, BackRight.MODULE_OFFSET, BackRight.ABSOLUTE_OFFSET, Ports.Swerve.BackRight.DRIVE, Ports.Swerve.BackRight.TURN, Ports.Swerve.BackRight.ENCODER),
+                new SwerveModuleImpl(FrontRight.ID, FrontRight.MODULE_OFFSET, FrontRight.ABSOLUTE_OFFSET, Ports.Swerve.FrontRight.DRIVE, Ports.Swerve.FrontRight.TURN, Ports.Swerve.FrontRight.ENCODER)
+            );
+        }
+        else {
+            instance = new SwerveDrive(
+                new SimModule(FrontLeft.ID, FrontLeft.MODULE_OFFSET),
+                new SimModule(BackLeft.ID, BackLeft.MODULE_OFFSET),
+                new SimModule(BackRight.ID, BackRight.MODULE_OFFSET),
+                new SimModule(FrontRight.ID, FrontRight.MODULE_OFFSET)
+            );
+        }
     }
 
     public static SwerveDrive getInstance() {
         return instance;
     }
 
-    /** MODULES */
     private final SwerveModule[] modules;
-
-    /** SENSORS */
     private final AHRS gyro;
-
     private final SwerveDriveKinematics kinematics;
-
     private final FieldObject2d[] module2ds;
 
     protected SwerveDrive(SwerveModule... modules) {
@@ -197,30 +205,26 @@ public class SwerveDrive extends SubsystemBase {
         setModuleStates(state);
     }
 
-    public void configureAutoBuilder() {
-
-        Odometry odometry = Odometry.getInstance();
-        
+    public void configureAutoBuilder() {        
         try{
-          config = RobotConfig.fromGUISettings();
-        } catch (Exception e) {
-          // Handle exception as needed
-          e.printStackTrace();
-        }
+            Odometry odometry = Odometry.getInstance();
 
-        AutoBuilder.configure(
-            odometry::getPose,
-            odometry::reset,
-            this::getChassisSpeeds,
-            (speeds, feedforwards) -> setChassisSpeeds(speeds),
-            new PPHolonomicDriveController(
-                new PIDConstants(Settings.Swerve.Drive.kP, Settings.Swerve.Drive.kI, Settings.Swerve.Drive.kD),
-                new PIDConstants(Settings.Swerve.Turn.kP, Settings.Swerve.Turn.kI, Settings.Swerve.Turn.kD)
-            ),
-            config,
-            () -> false,
-            instance
-        );
+            AutoBuilder.configure(
+                odometry::getPose,
+                odometry::reset,
+                this::getChassisSpeeds,
+                (speeds, feedforwards) -> setChassisSpeeds(speeds),
+                new PPHolonomicDriveController(
+                    Settings.Swerve.Motion.XY,
+                    Settings.Swerve.Motion.THETA
+                ),
+                RobotConfig.fromGUISettings(),
+                () -> false,
+                instance
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -250,7 +254,6 @@ public class SwerveDrive extends SubsystemBase {
     public void simulationPeriodic() {
         // Integrate omega in simulation and store in gyro
         var speeds = getKinematics().toChassisSpeeds(getModuleStates());
-
         gyro.setAngleAdjustment(gyro.getAngle() - Math.toDegrees(speeds.omegaRadiansPerSecond * Settings.DT));
     }
 

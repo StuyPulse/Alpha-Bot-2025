@@ -1,4 +1,4 @@
-package com.stuypulse.robot.subsystems.swerve;
+package com.stuypulse.robot.subsystems.swerve.modules;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -29,8 +29,8 @@ public class SwerveModuleImpl extends SwerveModule {
 
     private final AngleController pivotController;
 
-    public SwerveModuleImpl(String id, Translation2d location, Rotation2d angleOffset, int driveMotorID, int pivotMotorID, int pivotEncoderID) {
-        super(id, location);
+    public SwerveModuleImpl(String name, Translation2d location, Rotation2d angleOffset, int driveMotorID, int pivotMotorID, int pivotEncoderID) {
+        super(name, location);
 
         this.angleOffset = angleOffset;
 
@@ -80,13 +80,13 @@ public class SwerveModuleImpl extends SwerveModule {
             pivotMotor.setVoltage(pivotController.getOutput());
         }
 
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Drive Current", driveMotor.getSupplyCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Drive Position", getPosition());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Velocity", getVelocity());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Drive Voltage", driveMotor.getMotorVoltage().getValueAsDouble());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Turn Voltage", pivotController.getOutput());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Turn Current", pivotMotor.getOutputCurrent());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Angle Error", pivotController.getError().toDegrees());
-        SmartDashboard.putNumber("Swerve/Modules/" + getId() + "/Raw Encoder Angle", Units.rotationsToDegrees(pivotEncoder.getAbsolutePosition().getValueAsDouble()));
+        SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Drive Current", driveMotor.getSupplyCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Drive Position", getPosition());
+        SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Velocity", getVelocity());
+        SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Drive Voltage", driveMotor.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Turn Voltage", pivotController.getOutput());
+        SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Turn Current", pivotMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Angle Error", pivotController.getError().toDegrees());
+        SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Raw Encoder Angle", Units.rotationsToDegrees(pivotEncoder.getAbsolutePosition().getValueAsDouble()));
     }
 }

@@ -75,20 +75,16 @@ public interface Settings {
             double kP = 7.0;
             double kI = 0.0;
             double kD = 0.05;
-
-            double kS = 0.25582;
-            double kV = 0.00205;
-            double kA = 0.00020123;
         }
 
         public interface Drive {
-            double kP = 0.31399;
+            double kP = 0.0;
             double kI = 0.0;
             double kD = 0.0;
 
-            double kS = 0.15618;
-            double kV = 0.00012288;
-            double kA = 0.0000259;
+            double kS = 0.26722;
+            double kV = 2.2119;
+            double kA = 0.36249;
         }
 
         public interface FrontLeft {
