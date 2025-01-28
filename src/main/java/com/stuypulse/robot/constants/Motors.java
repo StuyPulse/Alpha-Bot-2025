@@ -34,7 +34,7 @@ public interface Motors {
         SparkBaseConfig leftMotor = new SparkMaxConfig().inverted(false).smartCurrentLimit(100).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
         SparkBaseConfig rightMotor = new SparkMaxConfig().inverted(false).smartCurrentLimit(100).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
 
-        EncoderConfig encoderConfig = new EncoderConfig().positionConversionFactor(Settings.Elevator.Encoders.POSITION_CONVERSION_FACTOR).velocityConversionFactor(Settings.Elevator.Encoders.VELOCITY_CONVERSION_FACTOR);
+        EncoderConfig encoderConfig = new EncoderConfig().positionConversionFactor(Constants.Elevator.Encoders.POSITION_CONVERSION_FACTOR).velocityConversionFactor(Constants.Elevator.Encoders.VELOCITY_CONVERSION_FACTOR);
     }
 
     public interface Shooter {
@@ -73,7 +73,7 @@ public interface Motors {
                 .withPeakReverseTorqueCurrent(-400)
                 .withTorqueNeutralDeadband(0.05);
 
-            FeedbackConfigs feedbackConfigs = new FeedbackConfigs().withSensorToMechanismRatio(1/Settings.Swerve.Encoder.Drive.POSITION_CONVERSION);
+            FeedbackConfigs feedbackConfigs = new FeedbackConfigs().withSensorToMechanismRatio(1/Constants.Swerve.Encoder.Drive.POSITION_CONVERSION);
 
             TalonFXConfiguration motorConfig = new TalonFXConfiguration()
                 .withSlot0(slot0Configs)

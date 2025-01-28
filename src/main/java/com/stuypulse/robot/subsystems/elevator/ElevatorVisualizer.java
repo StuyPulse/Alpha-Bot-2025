@@ -3,6 +3,7 @@
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
+import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.math.util.Units;
@@ -41,7 +42,7 @@ public class ElevatorVisualizer {
         
         // Stage One
         // Bottom Left Node 
-        elevatorBL = elevator2d.getRoot("Elevator BL", Units.inchesToMeters(2), Settings.Elevator.MIN_HEIGHT_METERS);
+        elevatorBL = elevator2d.getRoot("Elevator BL", Units.inchesToMeters(2), Constants.Elevator.MIN_HEIGHT_METERS);
 
         elevatorBL.append(new MechanismLigament2d(
             "Left Tower",
@@ -62,7 +63,7 @@ public class ElevatorVisualizer {
         );
 
         // Top Right Node
-        elevatorTR = elevator2d.getRoot("Elevator TR", Units.inchesToMeters(13), Units.inchesToMeters(47) + Settings.Elevator.MIN_HEIGHT_METERS);
+        elevatorTR = elevator2d.getRoot("Elevator TR", Units.inchesToMeters(13), Units.inchesToMeters(47) + Constants.Elevator.MIN_HEIGHT_METERS);
 
         elevatorTR.append(new MechanismLigament2d(
             "Right Tower", 
@@ -84,7 +85,7 @@ public class ElevatorVisualizer {
 
         // Stage Two
         // Bottom Left Node
-        outerBL = elevator2d.getRoot("Outer BL", Units.inchesToMeters(3), Settings.Elevator.MIN_HEIGHT_METERS);
+        outerBL = elevator2d.getRoot("Outer BL", Units.inchesToMeters(3), Constants.Elevator.MIN_HEIGHT_METERS);
 
         outerBL.append(new MechanismLigament2d(
             "Left Side",
@@ -105,7 +106,7 @@ public class ElevatorVisualizer {
         );
         
         // Top Right Node
-        outerTR = elevator2d.getRoot("Outer TR", Units.inchesToMeters(12), Units.inchesToMeters(47) + Settings.Elevator.MIN_HEIGHT_METERS);
+        outerTR = elevator2d.getRoot("Outer TR", Units.inchesToMeters(12), Units.inchesToMeters(47) + Constants.Elevator.MIN_HEIGHT_METERS);
 
         outerTR.append(new MechanismLigament2d(
             "Top Side",
@@ -127,7 +128,7 @@ public class ElevatorVisualizer {
         
         // Carriage
         // Bottom Left Node
-        innerBL = elevator2d.getRoot("Inner BL", Units.inchesToMeters(4), Units.inchesToMeters(1) + Settings.Elevator.MIN_HEIGHT_METERS);
+        innerBL = elevator2d.getRoot("Inner BL", Units.inchesToMeters(4), Units.inchesToMeters(1) + Constants.Elevator.MIN_HEIGHT_METERS);
 
         innerBL.append(new MechanismLigament2d(
             "Left Side",
@@ -148,7 +149,7 @@ public class ElevatorVisualizer {
         );
 
         // Top Right Node
-        innerTR = elevator2d.getRoot("Inner TR", Units.inchesToMeters(11), Units.inchesToMeters(8) + Settings.Elevator.MIN_HEIGHT_METERS);
+        innerTR = elevator2d.getRoot("Inner TR", Units.inchesToMeters(11), Units.inchesToMeters(8) + Constants.Elevator.MIN_HEIGHT_METERS);
 
         innerTR.append(new MechanismLigament2d(
             "Top Side",
@@ -176,8 +177,8 @@ public class ElevatorVisualizer {
         ElevatorSimu simu = ((ElevatorSimu) ElevatorSimu.getInstance());
         
 
-        outerBL.setPosition(Units.inchesToMeters(3), (simu.getCurrentHeight() - Settings.Elevator.MIN_HEIGHT_METERS) * Settings.Elevator.Simulation.SCALE_FACTOR + Settings.Elevator.MIN_HEIGHT_METERS);
-        outerTR.setPosition(Units.inchesToMeters(12), (simu.getCurrentHeight() - Settings.Elevator.MIN_HEIGHT_METERS) * Settings.Elevator.Simulation.SCALE_FACTOR + Units.inchesToMeters(47) + Settings.Elevator.MIN_HEIGHT_METERS);
+        outerBL.setPosition(Units.inchesToMeters(3), (simu.getCurrentHeight() - Constants.Elevator.MIN_HEIGHT_METERS) * Settings.Elevator.Simulation.SCALE_FACTOR + Constants.Elevator.MIN_HEIGHT_METERS);
+        outerTR.setPosition(Units.inchesToMeters(12), (simu.getCurrentHeight() - Constants.Elevator.MIN_HEIGHT_METERS) * Settings.Elevator.Simulation.SCALE_FACTOR + Units.inchesToMeters(47) + Constants.Elevator.MIN_HEIGHT_METERS);
 
         innerBL.setPosition(Units.inchesToMeters(4), simu.getCurrentHeight() + Units.inchesToMeters(1));
         innerTR.setPosition(Units.inchesToMeters(11), simu.getCurrentHeight() + Units.inchesToMeters(8));

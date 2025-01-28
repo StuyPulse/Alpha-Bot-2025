@@ -176,7 +176,7 @@ public interface Field {
             }
 
             return correspondingAprilTagPose.toPose2d()
-                    .transformBy(new Transform2d(Settings.LENGTH_WITH_BUMPERS_METERS/2 + 0.15, CENTER_OF_TROUGH_TO_BRANCH * (this.isLeftPeg() ? -1 : 1), Rotation2d.fromDegrees(180)));
+                    .transformBy(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS/2 + 0.15, CENTER_OF_TROUGH_TO_BRANCH * (this.isLeftPeg() ? -1 : 1), Rotation2d.fromDegrees(180)));
         }
 
         public boolean isLeftPeg() {
@@ -261,7 +261,7 @@ public interface Field {
                     break;
             }
             return correspondingAprilTag.toPose2d()
-                    .transformBy(new Transform2d(Settings.LENGTH_WITH_BUMPERS_METERS / 2, 0, Rotation2d.fromDegrees(180)));
+                    .transformBy(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, Rotation2d.fromDegrees(180)));
         }
     }
 
@@ -283,14 +283,14 @@ public interface Field {
     /*** CORAL STATIONS ***/
     public static Pose2d getTargetPoseForCDCoralStation() {
         return Robot.isBlue()
-            ? NamedTags.BLUE_CD_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Settings.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()))
-            : NamedTags.RED_CD_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Settings.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()));
+            ? NamedTags.BLUE_CD_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()))
+            : NamedTags.RED_CD_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()));
     }
 
     public static Pose2d getTargetPoseForKLCoralStation() {
         return Robot.isBlue()
-            ? NamedTags.BLUE_KL_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Settings.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()))
-            : NamedTags.RED_KL_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Settings.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()));
+            ? NamedTags.BLUE_KL_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()))
+            : NamedTags.RED_KL_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()));
     }
 
     public static boolean robotIsCloserToCDCoralStation() {

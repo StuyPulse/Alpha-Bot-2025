@@ -1,6 +1,6 @@
 package com.stuypulse.robot.commands.elevator;
 
-import com.stuypulse.robot.constants.Settings.Elevator;
+import com.stuypulse.robot.constants.Constants.Elevator;
 
 public class ElevatorToBottom extends ElevatorToHeight {
 

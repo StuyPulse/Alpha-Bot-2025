@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
@@ -48,7 +49,7 @@ public class ElevatorImpl extends Elevator {
 
         bumpSwitch = new DigitalInput(Ports.Elevator.SWITCH);
 
-        targetHeight = new SmartNumber("Elevator/Target Height", Settings.Elevator.MIN_HEIGHT_METERS);
+        targetHeight = new SmartNumber("Elevator/Target Height", Constants.Elevator.MIN_HEIGHT_METERS);
 
         MotionProfile motionProfile = new MotionProfile(Settings.Elevator.MAX_VELOCITY_METERS_PER_SECOND, Settings.Elevator.MAX_ACCEL_METERS_PER_SECOND_PER_SECOND);
         
@@ -65,8 +66,8 @@ public class ElevatorImpl extends Elevator {
         targetHeight.set(
             SLMath.clamp(
                 height, 
-                Settings.Elevator.MIN_HEIGHT_METERS, 
-                Settings.Elevator.MAX_HEIGHT_METERS
+                Constants.Elevator.MIN_HEIGHT_METERS, 
+                Constants.Elevator.MAX_HEIGHT_METERS
             )
         );
     }
@@ -92,8 +93,8 @@ public class ElevatorImpl extends Elevator {
 
         if (bumpSwitch.get()) {
             hasBeenReset = true;
-            leftEncoder.setPosition(Settings.Elevator.MIN_HEIGHT_METERS);
-            rightEncoder.setPosition(Settings.Elevator.MIN_HEIGHT_METERS);
+            leftEncoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
+            rightEncoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
         }
 
         if (!hasBeenReset) {
