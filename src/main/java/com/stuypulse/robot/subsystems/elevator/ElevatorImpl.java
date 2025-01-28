@@ -50,7 +50,7 @@ public class ElevatorImpl extends Elevator {
 
         targetHeight = new SmartNumber("Elevator/Target Height", Settings.Elevator.MIN_HEIGHT_METERS);
 
-        MotionProfile motionProfile = new MotionProfile(Settings.Elevator.MAX_VELOCITY_METERS_PER_SECOND, Settings.Elevator.MAX_ACCELERATION_METERS_PER_SECOND);
+        MotionProfile motionProfile = new MotionProfile(Settings.Elevator.MAX_VELOCITY_METERS_PER_SECOND, Settings.Elevator.MAX_ACCEL_METERS_PER_SECOND_PER_SECOND);
         
         controller = new MotorFeedforward(Settings.Elevator.FF.kS, Settings.Elevator.FF.kV, Settings.Elevator.FF.kA).position()
             .add(new ElevatorFeedforward(Settings.Elevator.FF.kG))
@@ -104,7 +104,6 @@ public class ElevatorImpl extends Elevator {
             setVoltage(controller.getOutput());
         }
 
-        SmartDashboard.putNumber("Elevator/Target Height", targetHeight.getAsDouble());
         SmartDashboard.putNumber("Elevator/Current Height", getCurrentHeight());
     }
 }

@@ -43,12 +43,11 @@ public interface Settings {
             double REDUCED_FF_DIST = 0.75;
         }
 
-        // TODO: Tune these values
         public interface Motion {
-            SmartNumber MAX_VELOCITY = new SmartNumber("Swerve/Motion/Max Velocity", 3.0);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Swerve/Motion/Max Acceleration", 4.0);
-            SmartNumber MAX_ANGULAR_VELOCITY = new SmartNumber("Swerve/Motion/Max Angular Velocity", Units.degreesToRadians(540));
-            SmartNumber MAX_ANGULAR_ACCELERATION = new SmartNumber("Swerve/Motion/Max Angular Acceleration", Units.degreesToRadians(720));
+            SmartNumber MAX_VELOCITY = new SmartNumber("Swerve/Motion/Max Velocity (m per s)", 3.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Swerve/Motion/Max Acceleration (m per s^2)", 4.0);
+            SmartNumber MAX_ANGULAR_VELOCITY = new SmartNumber("Swerve/Motion/Max Angular Velocity (rad per s)", Units.degreesToRadians(540));
+            SmartNumber MAX_ANGULAR_ACCELERATION = new SmartNumber("Swerve/Motion/Max Angular Acceleration (rad per s^2)", Units.degreesToRadians(720));
 
             PathConstraints DEFAULT_CONSTRAINTS =
                 new PathConstraints(
@@ -119,9 +118,9 @@ public interface Settings {
     public interface Elevator {
         double MIN_HEIGHT_METERS = Units.inchesToMeters(9.09375); // FROM THE BOTTOM OF FIXED STAGE TO TOP OF CARRIAGE
         double MAX_HEIGHT_METERS = Units.inchesToMeters(77); // FROM THE BOTTOM OF FIXED STAGE TO TOP ELEVATOR
-        double MAX_VELOCITY_METERS_PER_SECOND = 3.0;
-        double MAX_ACCELERATION_METERS_PER_SECOND = 2.0;
-        double MASS_KG = 25.0;
+        SmartNumber MAX_VELOCITY_METERS_PER_SECOND = new SmartNumber("Elevator/Max Velocity (m per s)", 1.0);
+        SmartNumber MAX_ACCEL_METERS_PER_SECOND_PER_SECOND = new SmartNumber("Elevator/Max Accel (m per s^2)", 2.0);
+        double MASS_KG = 10.0;
 
         double L1_HEIGHT_METERS = 0;
         double L2_HEIGHT_METERS = 0.25;
@@ -135,27 +134,25 @@ public interface Settings {
 
             double NUM_ROTATIONS_TO_REACH_TOP = (6 + 9.0 / 24) * GEARING; // Number of rotations that the motor has to spin, NOT the gear
 
-            double DRUM_CIRCUMFERENCE_METERS = MAX_HEIGHT_METERS / NUM_ROTATIONS_TO_REACH_TOP * GEARING;
-            double DRUM_RADIUS_METERS = DRUM_CIRCUMFERENCE_METERS / 2 / Math.PI;
-
             double POSITION_CONVERSION_FACTOR = MAX_HEIGHT_METERS / NUM_ROTATIONS_TO_REACH_TOP;
             double VELOCITY_CONVERSION_FACTOR = MAX_HEIGHT_METERS / NUM_ROTATIONS_TO_REACH_TOP / 60;
         }
     
         public interface PID {
-            SmartNumber kP = new SmartNumber("kP",1.5);
-            SmartNumber kI = new SmartNumber("kI",0.0);
-            SmartNumber kD = new SmartNumber("kD",0.2);
+            SmartNumber kP = new SmartNumber("Elevator/Controller/kP",10);
+            SmartNumber kI = new SmartNumber("Elevator/Controller/kI",0.0);
+            SmartNumber kD = new SmartNumber("Elevator/Controller/kD",0.2);
         }
 
         public interface FF {
-            SmartNumber kS = new SmartNumber("kS",0.20506);
-            SmartNumber kV = new SmartNumber("kV",3.7672);
-            SmartNumber kA = new SmartNumber("kA", 0.27);
-            SmartNumber kG = new SmartNumber("kG", 0.37);
+            SmartNumber kS = new SmartNumber("Elevator/Controller/kS",0.20506);
+            SmartNumber kV = new SmartNumber("Elevator/Controller/kV",3.7672);
+            SmartNumber kA = new SmartNumber("Elevator/Controller/kA", 0.27);
+            SmartNumber kG = new SmartNumber("Elevator/Controller/kG", 1.37);
         }
         
         public interface Simulation {
+            double DRUM_RADIUS_METERS = (MAX_HEIGHT_METERS / Encoders.NUM_ROTATIONS_TO_REACH_TOP * Encoders.GEARING) / 2 / Math.PI;
             double SCALE_FACTOR = 0.5 + 2.5/77;
         }
     }
@@ -187,8 +184,8 @@ public interface Settings {
             SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.05);
             SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
 
-            SmartNumber MAX_TELEOP_TURN_SPEED = new SmartNumber("Driver Settings/Turn/Max Turn Speed (rad/s)", Swerve.Motion.MAX_ANGULAR_VELOCITY.get());
-            SmartNumber MAX_TELEOP_TURN_ACCEL = new SmartNumber("Driver Settings/Turn/Max Turn Accel (rad/s^2)", Swerve.Motion.MAX_ANGULAR_ACCELERATION.get());
+            SmartNumber MAX_TELEOP_TURN_SPEED = new SmartNumber("Driver Settings/Turn/Max Turn Speed (rad per s)", Swerve.Motion.MAX_ANGULAR_VELOCITY.get());
+            SmartNumber MAX_TELEOP_TURN_ACCEL = new SmartNumber("Driver Settings/Turn/Max Turn Accel (rad per s^2)", Swerve.Motion.MAX_ANGULAR_ACCELERATION.get());
         }
     }
 }

@@ -1,8 +1,19 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
+    },
+    "Timing": {
+      "window": {
+        "visible": false
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Visualizers/Elevator": "Mechanism2d"
     },
@@ -29,14 +40,11 @@
   "NetworkTables": {
     "transitory": {
       "SmartDashboard": {
-        "Elevator": {
+        "Odometry": {
           "open": true
         },
         "open": true
       }
     }
-  },
-  "NetworkTables Info": {
-    "visible": true
   }
 }
