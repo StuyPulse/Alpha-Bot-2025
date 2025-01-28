@@ -71,7 +71,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureDefaultCommands();
         configureButtonBindings();
-        //configureAutons();
+        configureAutons();
     }
 
     /****************/
@@ -225,15 +225,15 @@ public class RobotContainer {
         /** TESTS **/
 
         AutonConfig BLUE_MOBILITY = new AutonConfig("Mobility", Mobility::new,
-        "Blue Mobility");
+        "Mobility");
         AutonConfig RED_MOBILITY = new AutonConfig("Mobility", Mobility::new, 
-        "Red Mobility");
+        "Mobility");
         AutonConfig STRAIGHT_LINE_TEST = new AutonConfig("Straight Line Test", StraightLineTest::new,
         "Straight Line");
         AutonConfig CURVY_LINE_TEST = new AutonConfig("Curvy Line Test", CurvyLineTest::new,
         "Curvy Line");
         AutonConfig SQUARE_TEST = new AutonConfig("Square Test", SquareTest::new,
-        "Sqaure Top", "Square Right", "Square Bottom", "Square Left");
+        "Square Top", "Square Right", "Square Bottom", "Square Left");
         AutonConfig RSQUARE_TEST = new AutonConfig("RSquare Test", RSquareTest::new,
         "RSquare Top", "RSquare Right", "RSquare Bottom", "RSquare Left");
 
@@ -250,4 +250,13 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return autonChooser.getSelected();
     }
+
+    public static String getAutonomousCommandNameStatic() {
+        if (autonChooser.getSelected() == null) {
+            return "Do Nothing";
+        }
+
+        return autonChooser.getSelected().getName();
+    }
+
 }
