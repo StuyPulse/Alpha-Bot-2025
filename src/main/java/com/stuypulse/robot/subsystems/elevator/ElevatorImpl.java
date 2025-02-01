@@ -24,8 +24,6 @@ public class ElevatorImpl extends Elevator {
     private final SparkMax leftMotor;
     private final SparkMax rightMotor;
 
-    private final DigitalInput bumpSwitch;
-
     private final RelativeEncoder leftEncoder;
     private final RelativeEncoder rightEncoder;
 
@@ -46,8 +44,6 @@ public class ElevatorImpl extends Elevator {
 
         leftEncoder = leftMotor.getEncoder();
         rightEncoder = rightMotor.getEncoder();
-
-        bumpSwitch = new DigitalInput(Ports.Elevator.SWITCH);
 
         targetHeight = new SmartNumber("Elevator/Target Height", Constants.Elevator.MIN_HEIGHT_METERS);
 
@@ -96,14 +92,13 @@ public class ElevatorImpl extends Elevator {
     public void periodic() {
         super.periodic();
 
-        if (bumpSwitch.get()) {
-            hasBeenReset = true;
-            leftEncoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
-            rightEncoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
-        }
-
         if (!hasBeenReset) {
-            setVoltage(-1);
+            setVoltage(-0.5);
+            if (leftMotor.getOutputCurrent() > Settings.Elevator.RESET_STALL_CURRENT) {
+                hasBeenReset = true;
+                leftEncoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
+                rightEncoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
+            }
         }
         else {
             controller.update(getTargetHeight(), getCurrentHeight());

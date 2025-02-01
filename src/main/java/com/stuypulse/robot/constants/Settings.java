@@ -77,6 +77,8 @@ public interface Settings {
         SmartNumber MAX_VELOCITY_METERS_PER_SECOND = new SmartNumber("Elevator/Max Velocity (m per s)", 1.0);
         SmartNumber MAX_ACCEL_METERS_PER_SECOND_PER_SECOND = new SmartNumber("Elevator/Max Accel (m per s^2)", 2.0);
 
+        double RESET_STALL_CURRENT = 50;
+
         double L1_HEIGHT_METERS = 0;
         double L2_HEIGHT_METERS = 0.25;
         double L3_HEIGHT_METERS = 0.5;
