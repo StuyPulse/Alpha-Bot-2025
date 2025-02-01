@@ -6,4 +6,8 @@ public class ElevatorToLvl1 extends ElevatorToHeight{
     public ElevatorToLvl1(){
         super(Elevator.L1_HEIGHT_METERS);
     }
+
+    public void initialize() {
+        super.initialize();
+    }
 }

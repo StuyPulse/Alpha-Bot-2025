@@ -7,4 +7,8 @@ public class ElevatorToTop extends ElevatorToHeight {
     public ElevatorToTop() {
         super(Elevator.MAX_HEIGHT_METERS);
     }
+
+    public void initialize() {
+        super.initialize();
+    }
 }
