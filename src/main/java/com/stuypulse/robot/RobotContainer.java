@@ -33,6 +33,8 @@ import com.stuypulse.robot.commands.funnel.FunnelStop;
 import com.stuypulse.robot.commands.shooter.ShooterAcquire;
 import com.stuypulse.robot.commands.shooter.ShooterShoot;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
+import com.stuypulse.robot.commands.swerve.SwerveDrivePIDToPose;
+import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.elevator.Elevator;
 import com.stuypulse.robot.subsystems.funnel.Funnel;
@@ -87,6 +89,9 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
+
+        driver.getRightTriggerButton()
+            .whileTrue(new SwerveDrivePIDToPose(() -> Field.getClosestBranch().getTargetPose()));
         
         driver.getTopButton()
             .whileTrue(new ElevatorToLvl4());
@@ -111,7 +116,6 @@ public class RobotContainer {
 
         driver.getRightBumper()
             .whileTrue(new ShooterShoot());
-
     }
 
     /**************/

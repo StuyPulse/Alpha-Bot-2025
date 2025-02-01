@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class SwervePIDToPose extends Command {
+public class SwerveDrivePIDToPose extends Command {
 
     private final SwerveDrive swerve;
     private final Odometry odometry;
@@ -45,11 +45,11 @@ public class SwervePIDToPose extends Command {
 
     private Pose2d targetPose;
 
-    public SwervePIDToPose(Pose2d targetPose) {
+    public SwerveDrivePIDToPose(Pose2d targetPose) {
         this(() -> targetPose);
     }
 
-    public SwervePIDToPose(Supplier<Pose2d> poseSupplier) {
+    public SwerveDrivePIDToPose(Supplier<Pose2d> poseSupplier) {
         swerve = SwerveDrive.getInstance();
         odometry = Odometry.getInstance();
 
@@ -81,27 +81,27 @@ public class SwervePIDToPose extends Command {
         addRequirements(swerve);
     }
 
-    public SwervePIDToPose withTranslationConstants(PIDConstants pid) {
+    public SwerveDrivePIDToPose withTranslationConstants(PIDConstants pid) {
         controller.setTranslationConstants(pid.kP, pid.kI, pid.kD);
         return this;
     }
     
-    public SwervePIDToPose withRotationConstants(PIDConstants pid) {
+    public SwerveDrivePIDToPose withRotationConstants(PIDConstants pid) {
         controller.setRotationConstants(pid.kP, pid.kI, pid.kD);
         return this;
     }
 
-    public SwervePIDToPose withTranslationConstants(double p, double i, double d) {
+    public SwerveDrivePIDToPose withTranslationConstants(double p, double i, double d) {
         controller.setTranslationConstants(p, i, d);
         return this;
     }
     
-    public SwervePIDToPose withRotationConstants(double p, double i, double d) {
+    public SwerveDrivePIDToPose withRotationConstants(double p, double i, double d) {
         controller.setRotationConstants(p, i, d);
         return this;
     }
 
-    public SwervePIDToPose withTolerance(Number x, Number y, Number theta) {
+    public SwerveDrivePIDToPose withTolerance(Number x, Number y, Number theta) {
         xTolerance = x;
         yTolerance = y;
         thetaTolerance = theta;
