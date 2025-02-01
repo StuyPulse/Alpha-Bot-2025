@@ -22,8 +22,6 @@ public interface Constants {
         double WIDTH = Units.inchesToMeters(20.75);
         double LENGTH = Units.inchesToMeters(20.75);
 
-        double MODULE_VELOCITY_DEADBAND = 0.05;
-
         public interface Encoder {
             public interface Drive {
                 double WHEEL_DIAMETER = Units.inchesToMeters(4);
