@@ -38,7 +38,7 @@ public class SwerveModuleImpl extends SwerveModule {
         pivotMotor.configure(Motors.Swerve.Turn.motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         pivotEncoder = new CANcoder(pivotEncoderID);
         
-        driveMotor = new TalonFX(driveMotorID);
+        driveMotor = new TalonFX(driveMotorID, Settings.Swerve.DRIVE_CANBUS);
 
         driveMotor.getConfigurator().apply(Motors.Swerve.Drive.motorConfig);
         driveMotor.setPosition(0);

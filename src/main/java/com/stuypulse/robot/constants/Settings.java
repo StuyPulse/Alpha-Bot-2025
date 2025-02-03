@@ -22,6 +22,7 @@ public interface Settings {
     double DT = 0.020;
 
     public interface Swerve {
+        String DRIVE_CANBUS = "swerve-drive";
         double MODULE_VELOCITY_DEADBAND = 0.05;
 
         public interface Constraints {
