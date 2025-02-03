@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9904980431760173,
-        "y": 1.0104812927448683
+        "x": 1.9904980431760175,
+        "y": 1.010481292744868
       },
       "isLocked": false,
       "linkedName": "Red C"
@@ -45,7 +45,7 @@
     "rotation": -125.00000000000001
   },
   "reversed": false,
-  "folder": "Red To HP",
+  "folder": "Red to HP",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -119.99999999999999
