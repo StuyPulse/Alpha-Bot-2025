@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.771842754463763,
+        "x": 1.7718427544637625,
         "y": 7.255001200290058
       },
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": 125.00000000000001
   },
   "reversed": false,
-  "folder": "Red To HP",
+  "folder": "Red to HP",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 119.99999999999999
