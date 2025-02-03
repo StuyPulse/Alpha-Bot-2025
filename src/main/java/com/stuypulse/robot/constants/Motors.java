@@ -31,14 +31,15 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 public interface Motors {
 
     public interface Elevator {
-        SparkBaseConfig leftMotor = new SparkMaxConfig().inverted(false).smartCurrentLimit(100).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
-        SparkBaseConfig rightMotor = new SparkMaxConfig().inverted(false).smartCurrentLimit(100).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
+        SparkBaseConfig frontMotor = new SparkMaxConfig().inverted(false).smartCurrentLimit(100).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
+        SparkBaseConfig backMotor = new SparkMaxConfig().inverted(false).smartCurrentLimit(100).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
 
         EncoderConfig encoderConfig = new EncoderConfig().positionConversionFactor(Constants.Elevator.Encoders.POSITION_CONVERSION_FACTOR).velocityConversionFactor(Constants.Elevator.Encoders.VELOCITY_CONVERSION_FACTOR);
     }
 
     public interface Shooter {
-        SparkBaseConfig motorConfig = new SparkMaxConfig().inverted(false).smartCurrentLimit(50).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
+        SparkBaseConfig topMotorConfig = new SparkMaxConfig().inverted(false).smartCurrentLimit(50).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
+        SparkBaseConfig bottomMotorConfig = new SparkMaxConfig().inverted(false).smartCurrentLimit(50).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
     }
 
     public interface Funnel {

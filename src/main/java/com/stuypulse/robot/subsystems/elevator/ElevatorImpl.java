@@ -21,11 +21,10 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ElevatorImpl extends Elevator {
-    private final SparkMax leftMotor;
-    private final SparkMax rightMotor;
+    private final SparkMax frontMotor;
+    private final SparkMax backMotor;
 
-    private final RelativeEncoder leftEncoder;
-    private final RelativeEncoder rightEncoder;
+    private final RelativeEncoder encoder;
 
     private final SmartNumber targetHeight;
 
@@ -34,16 +33,15 @@ public class ElevatorImpl extends Elevator {
     private boolean hasBeenReset;
 
     public ElevatorImpl() {
-        leftMotor = new SparkMax(Ports.Elevator.LEFT, MotorType.kBrushless);
-        Motors.Elevator.leftMotor.encoder.apply(Motors.Elevator.encoderConfig);
-        leftMotor.configure(Motors.Elevator.leftMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        frontMotor = new SparkMax(Ports.Elevator.FRONT, MotorType.kBrushless);
+        Motors.Elevator.frontMotor.encoder.apply(Motors.Elevator.encoderConfig);
+        frontMotor.configure(Motors.Elevator.frontMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        rightMotor = new SparkMax(Ports.Elevator.RIGHT, MotorType.kBrushless);
-        Motors.Elevator.rightMotor.encoder.apply(Motors.Elevator.encoderConfig);
-        rightMotor.configure(Motors.Elevator.rightMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        backMotor = new SparkMax(Ports.Elevator.BACK, MotorType.kBrushless);
+        Motors.Elevator.backMotor.encoder.apply(Motors.Elevator.encoderConfig);
+        backMotor.configure(Motors.Elevator.backMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        leftEncoder = leftMotor.getEncoder();
-        rightEncoder = rightMotor.getEncoder();
+        encoder = frontMotor.getEncoder();
 
         targetHeight = new SmartNumber("Elevator/Target Height", Constants.Elevator.MIN_HEIGHT_METERS);
 
@@ -75,7 +73,7 @@ public class ElevatorImpl extends Elevator {
 
     @Override
     public double getCurrentHeight() {
-        return leftEncoder.getPosition();
+        return encoder.getPosition();
     }
 
     @Override
@@ -84,8 +82,8 @@ public class ElevatorImpl extends Elevator {
     }
 
     private void setVoltage(double voltage) {
-        leftMotor.setVoltage(voltage);
-        rightMotor.setVoltage(voltage);
+        frontMotor.setVoltage(voltage);
+        backMotor.setVoltage(voltage);
     }
 
     @Override
@@ -94,10 +92,9 @@ public class ElevatorImpl extends Elevator {
 
         if (!hasBeenReset) {
             setVoltage(-0.5);
-            if (leftMotor.getOutputCurrent() > Settings.Elevator.RESET_STALL_CURRENT) {
+            if (frontMotor.getOutputCurrent() > Settings.Elevator.RESET_STALL_CURRENT || backMotor.getOutputCurrent() > Settings.Elevator.RESET_STALL_CURRENT) {
                 hasBeenReset = true;
-                leftEncoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
-                rightEncoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
+                encoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
             }
         }
         else {

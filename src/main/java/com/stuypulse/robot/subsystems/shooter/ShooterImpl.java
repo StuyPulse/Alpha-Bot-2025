@@ -13,29 +13,36 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterImpl extends Shooter{
     
-    private final SparkMax motor;
+    private final SparkMax topMotor;
+    private final SparkMax bottomMotor;
     private final DigitalInput IR_Sensor;
 
     public ShooterImpl() {
-        motor = new SparkMax(Ports.Shooter.MOTOR, MotorType.kBrushless);
-        motor.configure(Motors.Shooter.motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        topMotor = new SparkMax(Ports.Shooter.TOP_MOTOR, MotorType.kBrushless);
+        topMotor.configure(Motors.Shooter.topMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        bottomMotor = new SparkMax(Ports.Shooter.BOTTOM_MOTOR, MotorType.kBrushless);
+        bottomMotor.configure(Motors.Shooter.bottomMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         IR_Sensor = new DigitalInput(Ports.Shooter.IR_SENSOR);
     }
 
     @Override
     public void acquire() {
-        motor.set(Settings.Shooter.ACQUIRE_SPEED.get());
+        topMotor.set(Settings.Shooter.Top.ACQUIRE_SPEED.get());
+        bottomMotor.set(Settings.Shooter.Bottom.ACQUIRE_SPEED.get());
     }
 
     @Override
     public void shoot() {
-        motor.set(Settings.Shooter.SHOOT_SPEED.get());
+        topMotor.set(Settings.Shooter.Top.SHOOT_SPEED.get());
+        bottomMotor.set(Settings.Shooter.Bottom.SHOOT_SPEED.get());
     }
 
     @Override
     public void stop() {
-        motor.set(0);
+        topMotor.set(0);
+        bottomMotor.set(0);
     }
 
     @Override
