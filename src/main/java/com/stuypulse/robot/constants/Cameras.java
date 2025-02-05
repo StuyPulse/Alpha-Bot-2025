@@ -1,12 +1,14 @@
 package com.stuypulse.robot.constants;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.util.Units;
 
 /** This interface stores information about each camera. */
 public interface Cameras {
 
     public CameraInfo[] LimelightCameras = new CameraInfo[] {
-        new CameraInfo("limelight", new Pose3d())
+        new CameraInfo("limelight", new Pose3d(Units.inchesToMeters(11), Units.inchesToMeters(6.96), Units.inchesToMeters(8.25), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(-28), Units.degreesToRadians(-16))))
     };
     
 
