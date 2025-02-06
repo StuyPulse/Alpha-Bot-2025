@@ -5,6 +5,7 @@
 
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.commands.SeedFieldRelative;
 import com.stuypulse.robot.commands.auton.EDCB.FourPieceEDCB;
 import com.stuypulse.robot.commands.auton.EDCB.OnePieceE;
 import com.stuypulse.robot.commands.auton.EDCB.ThreeHalfPieceEDC;
@@ -24,6 +25,7 @@ import com.stuypulse.robot.commands.auton.tests.RSquareTest;
 import com.stuypulse.robot.commands.auton.tests.SquareTest;
 import com.stuypulse.robot.commands.auton.tests.StraightLineTest;
 import com.stuypulse.robot.commands.elevator.ElevatorToBottom;
+import com.stuypulse.robot.commands.elevator.ElevatorToFeed;
 import com.stuypulse.robot.commands.elevator.ElevatorToLvl1;
 import com.stuypulse.robot.commands.elevator.ElevatorToLvl2;
 import com.stuypulse.robot.commands.elevator.ElevatorToLvl3;
@@ -32,6 +34,7 @@ import com.stuypulse.robot.commands.elevator.ElevatorWaitUntilAtTargetHeight;
 import com.stuypulse.robot.commands.funnel.FunnelDefaultCommand;
 import com.stuypulse.robot.commands.shooter.ShooterAcquire;
 import com.stuypulse.robot.commands.shooter.ShooterShoot;
+import com.stuypulse.robot.commands.shooter.ShooterStop;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.commands.swerve.SwerveDrivePIDToNearestBranch;
 import com.stuypulse.robot.commands.swerve.SwerveDrivePIDToPose;
@@ -93,32 +96,34 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
-        driver.getRightTriggerButton()
-            .whileTrue(new SwerveDrivePIDToPose(() -> Field.getClosestBranch().getTargetPose()));
+        driver.getDPadUp().onTrue(new SeedFieldRelative());
         
+        // Automated L4
         driver.getTopButton()
             .whileTrue(new ElevatorToLvl4()
-                .andThen(new ElevatorWaitUntilAtTargetHeight()
-                    .alongWith(new SwerveDrivePIDToNearestBranch())
-                ));
+                .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
+                .andThen(new ShooterShoot())
+            )
+            .onFalse(new ElevatorToFeed())
+            .onFalse(new ShooterStop());
         
-        driver.getRightButton()
-            .whileTrue(new ElevatorToLvl3());
+        // Automated L3
+        driver.getTopButton()
+            .whileTrue(new ElevatorToLvl3()
+                .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
+                .andThen(new ShooterShoot())
+            )
+            .onFalse(new ElevatorToFeed())
+            .onFalse(new ShooterStop());
 
-        driver.getLeftButton()
-            .whileTrue(new ElevatorToLvl2());
-
-        driver.getBottomButton()
-            .whileTrue(new ElevatorToLvl1());
-
-        driver.getDPadDown()
-            .whileTrue(new ElevatorToBottom());
-
-        driver.getLeftBumper()
-            .whileTrue(new ShooterAcquire());
-
-        driver.getRightBumper()
-            .whileTrue(new ShooterShoot());
+        // Automated L2
+        driver.getTopButton()
+            .whileTrue(new ElevatorToLvl2()
+                .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
+                .andThen(new ShooterShoot())
+            )
+            .onFalse(new ElevatorToFeed())
+            .onFalse(new ShooterStop());
     }
 
     /**************/
