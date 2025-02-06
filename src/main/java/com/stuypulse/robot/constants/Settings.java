@@ -120,7 +120,11 @@ public interface Settings {
 
     public interface Funnel {
         SmartNumber ACQUIRE_SPEED = new SmartNumber("Funnel/Acquire Speed", 0.4);
-        SmartNumber DEACQUIRE_SPEED = new SmartNumber("Funnel/Deacquire Speed", 0.4); 
+        SmartNumber REVERSE_SPEED = new SmartNumber("Funnel/Reverse Speed", 0.4); 
+
+        double STALL_CURRENT = 15;
+        double STALL_DETECTION_TIME = 0.25;
+        double REVERSE_TIME = 1.0;
     }
 
     public interface Driver {

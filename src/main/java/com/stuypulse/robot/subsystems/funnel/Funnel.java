@@ -15,6 +15,8 @@ public abstract class Funnel extends SubsystemBase{
     }
 
     public abstract void acquire();
-    public abstract void deacquire();
+    public abstract void reverse();
     public abstract void stop();
+
+    public abstract boolean shouldReverse();
 }
