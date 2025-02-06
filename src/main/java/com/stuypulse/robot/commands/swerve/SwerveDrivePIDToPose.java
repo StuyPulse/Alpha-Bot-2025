@@ -1,0 +1,156 @@
+package com.stuypulse.robot.commands.swerve;
+
+import java.util.function.Supplier;
+
+import com.pathplanner.lib.config.PIDConstants;
+import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Settings.Swerve;
+import com.stuypulse.robot.constants.Settings.Swerve.Alignment;
+import com.stuypulse.robot.subsystems.odometry.Odometry;
+import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
+import com.stuypulse.robot.util.HolonomicController;
+import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
+import com.stuypulse.stuylib.control.feedback.PIDController;
+import com.stuypulse.stuylib.math.SLMath;
+import com.stuypulse.stuylib.math.Vector2D;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
+import com.stuypulse.stuylib.streams.numbers.IStream;
+import com.stuypulse.stuylib.streams.numbers.filters.LowPassFilter;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+
+public class SwerveDrivePIDToPose extends Command {
+
+    private final SwerveDrive swerve;
+    private final Odometry odometry;
+
+    private final HolonomicController controller;
+    private final Supplier<Pose2d> poseSupplier;
+    private final BStream isAligned;
+    private final IStream velocityError;
+
+    private final FieldObject2d targetPose2d;
+
+    private Number xTolerance;
+    private Number yTolerance;
+    private Number thetaTolerance;
+    private Number velocityTolerance;
+
+    private Pose2d targetPose;
+
+    public SwerveDrivePIDToPose(Pose2d targetPose) {
+        this(() -> targetPose);
+    }
+
+    public SwerveDrivePIDToPose(Supplier<Pose2d> poseSupplier) {
+        swerve = SwerveDrive.getInstance();
+        odometry = Odometry.getInstance();
+
+        this.poseSupplier = poseSupplier;
+
+        targetPose2d = Odometry.getInstance().getField().getObject("Target Pose");
+
+        controller = new HolonomicController(
+            new PIDController(Alignment.XY.kP, Alignment.XY.kI, Alignment.XY.kD),
+            new PIDController(Alignment.XY.kP, Alignment.XY.kI, Alignment.XY.kD),
+            new AnglePIDController(Alignment.THETA.kP, Alignment.THETA.kI, Alignment.THETA.kD));
+
+        isAligned = BStream.create(this::isAligned)
+            .filtered(new BDebounceRC.Both(Alignment.THETA_DEBOUNCE));
+
+        velocityError = IStream.create(() -> {
+            ChassisSpeeds speeds = controller.getError();
+
+            return new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond).getNorm();
+        })
+        .filtered(new LowPassFilter(0.05))
+        .filtered(x -> Math.abs(x));
+
+        xTolerance = Alignment.X_TOLERANCE;
+        yTolerance = Alignment.Y_TOLERANCE;
+        thetaTolerance = Alignment.THETA_TOLERANCE;
+        velocityTolerance = 0.15;
+
+        addRequirements(swerve);
+    }
+
+    public SwerveDrivePIDToPose withTranslationConstants(PIDConstants pid) {
+        controller.setTranslationConstants(pid.kP, pid.kI, pid.kD);
+        return this;
+    }
+    
+    public SwerveDrivePIDToPose withRotationConstants(PIDConstants pid) {
+        controller.setRotationConstants(pid.kP, pid.kI, pid.kD);
+        return this;
+    }
+
+    public SwerveDrivePIDToPose withTranslationConstants(double p, double i, double d) {
+        controller.setTranslationConstants(p, i, d);
+        return this;
+    }
+    
+    public SwerveDrivePIDToPose withRotationConstants(double p, double i, double d) {
+        controller.setRotationConstants(p, i, d);
+        return this;
+    }
+
+    public SwerveDrivePIDToPose withTolerance(Number x, Number y, Number theta) {
+        xTolerance = x;
+        yTolerance = y;
+        thetaTolerance = theta;
+        return this;
+    }
+
+    @Override
+    public void initialize() {
+        targetPose = poseSupplier.get();
+    }
+
+    private boolean isAligned() {
+        return controller.isDone(xTolerance.doubleValue(), yTolerance.doubleValue(), Math.toDegrees(thetaTolerance.doubleValue()))
+            && velocityError.get() < velocityTolerance.doubleValue();
+    }
+
+    @Override
+    public void execute() {
+        targetPose2d.setPose(Robot.isBlue() ? targetPose : Field.transformToOppositeAlliance(targetPose));
+
+        SmartDashboard.putNumber("Alignment/Target x", targetPose.getX());
+        SmartDashboard.putNumber("Alignment/Target y", targetPose.getY());
+        SmartDashboard.putNumber("Alignment/Target angle", targetPose.getRotation().getDegrees());
+        controller.update(targetPose, odometry.getPose());
+
+        Vector2D speed = new Vector2D(controller.getOutput().vxMetersPerSecond, controller.getOutput().vyMetersPerSecond)
+            .clamp(Swerve.Constraints.MAX_VELOCITY.get());
+        double rotation = SLMath.clamp(controller.getOutput().omegaRadiansPerSecond, Swerve.Constraints.MAX_ANGULAR_VELOCITY.get());
+        
+        SmartDashboard.putNumber("Alignment/Translation Target Speed", speed.distance());
+
+        if (Math.abs(rotation) < Swerve.Alignment.THETA_TOLERANCE.get())
+            rotation = 0;
+
+        ChassisSpeeds clamped = new ChassisSpeeds(
+            speed.x, speed.y, rotation);
+        
+        swerve.setChassisSpeeds(clamped);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return isAligned.get();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        swerve.setChassisSpeeds(new ChassisSpeeds());
+        Field.clearFieldObject(targetPose2d);
+    }
+
+}

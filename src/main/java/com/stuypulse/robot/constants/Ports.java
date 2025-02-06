@@ -12,20 +12,47 @@ public interface Ports {
         int OPERATOR = 1;
         int DEBUGGER = 2;
     }
+  
+    public interface Swerve {
+        public interface FrontRight {
+            int DRIVE = 10;
+            int TURN = 17;
+            int ENCODER = 1;
+        }
+
+        public interface FrontLeft {
+            int DRIVE = 16;
+            int TURN = 15;
+            int ENCODER = 4;
+        }
+
+        public interface BackLeft {
+            int DRIVE = 14;
+            int TURN = 13;
+            int ENCODER = 3;
+        }
+
+        public interface BackRight {
+            int DRIVE = 12;
+            int TURN = 11;
+            int ENCODER = 2;
+        }
+    }
 
     public interface Shooter {
-        int SHOOTER_MOTOR = 0;
+        int TOP_MOTOR = 41;
+        int BOTTOM_MOTOR = 42;
+        int IR_SENSOR = 9;
     }
 
     public interface Elevator {
-        int LEFT = 0;
-        int RIGHT = 1;
-        int SWITCH = 2;
+        int FRONT = 21;
+        int BACK = 22;
+        int SWITCH = 000; // unknown
     }
-  
-    public interface Algae {
-        int ROLLER_ID = 0; // update ports later -- def won't be 0
-        int PIVOT_ID = 1; // update ports later
+
+    public interface Funnel {
+        int MOTOR = 30;
     }
 }
 

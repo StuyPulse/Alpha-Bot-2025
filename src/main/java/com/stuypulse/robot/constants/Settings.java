@@ -5,107 +5,143 @@
 
 package com.stuypulse.robot.constants;
 
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.path.PathConstraints;
 import com.stuypulse.stuylib.network.SmartNumber;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
-/*-
- * File containing tunable settings for every subsystem on the robot.
- *
- * We use StuyLib's SmartNumber / SmartBoolean in order to have tunable
- * values that we can edit on Shuffleboard.
- */
 public interface Settings {
-
-    // checks the current RIO's serial number to determine which robot is running
-    public enum RobotType {
-
-        AUNT_MARY("0000000"),
-        SIM("");
-
-        public final String serialNum;
-
-        RobotType(String serialNum) {
-            this.serialNum = serialNum;
-        }
-
-        public static RobotType fromString(String serialNum) {
-            for (RobotType robot : RobotType.values()) {
-                if (robot.serialNum.equals(serialNum.toUpperCase())) {
-                    return robot;
-                }
-            }
-
-            return RobotType.SIM;
-        }
-    }
 
     double DT = 0.020;
 
-    public interface Robot {
-        double kG = 100.0;
-    }
+    public interface Swerve {
+        String DRIVE_CANBUS = "Swerve Drive Drive";
+        double MODULE_VELOCITY_DEADBAND = 0.05;
 
-    public interface Elevator {
-        double MIN_HEIGHT = 0.0;
-        double MAX_HEIGHT = 12.0;
-        double MAX_ACCELERATION = 2.0;
-        double MAX_VELOCITY = 3.0;
-        double ENCODER_CONVERSION_FACTOR = 0;
-        
-        double MASS = 25.0;
-        double GEARING = 1.0/9.0;
-        double DRUM_RADIUS = Units.inchesToMeters(1.0);
+        public interface Constraints {
+            double MAX_MODULE_SPEED = 4.9;
 
-        double L1 = 1;
-        double L2 = 2;
-        double L3 = 3;
-        double L4 = 4;
-         
-        double POSITION_CONVERSION_FACTOR = 1.0;
-        double VELOCITY_CONVERSION_FACTOR = 1.0;
+            SmartNumber MAX_VELOCITY = new SmartNumber("Swerve/Motion/Max Velocity (m per s)", 3.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Swerve/Motion/Max Acceleration (m per s^2)", 4.0);
+            SmartNumber MAX_ANGULAR_VELOCITY = new SmartNumber("Swerve/Motion/Max Angular Velocity (rad per s)", Units.degreesToRadians(540));
+            SmartNumber MAX_ANGULAR_ACCELERATION = new SmartNumber("Swerve/Motion/Max Angular Acceleration (rad per s^2)", Units.degreesToRadians(720));
 
-        double SCALE_FACTOR = 0.5;
-    
-        public interface PID {
-            SmartNumber kP = new SmartNumber("kP",1.5);
-            SmartNumber kI = new SmartNumber("kI",0.0);
-            SmartNumber kD = new SmartNumber("kD",0.2);
+            PathConstraints DEFAULT_CONSTRAINTS =
+                new PathConstraints(
+                    MAX_VELOCITY.get(),
+                    MAX_ACCELERATION.get(),
+                    MAX_ANGULAR_VELOCITY.get(),
+                    MAX_ANGULAR_ACCELERATION.get());
         }
 
-        public interface FF {
-            SmartNumber kS = new SmartNumber("kS",0.20506);
-            SmartNumber kV = new SmartNumber("kV",3.7672);
-            SmartNumber kA = new SmartNumber("kA", 0.27);
-            SmartNumber kG = new SmartNumber("kG", 0.37);
-        }
-    }
+        public interface Alignment {
+            PIDConstants XY = new PIDConstants(2.5, 0, 0.02);
+            PIDConstants THETA = new PIDConstants(4, 0, 0.1);
 
-    public interface Algae {
-        double RAISED_ANGLE = 0.0;          // CHANGE
-        double PROCESSOR_ANGLE = 0.0;       // CHANGE 
-        double REEF_KNOCKOFF_ANGLE = 0.0;   // CHANGE
-        double GROUND_PICKUP_ANGLE = 0.0;   // CHANGE
-        double L2_ANGLE = 0.0;              // CHANGE
-        double L3_ANGLE = 0.0;              // CHANGE
-        double STOW_ANGLE = 0.0;            // CHANGE 
-        double ACQUIRE_SPEED = 0.0;         // CHANGE
-        double DEACQUIRE_SPEED = 0.0;       // CHANGE
-    
-        public interface PID {
+            SmartNumber X_TOLERANCE = new SmartNumber("Alignment/X Tolerance (m)", 0.05);
+            SmartNumber Y_TOLERANCE = new SmartNumber("Alignment/Y Tolerance (m)", 0.05);
+            SmartNumber THETA_TOLERANCE = new SmartNumber("Alignment/Theta Tolerance (rad)", 0.1);
+
+            double XY_DEBOUNCE = 0.05;
+            double THETA_DEBOUNCE = 0.05;
+        }
+
+        public interface Turn {
+            double kP = 7.0;
+            double kI = 0.0;
+            double kD = 0.05;
+        }
+
+        public interface Drive {
             double kP = 0.0;
             double kI = 0.0;
             double kD = 0.0;
-            double MAX_VELOCITY = 0.0;
-            double MAX_ACCELERATION = 0.0;
+
+            double kS = 0.26722;
+            double kV = 2.2119;
+            double kA = 0.36249;
+        }
+    }
+
+    public interface Vision {        
+        Vector<N3> STDDEVS = VecBuilder.fill(0.3, 0.3, Math.toRadians(30));
+    }
+
+    public interface Elevator {
+        SmartNumber MAX_VELOCITY_METERS_PER_SECOND = new SmartNumber("Elevator/Max Velocity (m per s)", 1.0);
+        SmartNumber MAX_ACCEL_METERS_PER_SECOND_PER_SECOND = new SmartNumber("Elevator/Max Accel (m per s^2)", 2.0);
+
+        double RESET_STALL_CURRENT = 50;
+
+        double L1_HEIGHT_METERS = 0;
+        double L2_HEIGHT_METERS = 0.25;
+        double L3_HEIGHT_METERS = 0.5;
+        double L4_HEIGHT_METERS = 0.75;
+
+        double FEED_HEIGHT_METERS = 0.4;
+
+        SmartNumber HEIGHT_TOLERANCE_METERS = new SmartNumber("Elevator/Height Tolerance (m)", 0.02);
+    
+        public interface PID {
+            SmartNumber kP = new SmartNumber("Elevator/Controller/kP",10);
+            SmartNumber kI = new SmartNumber("Elevator/Controller/kI",0.0);
+            SmartNumber kD = new SmartNumber("Elevator/Controller/kD",0.2);
+        }
+
+        public interface FF {
+            SmartNumber kS = new SmartNumber("Elevator/Controller/kS",0.20506);
+            SmartNumber kV = new SmartNumber("Elevator/Controller/kV",3.7672);
+            SmartNumber kA = new SmartNumber("Elevator/Controller/kA", 0.27);
+            SmartNumber kG = new SmartNumber("Elevator/Controller/kG", 1.37);
         }
         
+        public interface Simulation {
+            double SCALE_FACTOR = 0.5 + 2.5/77;
+        }
+    }
 
-        public interface FF{
-            double kS = 0.0;
-            double kV = 0.0;
-            double kA = 0.0;
-            double kG = 0.0;
+    public interface Shooter {
+        public interface Top {
+            SmartNumber ACQUIRE_SPEED = new SmartNumber("Shooter/Top Acquire Speed", 0.2);
+            SmartNumber SHOOT_SPEED = new SmartNumber("Shooter/Top Shoot Speed", 0.5);
+        }
+        public interface Bottom {
+            SmartNumber ACQUIRE_SPEED = new SmartNumber("Shooter/Bottom Acquire Speed", 0.2);
+            SmartNumber SHOOT_SPEED = new SmartNumber("Shooter/Bottom Shoot Speed", 0.5);
+        }
+    }
+
+    public interface Funnel {
+        SmartNumber ACQUIRE_SPEED = new SmartNumber("Funnel/Acquire Speed", 0.4);
+        SmartNumber DEACQUIRE_SPEED = new SmartNumber("Funnel/Deacquire Speed", 0.4); 
+    }
+
+    public interface Driver {
+        public interface Drive {
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.05);
+
+            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.05);
+            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
+
+            SmartNumber MAX_TELEOP_SPEED = new SmartNumber("Driver Settings/Drive/Max Speed", Swerve.Constraints.MAX_VELOCITY.get());
+            SmartNumber MAX_TELEOP_ACCEL = new SmartNumber("Driver Settings/Drive/Max Accleration", Swerve.Constraints.MAX_ACCELERATION.get());
+        }
+
+        public interface Turn {
+            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.05);
+
+            SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.05);
+            SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
+
+            SmartNumber MAX_TELEOP_TURN_SPEED = new SmartNumber("Driver Settings/Turn/Max Turn Speed (rad per s)", Swerve.Constraints.MAX_ANGULAR_VELOCITY.get());
+            SmartNumber MAX_TELEOP_TURN_ACCEL = new SmartNumber("Driver Settings/Turn/Max Turn Accel (rad per s^2)", Swerve.Constraints.MAX_ANGULAR_ACCELERATION.get());
         }
     }
 }

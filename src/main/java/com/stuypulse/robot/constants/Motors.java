@@ -5,9 +5,19 @@
 
 package com.stuypulse.robot.constants;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.config.EncoderConfig;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 /*-
  * File containing all of the configurations that different motors require.
@@ -20,66 +30,59 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
  */
 public interface Motors {
 
-    /** Classes to store all of the values a motor needs */
+    public interface Elevator {
+        SparkBaseConfig frontMotor = new SparkMaxConfig().inverted(false).smartCurrentLimit(100).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
+        SparkBaseConfig backMotor = new SparkMaxConfig().inverted(false).smartCurrentLimit(100).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
 
-    public static class TalonSRXConfig {
-        public final boolean INVERTED;
-        public final NeutralMode NEUTRAL_MODE;
-        public final int PEAK_CURRENT_LIMIT_AMPS;
-        public final double OPEN_LOOP_RAMP_RATE;
-
-        public TalonSRXConfig(
-                boolean inverted,
-                NeutralMode neutralMode,
-                int peakCurrentLimitAmps,
-                double openLoopRampRate) {
-            this.INVERTED = inverted;
-            this.NEUTRAL_MODE = neutralMode;
-            this.PEAK_CURRENT_LIMIT_AMPS = peakCurrentLimitAmps;
-            this.OPEN_LOOP_RAMP_RATE = openLoopRampRate;
-        }
-
-        public TalonSRXConfig(boolean inverted, NeutralMode neutralMode, int peakCurrentLimitAmps) {
-            this(inverted, neutralMode, peakCurrentLimitAmps, 0.0);
-        }
-
-        public TalonSRXConfig(boolean inverted, NeutralMode neutralMode) {
-            this(inverted, neutralMode, 80);
-        }
-
-        public void configure(WPI_TalonSRX motor) {
-            motor.setInverted(INVERTED);
-            motor.setNeutralMode(NEUTRAL_MODE);
-            motor.configContinuousCurrentLimit(PEAK_CURRENT_LIMIT_AMPS - 10, 0);
-            motor.configPeakCurrentLimit(PEAK_CURRENT_LIMIT_AMPS, 0);
-            motor.configPeakCurrentDuration(100, 0);
-            motor.enableCurrentLimit(true);
-            motor.configOpenloopRamp(OPEN_LOOP_RAMP_RATE);
-        }
+        EncoderConfig encoderConfig = new EncoderConfig().positionConversionFactor(Constants.Elevator.Encoders.POSITION_CONVERSION_FACTOR).velocityConversionFactor(Constants.Elevator.Encoders.VELOCITY_CONVERSION_FACTOR);
     }
 
-    public static class VictorSPXConfig {
-        public final boolean INVERTED;
-        public final NeutralMode NEUTRAL_MODE;
-        public final double OPEN_LOOP_RAMP_RATE;
+    public interface Shooter {
+        SparkBaseConfig topMotorConfig = new SparkMaxConfig().inverted(false).smartCurrentLimit(50).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
+        SparkBaseConfig bottomMotorConfig = new SparkMaxConfig().inverted(false).smartCurrentLimit(50).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
+    }
 
-        public VictorSPXConfig(
-                boolean inverted,
-                NeutralMode neutralMode,
-                double openLoopRampRate) {
-            this.INVERTED = inverted;
-            this.NEUTRAL_MODE = neutralMode;
-            this.OPEN_LOOP_RAMP_RATE = openLoopRampRate;
+    public interface Funnel {
+        SparkBaseConfig motorConfig = new SparkMaxConfig().inverted(false).smartCurrentLimit(50).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
+    }
+
+    public interface Swerve {
+        public interface Turn {
+            SparkBaseConfig motorConfig = new SparkMaxConfig().inverted(false).smartCurrentLimit(200).openLoopRampRate(0.25).idleMode(IdleMode.kBrake);
         }
+        public interface Drive {
+            Slot0Configs slot0Configs = new Slot0Configs()
+                .withKS(Settings.Swerve.Drive.kS)
+                .withKV(Settings.Swerve.Drive.kV)
+                .withKA(Settings.Swerve.Drive.kA)
+                .withKP(Settings.Swerve.Drive.kP)
+                .withKI(Settings.Swerve.Drive.kI)
+                .withKD(Settings.Swerve.Drive.kD);
+            
+            MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs()
+                .withInverted(InvertedValue.Clockwise_Positive)
+                .withNeutralMode(NeutralModeValue.Brake);
 
-        public VictorSPXConfig(boolean inverted, NeutralMode neutralMode) {
-            this(inverted, neutralMode, 0.0);
-        }
+            ClosedLoopRampsConfigs closedLoopRampsConfigs = new ClosedLoopRampsConfigs()
+                .withTorqueClosedLoopRampPeriod(0.25);
+            
+            CurrentLimitsConfigs currentLimitsConfigs = new CurrentLimitsConfigs()
+                .withStatorCurrentLimit(65);
 
-        public void configure(WPI_VictorSPX motor) {
-            motor.setInverted(INVERTED);
-            motor.setNeutralMode(NEUTRAL_MODE);
-            motor.configOpenloopRamp(OPEN_LOOP_RAMP_RATE);
+            TorqueCurrentConfigs torqueCurrentConfigs = new TorqueCurrentConfigs()
+                .withPeakForwardTorqueCurrent(+400)
+                .withPeakReverseTorqueCurrent(-400)
+                .withTorqueNeutralDeadband(0.05);
+
+            FeedbackConfigs feedbackConfigs = new FeedbackConfigs().withSensorToMechanismRatio(1/Constants.Swerve.Encoder.Drive.POSITION_CONVERSION);
+
+            TalonFXConfiguration motorConfig = new TalonFXConfiguration()
+                .withSlot0(slot0Configs)
+                .withMotorOutput(motorOutputConfigs)
+                .withClosedLoopRamps(closedLoopRampsConfigs)
+                .withCurrentLimits(currentLimitsConfigs)
+                .withTorqueCurrent(torqueCurrentConfigs)
+                .withFeedback(feedbackConfigs);
         }
     }
 }

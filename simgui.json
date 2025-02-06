@@ -1,28 +1,43 @@
 {
   "HALProvider": {
-    "Encoders": {
+    "Other Devices": {
       "window": {
-        "visible": true
+        "visible": false
       }
     },
-    "PWM Outputs": {
+    "Timing": {
       "window": {
-        "visible": true
+        "visible": false
       }
     }
   },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/Autonomous": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Visualizers/Elevator": "Mechanism2d"
     },
     "windows": {
+      "/SmartDashboard/Autonomous": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Field": {
+        "bottom": 1638,
+        "builtin": "2025 Reefscape",
+        "height": 8.051901817321777,
+        "left": 534,
+        "right": 3466,
+        "top": 291,
+        "width": 17.54825210571289,
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Visualizers/Elevator": {
-      "/SmartDashboard/algae": "Mechanism2d"
-    },
-    "windows": {
-      "/SmartDashboard/algae": {
         "window": {
           "visible": true
         }
@@ -31,20 +46,8 @@
   },
   "NetworkTables": {
     "transitory": {
-      "FMSInfo": {
-        "open": true
-      },
-      "LiveWindow": {
-        "open": true
-      },
-      "Shuffleboard": {
-        "open": true
-      },
       "SmartDashboard": {
-        "Elevator": {
-
-        "algae": {
-
+        "Odometry": {
           "open": true
         },
         "open": true
@@ -52,26 +55,6 @@
     }
   },
   "NetworkTables Info": {
-    "Clients": {
-      "open": true
-    },
-    "Server": {
-
-      "Publishers": {
-        "open": true
-      },
-      "Subscribers": {
-        "open": true
-      }
-    },
     "visible": true
-  },
-  "NetworkTables View": {
-    "visible": false
-
-      "open": true
-    },
-    "visible": true
-
   }
 }
