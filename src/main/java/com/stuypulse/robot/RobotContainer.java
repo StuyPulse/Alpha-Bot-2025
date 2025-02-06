@@ -36,6 +36,7 @@ import com.stuypulse.robot.commands.shooter.ShooterAcquire;
 import com.stuypulse.robot.commands.shooter.ShooterShoot;
 import com.stuypulse.robot.commands.shooter.ShooterStop;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
+import com.stuypulse.robot.commands.swerve.SwerveDriveDriveAlignedToNearestCoralStation;
 import com.stuypulse.robot.commands.swerve.SwerveDrivePIDToNearestBranch;
 import com.stuypulse.robot.commands.swerve.SwerveDrivePIDToPose;
 import com.stuypulse.robot.constants.Field;
@@ -97,6 +98,10 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         driver.getDPadUp().onTrue(new SeedFieldRelative());
+
+        // Align to nearest Coral Station while driving
+        driver.getRightTriggerButton()
+            .whileTrue(new SwerveDriveDriveAlignedToNearestCoralStation(driver));
         
         // Automated L4
         driver.getTopButton()

@@ -293,13 +293,18 @@ public interface Field {
             : NamedTags.RED_KL_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()));
     }
 
-    public static boolean robotIsCloserToCDCoralStation() {
+    public static Pose2d getClosestCoralStationTargetPose() {
         Pose2d robot = Odometry.getInstance().getPose();
 
         Pose2d cdCoralStation = getTargetPoseForCDCoralStation();
         Pose2d klCoralStation = getTargetPoseForKLCoralStation();
 
-        return robot.minus(cdCoralStation).getTranslation().getNorm() < robot.minus(klCoralStation).getTranslation().getNorm();
+        if (robot.minus(cdCoralStation).getTranslation().getNorm() < robot.minus(klCoralStation).getTranslation().getNorm()) {
+            return cdCoralStation;
+        }
+        else {
+            return klCoralStation;
+        }
     }
 
     /**** EMPTY FIELD POSES ****/
