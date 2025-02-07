@@ -15,8 +15,8 @@ import edu.wpi.first.math.util.Units;
  */
 public interface Constants {
 
-    double LENGTH_WITH_BUMPERS_METERS = Units.inchesToMeters(29); //UNCONFIRMED
-    double WIDTH_WITH_BUMPERS_METERS = Units.inchesToMeters(29); //UNCONFIRMED
+    double LENGTH_WITH_BUMPERS_METERS = Units.inchesToMeters(30);
+    double WIDTH_WITH_BUMPERS_METERS = Units.inchesToMeters(30);
 
     public interface Swerve {
         double WIDTH = Units.inchesToMeters(18.75);
@@ -58,11 +58,9 @@ public interface Constants {
     }
 
     public interface Elevator {
-        //UNCONFIRMED
         double MIN_HEIGHT_METERS = Units.inchesToMeters(18 + 1.0/16.0); // FROM THE FLOOR TO TOP OF CARRAIGE
         double MAX_HEIGHT_METERS = Units.inchesToMeters(90.5); // FROM THE FLOOR TO TOP OF CARRAIGE
 
-        double MASS_KG = 10.0; //UNCONFIRMED
         double DRUM_RADIUS_METERS = (MAX_HEIGHT_METERS / Encoders.NUM_ROTATIONS_TO_REACH_TOP * Encoders.GEARING) / 2 / Math.PI;
 
         public interface Encoders {
