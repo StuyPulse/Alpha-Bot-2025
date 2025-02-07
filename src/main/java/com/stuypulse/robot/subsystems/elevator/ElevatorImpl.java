@@ -42,6 +42,7 @@ public class ElevatorImpl extends Elevator {
         backMotor.configure(Motors.Elevator.backMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         encoder = frontMotor.getEncoder();
+        encoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
 
         targetHeight = new SmartNumber("Elevator/Target Height", Constants.Elevator.MIN_HEIGHT_METERS);
 
@@ -91,7 +92,7 @@ public class ElevatorImpl extends Elevator {
         super.periodic();
 
         if (!hasBeenReset) {
-            setVoltage(-0.5);
+            setVoltage(-3.0);
             if (frontMotor.getOutputCurrent() > Settings.Elevator.RESET_STALL_CURRENT || backMotor.getOutputCurrent() > Settings.Elevator.RESET_STALL_CURRENT) {
                 hasBeenReset = true;
                 encoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
@@ -103,5 +104,11 @@ public class ElevatorImpl extends Elevator {
         }
 
         SmartDashboard.putNumber("Elevator/Current Height", getCurrentHeight());
+
+        SmartDashboard.putNumber("Elevator/Front height", frontMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Elevator/Back posoition", backMotor.getEncoder().getPosition());
+
+        SmartDashboard.putNumber("Elevator/Front current", frontMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Elevator/Back current", backMotor.getOutputCurrent());
     }
 }

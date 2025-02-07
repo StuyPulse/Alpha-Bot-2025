@@ -23,7 +23,7 @@ public class FunnelImpl extends Funnel{
 
         shouldReverse = BStream.create(() -> motor.getOutputCurrent() > Settings.Funnel.STALL_CURRENT)
             .filtered(new BDebounce.Rising(Settings.Funnel.STALL_DETECTION_TIME))
-            .filtered(new BDebounce.Falling(Settings.Funnel.REVERSE_TIME));
+            .filtered(new BDebounce.Falling(Settings.Funnel.MIN_REVERSE_TIME));
     }
 
     @Override
