@@ -105,9 +105,6 @@ public class ElevatorImpl extends Elevator {
 
         SmartDashboard.putNumber("Elevator/Current Height", getCurrentHeight());
 
-        SmartDashboard.putNumber("Elevator/Front height", frontMotor.getEncoder().getPosition());
-        SmartDashboard.putNumber("Elevator/Back posoition", backMotor.getEncoder().getPosition());
-
         SmartDashboard.putNumber("Elevator/Front current", frontMotor.getOutputCurrent());
         SmartDashboard.putNumber("Elevator/Back current", backMotor.getOutputCurrent());
     }

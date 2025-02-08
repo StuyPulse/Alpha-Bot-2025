@@ -69,11 +69,6 @@ public interface Motors {
             CurrentLimitsConfigs currentLimitsConfigs = new CurrentLimitsConfigs()
                 .withStatorCurrentLimit(65);
 
-            TorqueCurrentConfigs torqueCurrentConfigs = new TorqueCurrentConfigs()
-                .withPeakForwardTorqueCurrent(+400)
-                .withPeakReverseTorqueCurrent(-400)
-                .withTorqueNeutralDeadband(0.05);
-
             FeedbackConfigs feedbackConfigs = new FeedbackConfigs().withSensorToMechanismRatio(1/Constants.Swerve.Encoder.Drive.POSITION_CONVERSION);
 
             TalonFXConfiguration motorConfig = new TalonFXConfiguration()
@@ -81,7 +76,6 @@ public interface Motors {
                 .withMotorOutput(motorOutputConfigs)
                 .withClosedLoopRamps(closedLoopRampsConfigs)
                 .withCurrentLimits(currentLimitsConfigs)
-                .withTorqueCurrent(torqueCurrentConfigs)
                 .withFeedback(feedbackConfigs);
         }
     }
