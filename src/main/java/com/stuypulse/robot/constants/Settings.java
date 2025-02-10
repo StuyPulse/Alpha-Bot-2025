@@ -80,10 +80,9 @@ public interface Settings {
 
         double RESET_STALL_CURRENT = 30;
 
-        double L1_HEIGHT_METERS = 1.2;
-        double L2_HEIGHT_METERS = 0.5;
-        double L3_HEIGHT_METERS = 0.5;
-        double L4_HEIGHT_METERS = 0.75;
+        double L2_HEIGHT_METERS = 1.282004;
+        double L3_HEIGHT_METERS = 1.785820;
+        double L4_HEIGHT_METERS = 2.627014;
 
         double FEED_HEIGHT_METERS = 0.0;
 

@@ -26,12 +26,12 @@ import com.stuypulse.robot.commands.auton.tests.SquareTest;
 import com.stuypulse.robot.commands.auton.tests.StraightLineTest;
 import com.stuypulse.robot.commands.elevator.ElevatorToBottom;
 import com.stuypulse.robot.commands.elevator.ElevatorToFeed;
-import com.stuypulse.robot.commands.elevator.ElevatorToLvl1;
 import com.stuypulse.robot.commands.elevator.ElevatorToLvl2;
 import com.stuypulse.robot.commands.elevator.ElevatorToLvl3;
 import com.stuypulse.robot.commands.elevator.ElevatorToLvl4;
 import com.stuypulse.robot.commands.elevator.ElevatorWaitUntilAtTargetHeight;
-import com.stuypulse.robot.commands.funnel.FunnelDefaultCommand;
+import com.stuypulse.robot.commands.funnel.FunnelRun;
+import com.stuypulse.robot.commands.funnel.FunnelStop;
 import com.stuypulse.robot.commands.shooter.ShooterAcquire;
 import com.stuypulse.robot.commands.shooter.ShooterShoot;
 import com.stuypulse.robot.commands.shooter.ShooterStop;
@@ -88,7 +88,6 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-        funnel.setDefaultCommand(new FunnelDefaultCommand());
     }
 
     /***************/
@@ -99,9 +98,11 @@ public class RobotContainer {
 
         driver.getDPadUp().onTrue(new SeedFieldRelative());
 
-        // Align to nearest Coral Station while driving
         driver.getRightTriggerButton()
-            .whileTrue(new SwerveDriveDriveAlignedToNearestCoralStation(driver));
+            .whileTrue(new SwerveDriveDriveAlignedToNearestCoralStation(driver))
+            .whileTrue(new FunnelRun())
+            .onFalse(new FunnelStop())
+            .whileTrue(new ShooterAcquire());
         
         // Automated L4
         driver.getTopButton()
