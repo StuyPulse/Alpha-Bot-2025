@@ -14,6 +14,8 @@ public interface Ports {
     }
   
     public interface Swerve {
+        int PIGEON = 9;
+        
         public interface FrontRight {
             int DRIVE = 10;
             int TURN = 17;

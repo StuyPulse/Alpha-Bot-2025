@@ -1,5 +1,6 @@
 package com.stuypulse.robot.subsystems.swerve;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
@@ -64,14 +65,14 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     private final SwerveModule[] modules;
-    private final AHRS gyro;
+    private final Pigeon2 gyro;
     private final SwerveDriveKinematics kinematics;
     private final FieldObject2d[] module2ds;
 
     protected SwerveDrive(SwerveModule... modules) {
         this.modules = modules;
 
-        gyro = new AHRS(SPI.Port.kMXP);
+        gyro = new Pigeon2(9, Settings.Swerve.DRIVE_CANBUS);
 
         kinematics = new SwerveDriveKinematics(getModuleOffsets());
 
@@ -179,15 +180,15 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public double getGyroYaw() {
-        return gyro.getYaw();
+        return gyro.getYaw().getValueAsDouble();
     }
 
     public double getGyroPitch() {
-        return gyro.getPitch();
+        return gyro.getPitch().getValueAsDouble();
     }
 
     public double getGyroRoll() {
-        return gyro.getRoll();
+        return gyro.getRoll().getValueAsDouble();
     }
 
     /** KINEMATICS **/
@@ -243,18 +244,18 @@ public class SwerveDrive extends SubsystemBase {
 
         SmartDashboard.putNumber("Swerve/Gyro Angle (deg)", getGyroPitch());
         SmartDashboard.putNumber("Swerve/Gyro Pitch (deg)", getGyroPitch());
-        SmartDashboard.putNumber("Swerve/Gyro Roll", getGyroRoll());
+        SmartDashboard.putNumber("Swerve/Gyro Roll (deg)", getGyroRoll());
 
-        SmartDashboard.putNumber("Swerve/X Acceleration (Gs)", gyro.getWorldLinearAccelX());
-        SmartDashboard.putNumber("Swerve/Y Acceleration (Gs)", gyro.getWorldLinearAccelY());
-        SmartDashboard.putNumber("Swerve/Z Acceleration (Gs)", gyro.getWorldLinearAccelZ());
+        SmartDashboard.putNumber("Swerve/X Acceleration (Gs)", gyro.getAccelerationX().getValueAsDouble());
+        SmartDashboard.putNumber("Swerve/Y Acceleration (Gs)", gyro.getAccelerationY().getValueAsDouble());
+        SmartDashboard.putNumber("Swerve/Z Acceleration (Gs)", gyro.getAccelerationZ().getValueAsDouble());
     }
 
     @Override
     public void simulationPeriodic() {
         // Integrate omega in simulation and store in gyro
         var speeds = getKinematics().toChassisSpeeds(getModuleStates());
-        gyro.setAngleAdjustment(gyro.getAngle() - Math.toDegrees(speeds.omegaRadiansPerSecond * Settings.DT));
+        gyro.setYaw(gyro.getYaw().getValueAsDouble() - Math.toDegrees(speeds.omegaRadiansPerSecond * Settings.DT));
     }
 
 }
