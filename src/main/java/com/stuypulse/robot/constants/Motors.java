@@ -31,8 +31,8 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 public interface Motors {
 
     public interface Elevator {
-        SparkBaseConfig frontMotor = new SparkMaxConfig().inverted(true).smartCurrentLimit(100).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
-        SparkBaseConfig backMotor = new SparkMaxConfig().inverted(false).smartCurrentLimit(100).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
+        SparkBaseConfig frontMotor = new SparkMaxConfig().inverted(true).smartCurrentLimit(75).openLoopRampRate(0.75).idleMode(IdleMode.kBrake);
+        SparkBaseConfig backMotor = new SparkMaxConfig().inverted(false).smartCurrentLimit(75).openLoopRampRate(0.75).idleMode(IdleMode.kBrake);
 
         EncoderConfig encoderConfig = new EncoderConfig().positionConversionFactor(Constants.Elevator.Encoders.POSITION_CONVERSION_FACTOR).velocityConversionFactor(Constants.Elevator.Encoders.VELOCITY_CONVERSION_FACTOR);
     }

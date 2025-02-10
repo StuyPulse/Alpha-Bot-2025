@@ -30,7 +30,7 @@ public interface Settings {
 
             SmartNumber MAX_VELOCITY = new SmartNumber("Swerve/Motion/Max Velocity (m per s)", 3.0);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Swerve/Motion/Max Acceleration (m per s^2)", 5.0);
-            SmartNumber MAX_ANGULAR_VELOCITY = new SmartNumber("Swerve/Motion/Max Angular Velocity (rad per s)", Units.degreesToRadians(540));
+            SmartNumber MAX_ANGULAR_VELOCITY = new SmartNumber("Swerve/Motion/Max Angular Velocity (rad per s)", Units.degreesToRadians(360));
             SmartNumber MAX_ANGULAR_ACCELERATION = new SmartNumber("Swerve/Motion/Max Angular Acceleration (rad per s^2)", Units.degreesToRadians(720));
 
             PathConstraints DEFAULT_CONSTRAINTS =
@@ -75,30 +75,31 @@ public interface Settings {
     }
 
     public interface Elevator {
-        SmartNumber MAX_VELOCITY_METERS_PER_SECOND = new SmartNumber("Elevator/Max Velocity (m per s)", 1.0);
-        SmartNumber MAX_ACCEL_METERS_PER_SECOND_PER_SECOND = new SmartNumber("Elevator/Max Accel (m per s^2)", 2.0);
+        SmartNumber MAX_VELOCITY_METERS_PER_SECOND = new SmartNumber("Elevator/Max Velocity (m per s)", 2.5);
+        SmartNumber MAX_ACCEL_METERS_PER_SECOND_PER_SECOND = new SmartNumber("Elevator/Max Accel (m per s^2)", 5.0);
 
         double RESET_STALL_CURRENT = 30;
 
-        double L2_HEIGHT_METERS = 1.282004;
-        double L3_HEIGHT_METERS = 1.785820;
+        double MAX_VOLTAGE = 6;
+
+        double L2_HEIGHT_METERS = 1.302004;
+        double L3_HEIGHT_METERS = 1.805820;
         double L4_HEIGHT_METERS = 2.627014;
 
-        double FEED_HEIGHT_METERS = 0.0;
+        double FEED_HEIGHT_METERS = Constants.Elevator.MIN_HEIGHT_METERS;
 
-        SmartNumber HEIGHT_TOLERANCE_METERS = new SmartNumber("Elevator/Height Tolerance (m)", 0.02);
-    
+        SmartNumber HEIGHT_TOLERANCE_METERS = new SmartNumber("Elevator/Height Tolerance (m)", 0.03);
         public interface PID {
-            SmartNumber kP = new SmartNumber("Elevator/Controller/kP",0.0);
+            SmartNumber kP = new SmartNumber("Elevator/Controller/kP", 10.0);
             SmartNumber kI = new SmartNumber("Elevator/Controller/kI",0.0);
-            SmartNumber kD = new SmartNumber("Elevator/Controller/kD",0.0);
+            SmartNumber kD = new SmartNumber("Elevator/Controller/kD",0.01);
         }
 
         public interface FF {
             SmartNumber kS = new SmartNumber("Elevator/Controller/kS",0.0);
             SmartNumber kV = new SmartNumber("Elevator/Controller/kV",0.0);
             SmartNumber kA = new SmartNumber("Elevator/Controller/kA", 0.0);
-            SmartNumber kG = new SmartNumber("Elevator/Controller/kG", 0.0);
+            SmartNumber kG = new SmartNumber("Elevator/Controller/kG", 0.9);
         }
         
         public interface Simulation {
@@ -107,13 +108,14 @@ public interface Settings {
     }
 
     public interface Shooter {
+        double HAS_CORAL_DEBOUNCE = 0.0;
         public interface Top {
-            SmartNumber ACQUIRE_SPEED = new SmartNumber("Shooter/Top Acquire Speed", 0.2);
-            SmartNumber SHOOT_SPEED = new SmartNumber("Shooter/Top Shoot Speed", 0.5);
+            SmartNumber ACQUIRE_SPEED = new SmartNumber("Shooter/Top Acquire Speed", 0.22);
+            SmartNumber SHOOT_SPEED = new SmartNumber("Shooter/Top Shoot Speed", 0.7);
         }
         public interface Bottom {
-            SmartNumber ACQUIRE_SPEED = new SmartNumber("Shooter/Bottom Acquire Speed", 0.2);
-            SmartNumber SHOOT_SPEED = new SmartNumber("Shooter/Bottom Shoot Speed", 0.5);
+            SmartNumber ACQUIRE_SPEED = new SmartNumber("Shooter/Bottom Acquire Speed", 0.22);
+            SmartNumber SHOOT_SPEED = new SmartNumber("Shooter/Bottom Shoot Speed", 0.7);
         }
     }
 
@@ -121,7 +123,7 @@ public interface Settings {
         SmartNumber ACQUIRE_SPEED = new SmartNumber("Funnel/Acquire Speed", 0.4);
         SmartNumber REVERSE_SPEED = new SmartNumber("Funnel/Reverse Speed", 0.4); 
 
-        double STALL_CURRENT = 30;
+        double STALL_CURRENT = 25.0;
         double STALL_DETECTION_TIME = 0.25;
         double MIN_REVERSE_TIME = 1.0;
     }

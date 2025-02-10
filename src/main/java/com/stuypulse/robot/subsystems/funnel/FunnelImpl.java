@@ -48,6 +48,7 @@ public class FunnelImpl extends Funnel{
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Funnel/Speed", motor.get());
+        SmartDashboard.putNumber("Funnel/Current Speed", motor.get());
+        SmartDashboard.putNumber("Funnel/Current Amps", motor.getOutputCurrent());
     }
 }

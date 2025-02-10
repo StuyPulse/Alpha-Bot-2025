@@ -5,11 +5,11 @@ import com.stuypulse.robot.subsystems.shooter.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class FunnelRun extends Command{
+public class FunnelDefaultCommand extends Command{
     
     private final Funnel funnel;
 
-    public FunnelRun() {
+    public FunnelDefaultCommand() {
         this.funnel = Funnel.getInstance();
         addRequirements(funnel);
     }

@@ -26,9 +26,9 @@ public class ElevatorImpl extends Elevator {
 
     private final RelativeEncoder encoder;
 
-    private final SmartNumber targetHeight;
-
     private final Controller controller;
+
+    private double targetHeight;
 
     private boolean hasBeenReset;
 
@@ -44,7 +44,7 @@ public class ElevatorImpl extends Elevator {
         encoder = frontMotor.getEncoder();
         encoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
 
-        targetHeight = new SmartNumber("Elevator/Target Height", Constants.Elevator.MIN_HEIGHT_METERS);
+        targetHeight = Constants.Elevator.MIN_HEIGHT_METERS;
 
         MotionProfile motionProfile = new MotionProfile(Settings.Elevator.MAX_VELOCITY_METERS_PER_SECOND, Settings.Elevator.MAX_ACCEL_METERS_PER_SECOND_PER_SECOND);
         
@@ -58,18 +58,12 @@ public class ElevatorImpl extends Elevator {
     
     @Override
     public void setTargetHeight(double height) {
-        targetHeight.set(
-            SLMath.clamp(
-                height, 
-                Constants.Elevator.MIN_HEIGHT_METERS, 
-                Constants.Elevator.MAX_HEIGHT_METERS
-            )
-        );
+        targetHeight = height;
     }
 
     @Override
     public double getTargetHeight() {
-        return targetHeight.getAsDouble();
+        return targetHeight;
     }
 
     @Override
@@ -100,12 +94,17 @@ public class ElevatorImpl extends Elevator {
         }
         else {
             controller.update(getTargetHeight(), getCurrentHeight());
-            setVoltage(controller.getOutput());
+            double voltage = SLMath.clamp(controller.getOutput(), 0, Settings.Elevator.MAX_VOLTAGE);
+            setVoltage(voltage);
+            SmartDashboard.putNumber("Elevator/Voltage", voltage);
         }
 
+        SmartDashboard.putNumber("Elevator/Target Height", getTargetHeight());
         SmartDashboard.putNumber("Elevator/Current Height", getCurrentHeight());
 
-        SmartDashboard.putNumber("Elevator/Front current", frontMotor.getOutputCurrent());
-        SmartDashboard.putNumber("Elevator/Back current", backMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Elevator/Current Setpoint", controller.getSetpoint());
+
+        SmartDashboard.putNumber("Elevator/Front Motor Current", frontMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Elevator/Back Motor Current", backMotor.getOutputCurrent());
     }
 }
