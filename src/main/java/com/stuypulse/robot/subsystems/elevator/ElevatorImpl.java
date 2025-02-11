@@ -94,7 +94,7 @@ public class ElevatorImpl extends Elevator {
         }
         else {
             controller.update(getTargetHeight(), getCurrentHeight());
-            double voltage = SLMath.clamp(controller.getOutput(), 0, Settings.Elevator.MAX_VOLTAGE);
+            double voltage = SLMath.clamp(controller.getOutput(), -Settings.Elevator.MAX_VOLTAGE, Settings.Elevator.MAX_VOLTAGE);
             setVoltage(voltage);
             SmartDashboard.putNumber("Elevator/Voltage", voltage);
         }
