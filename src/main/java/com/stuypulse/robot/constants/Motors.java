@@ -52,12 +52,12 @@ public interface Motors {
         }
         public interface Drive {
             Slot0Configs slot0Configs = new Slot0Configs()
-                .withKS(Settings.Swerve.Drive.kS)
-                .withKV(Settings.Swerve.Drive.kV)
-                .withKA(Settings.Swerve.Drive.kA)
-                .withKP(Settings.Swerve.Drive.kP)
-                .withKI(Settings.Swerve.Drive.kI)
-                .withKD(Settings.Swerve.Drive.kD);
+                .withKS(Gains.Swerve.Drive.kS)
+                .withKV(Gains.Swerve.Drive.kV)
+                .withKA(Gains.Swerve.Drive.kA)
+                .withKP(Gains.Swerve.Drive.kP)
+                .withKI(Gains.Swerve.Drive.kI)
+                .withKD(Gains.Swerve.Drive.kD);
             
             MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs()
                 .withInverted(InvertedValue.Clockwise_Positive)

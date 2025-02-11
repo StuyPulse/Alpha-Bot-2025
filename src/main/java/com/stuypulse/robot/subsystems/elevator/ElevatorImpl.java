@@ -6,6 +6,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.stuypulse.robot.constants.Constants;
+import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
@@ -48,9 +49,9 @@ public class ElevatorImpl extends Elevator {
 
         MotionProfile motionProfile = new MotionProfile(Settings.Elevator.MAX_VELOCITY_METERS_PER_SECOND, Settings.Elevator.MAX_ACCEL_METERS_PER_SECOND_PER_SECOND);
         
-        controller = new MotorFeedforward(Settings.Elevator.FF.kS, Settings.Elevator.FF.kV, Settings.Elevator.FF.kA).position()
-            .add(new ElevatorFeedforward(Settings.Elevator.FF.kG))
-            .add(new PIDController(Settings.Elevator.PID.kP, Settings.Elevator.PID.kI, Settings.Elevator.PID.kD))
+        controller = new MotorFeedforward(Gains.Elevator.FF.kS, Gains.Elevator.FF.kV, Gains.Elevator.FF.kA).position()
+            .add(new ElevatorFeedforward(Gains.Elevator.FF.kG))
+            .add(new PIDController(Gains.Elevator.PID.kP, Gains.Elevator.PID.kI, Gains.Elevator.PID.kD))
             .setSetpointFilter(motionProfile)
             .setOutputFilter(x -> SLMath.clamp(x, -Settings.Elevator.MAX_VOLTAGE, Settings.Elevator.MAX_VOLTAGE));
         
