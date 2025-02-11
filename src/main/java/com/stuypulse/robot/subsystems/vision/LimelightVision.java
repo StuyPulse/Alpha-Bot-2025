@@ -8,6 +8,7 @@ import com.stuypulse.robot.util.vision.LimelightHelpers.PoseEstimate;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class LimelightVision extends AprilTagVision{
 
@@ -79,9 +80,18 @@ public class LimelightVision extends AprilTagVision{
                         Pose2d robotPose = poseEstimate.pose;
                         double timestamp = poseEstimate.timestampSeconds;
                         Odometry.getInstance().addVisionData(robotPose, timestamp);
+                        SmartDashboard.putBoolean("Vision/" + names[i] + " Has Data", true);
+                    }
+                    else {
+                        SmartDashboard.putBoolean("Vision/" + names[i] + " Has Data", false);
                     }
                 }
             }
+        }
+
+        SmartDashboard.putBoolean("Vision/Is Enabled", enabled);
+        for (int i = 0; i < names.length; i++) {
+            SmartDashboard.putBoolean("Vision/" + names[i] + " Is Enabled", camerasEnabled[i]);
         }
     }
 }
