@@ -2,6 +2,7 @@ package com.stuypulse.robot.subsystems.vision;
 
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Cameras;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.vision.LimelightHelpers;
@@ -91,7 +92,7 @@ public class LimelightVision extends AprilTagVision{
                     if (poseEstimate != null && poseEstimate.tagCount > 0) {
                         Pose2d robotPose = poseEstimate.pose;
                         double timestamp = poseEstimate.timestampSeconds;
-                        Odometry.getInstance().addVisionData(robotPose, timestamp);
+                        Odometry.getInstance().addVisionData(robotPose, timestamp, Settings.Vision.MIN_STDDEVS.times(1 + poseEstimate.avgTagDist));
                         SmartDashboard.putBoolean("Vision/" + names[i] + " Has Data", true);
                     }
                     else {

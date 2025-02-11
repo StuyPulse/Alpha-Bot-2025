@@ -51,7 +51,7 @@ public interface Settings {
     }
 
     public interface Vision {        
-        Vector<N3> STDDEVS = VecBuilder.fill(0.3, 0.3, Math.toRadians(30));
+        Vector<N3> MIN_STDDEVS = VecBuilder.fill(0.3, 0.3, 5);
     }
 
     public interface Elevator {
