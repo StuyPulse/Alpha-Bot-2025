@@ -137,9 +137,7 @@ public class RobotContainer {
             .onFalse(new ElevatorToFeed())
             .onFalse(new ShooterStop());
         
-        driver.getRightButton()
-            .onTrue(new ShooterShoot())
-            .onFalse(new ShooterStop());
+        driver.getLeftButton().whileTrue(new SwerveDrivePIDToNearestBranch());
     }
 
     /**************/

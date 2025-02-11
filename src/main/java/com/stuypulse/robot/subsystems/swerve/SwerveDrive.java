@@ -20,6 +20,7 @@ import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.modules.SimModule;
 import com.stuypulse.robot.subsystems.swerve.modules.SwerveModule;
 import com.stuypulse.robot.subsystems.swerve.modules.SwerveModuleImpl;
+import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.math.Vector2D;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -130,7 +131,7 @@ public class SwerveDrive extends SubsystemBase {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 velocity.x,
                 velocity.y,
-                -omega,
+                omega,
                 Odometry.getInstance().getRotation());
 
         Pose2d robotVel = new Pose2d(
@@ -147,6 +148,17 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public void setChassisSpeeds(ChassisSpeeds robotSpeed) {
+        Vector2D xy = new Vector2D(robotSpeed.vxMetersPerSecond, robotSpeed.vyMetersPerSecond);
+        xy = xy.clamp(Settings.Swerve.Constraints.MAX_VELOCITY.get());
+        robotSpeed.vxMetersPerSecond = xy.x;
+        robotSpeed.vyMetersPerSecond = xy.y;
+
+        robotSpeed.omegaRadiansPerSecond = SLMath.clamp(
+            robotSpeed.omegaRadiansPerSecond, 
+            -Settings.Swerve.Constraints.MAX_ANGULAR_VELOCITY.get(),
+            Settings.Swerve.Constraints.MAX_ANGULAR_VELOCITY.get()
+        );
+        
         setModuleStates(kinematics.toSwerveModuleStates(robotSpeed));
     }
 

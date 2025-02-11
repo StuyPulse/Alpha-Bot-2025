@@ -24,7 +24,6 @@ public abstract class Odometry extends SubsystemBase {
 
     public abstract Pose2d getPose();
 
-
     public final Translation2d getTranslation() {
         return getPose().getTranslation();
     }

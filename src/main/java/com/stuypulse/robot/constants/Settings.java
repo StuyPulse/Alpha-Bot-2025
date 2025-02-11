@@ -6,14 +6,11 @@
 package com.stuypulse.robot.constants;
 
 import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.path.PathConstraints;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
@@ -42,15 +39,14 @@ public interface Settings {
         }
 
         public interface Alignment {
-            PIDConstants XY = new PIDConstants(2.5, 0, 0.02);
-            PIDConstants THETA = new PIDConstants(4, 0, 0.1);
+            PIDConstants XY = new PIDConstants(2.0, 0, 0.02);
+            PIDConstants THETA = new PIDConstants(3, 0, 0.1);
 
             SmartNumber X_TOLERANCE = new SmartNumber("Alignment/X Tolerance (m)", 0.05);
             SmartNumber Y_TOLERANCE = new SmartNumber("Alignment/Y Tolerance (m)", 0.05);
             SmartNumber THETA_TOLERANCE = new SmartNumber("Alignment/Theta Tolerance (rad)", 0.1);
 
-            double XY_DEBOUNCE = 0.05;
-            double THETA_DEBOUNCE = 0.05;
+            double ALIGNMENT_DEBOUNCE = 0.05;
         }
 
         public interface Turn {
