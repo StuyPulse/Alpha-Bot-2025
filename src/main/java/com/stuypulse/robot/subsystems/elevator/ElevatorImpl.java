@@ -51,7 +51,8 @@ public class ElevatorImpl extends Elevator {
         controller = new MotorFeedforward(Settings.Elevator.FF.kS, Settings.Elevator.FF.kV, Settings.Elevator.FF.kA).position()
             .add(new ElevatorFeedforward(Settings.Elevator.FF.kG))
             .add(new PIDController(Settings.Elevator.PID.kP, Settings.Elevator.PID.kI, Settings.Elevator.PID.kD))
-            .setSetpointFilter(motionProfile);
+            .setSetpointFilter(motionProfile)
+            .setOutputFilter(x -> SLMath.clamp(x, -Settings.Elevator.MAX_VOLTAGE, Settings.Elevator.MAX_VOLTAGE));
         
         hasBeenReset = false;
     }
@@ -86,7 +87,7 @@ public class ElevatorImpl extends Elevator {
         super.periodic();
 
         if (!hasBeenReset) {
-            setVoltage(-3.0);
+            setVoltage(-Settings.Elevator.RESET_VOLTAGE);
             if (frontMotor.getOutputCurrent() > Settings.Elevator.RESET_STALL_CURRENT || backMotor.getOutputCurrent() > Settings.Elevator.RESET_STALL_CURRENT) {
                 hasBeenReset = true;
                 encoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
@@ -94,9 +95,8 @@ public class ElevatorImpl extends Elevator {
         }
         else {
             controller.update(getTargetHeight(), getCurrentHeight());
-            double voltage = SLMath.clamp(controller.getOutput(), -Settings.Elevator.MAX_VOLTAGE, Settings.Elevator.MAX_VOLTAGE);
-            setVoltage(voltage);
-            SmartDashboard.putNumber("Elevator/Voltage", voltage);
+            setVoltage(controller.getOutput());
+            SmartDashboard.putNumber("Elevator/Voltage", controller.getOutput());
         }
 
         SmartDashboard.putNumber("Elevator/Target Height", getTargetHeight());

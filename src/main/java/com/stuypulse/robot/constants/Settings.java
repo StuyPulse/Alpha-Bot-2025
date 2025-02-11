@@ -76,6 +76,7 @@ public interface Settings {
 
         double RESET_STALL_CURRENT = 30;
 
+        double RESET_VOLTAGE = 3;
         double MAX_VOLTAGE = 6;
 
         double L2_HEIGHT_METERS = 1.302004;
@@ -85,6 +86,7 @@ public interface Settings {
         double FEED_HEIGHT_METERS = Constants.Elevator.MIN_HEIGHT_METERS;
 
         SmartNumber HEIGHT_TOLERANCE_METERS = new SmartNumber("Elevator/Height Tolerance (m)", 0.03);
+
         public interface PID {
             SmartNumber kP = new SmartNumber("Elevator/Controller/kP", 10.0);
             SmartNumber kI = new SmartNumber("Elevator/Controller/kI",0.0);
