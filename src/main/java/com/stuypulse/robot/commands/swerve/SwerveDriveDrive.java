@@ -39,6 +39,7 @@ public class SwerveDriveDrive extends Command {
 
         turn = IStream.create(driver::getRightX)
             .filtered(
+                x -> -x,
                 x -> SLMath.deadband(x, Turn.DEADBAND.get()),
                 x -> SLMath.spow(x, Turn.POWER.get()),
                 x -> x * Turn.MAX_TELEOP_TURN_SPEED.get(),
@@ -55,18 +56,6 @@ public class SwerveDriveDrive extends Command {
 
     @Override
     public void execute() {
-        Vector2D targetVelocity = speed.get();
-        double omega = turn.get();
-
-        ChassisSpeeds currentSpeed = swerve.getChassisSpeeds();
-        double currentSpeedMagnitude = Math.hypot(currentSpeed.vxMetersPerSecond, currentSpeed.vyMetersPerSecond);
-
-        // if (targetVelocity.magnitude() > 0.05 || Math.abs(omega) > 0.05 || currentSpeedMagnitude > 0.05 || Math.abs(currentSpeed.omegaRadiansPerSecond) > 0.05) {
-        //     swerve.drive(speed.get(), turn.get());
-        // }
-        // else {
-        //     swerve.setXMode();
-        // }
         swerve.drive(speed.get(), turn.get());
     }
 }

@@ -1,5 +1,6 @@
 package com.stuypulse.robot.subsystems.swerve;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
@@ -19,6 +20,7 @@ import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.modules.SimModule;
 import com.stuypulse.robot.subsystems.swerve.modules.SwerveModule;
 import com.stuypulse.robot.subsystems.swerve.modules.SwerveModuleImpl;
+import com.stuypulse.stuylib.math.SLMath;
 import com.stuypulse.stuylib.math.Vector2D;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -64,14 +66,14 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     private final SwerveModule[] modules;
-    private final AHRS gyro;
+    private final Pigeon2 gyro;
     private final SwerveDriveKinematics kinematics;
     private final FieldObject2d[] module2ds;
 
     protected SwerveDrive(SwerveModule... modules) {
         this.modules = modules;
 
-        gyro = new AHRS(SPI.Port.kMXP);
+        gyro = new Pigeon2(9, Settings.Swerve.DRIVE_CANBUS);
 
         kinematics = new SwerveDriveKinematics(getModuleOffsets());
 
@@ -129,7 +131,7 @@ public class SwerveDrive extends SubsystemBase {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 velocity.x,
                 velocity.y,
-                -omega,
+                omega,
                 Odometry.getInstance().getRotation());
 
         Pose2d robotVel = new Pose2d(
@@ -146,6 +148,17 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public void setChassisSpeeds(ChassisSpeeds robotSpeed) {
+        Vector2D xy = new Vector2D(robotSpeed.vxMetersPerSecond, robotSpeed.vyMetersPerSecond);
+        xy = xy.clamp(Settings.Swerve.Constraints.MAX_VELOCITY.get());
+        robotSpeed.vxMetersPerSecond = xy.x;
+        robotSpeed.vyMetersPerSecond = xy.y;
+
+        robotSpeed.omegaRadiansPerSecond = SLMath.clamp(
+            robotSpeed.omegaRadiansPerSecond, 
+            -Settings.Swerve.Constraints.MAX_ANGULAR_VELOCITY.get(),
+            Settings.Swerve.Constraints.MAX_ANGULAR_VELOCITY.get()
+        );
+        
         setModuleStates(kinematics.toSwerveModuleStates(robotSpeed));
     }
 
@@ -179,15 +192,15 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public double getGyroYaw() {
-        return gyro.getYaw();
+        return gyro.getYaw().getValueAsDouble();
     }
 
     public double getGyroPitch() {
-        return gyro.getPitch();
+        return gyro.getPitch().getValueAsDouble();
     }
 
     public double getGyroRoll() {
-        return gyro.getRoll();
+        return gyro.getRoll().getValueAsDouble();
     }
 
     /** KINEMATICS **/
@@ -243,18 +256,18 @@ public class SwerveDrive extends SubsystemBase {
 
         SmartDashboard.putNumber("Swerve/Gyro Angle (deg)", getGyroPitch());
         SmartDashboard.putNumber("Swerve/Gyro Pitch (deg)", getGyroPitch());
-        SmartDashboard.putNumber("Swerve/Gyro Roll", getGyroRoll());
+        SmartDashboard.putNumber("Swerve/Gyro Roll (deg)", getGyroRoll());
 
-        SmartDashboard.putNumber("Swerve/X Acceleration (Gs)", gyro.getWorldLinearAccelX());
-        SmartDashboard.putNumber("Swerve/Y Acceleration (Gs)", gyro.getWorldLinearAccelY());
-        SmartDashboard.putNumber("Swerve/Z Acceleration (Gs)", gyro.getWorldLinearAccelZ());
+        SmartDashboard.putNumber("Swerve/X Acceleration (Gs)", gyro.getAccelerationX().getValueAsDouble());
+        SmartDashboard.putNumber("Swerve/Y Acceleration (Gs)", gyro.getAccelerationY().getValueAsDouble());
+        SmartDashboard.putNumber("Swerve/Z Acceleration (Gs)", gyro.getAccelerationZ().getValueAsDouble());
     }
 
     @Override
     public void simulationPeriodic() {
         // Integrate omega in simulation and store in gyro
         var speeds = getKinematics().toChassisSpeeds(getModuleStates());
-        gyro.setAngleAdjustment(gyro.getAngle() - Math.toDegrees(speeds.omegaRadiansPerSecond * Settings.DT));
+        gyro.setYaw(gyro.getYaw().getValueAsDouble() - Math.toDegrees(speeds.omegaRadiansPerSecond * Settings.DT));
     }
 
 }

@@ -26,9 +26,9 @@ public class ElevatorImpl extends Elevator {
 
     private final RelativeEncoder encoder;
 
-    private final SmartNumber targetHeight;
-
     private final Controller controller;
+
+    private double targetHeight;
 
     private boolean hasBeenReset;
 
@@ -42,33 +42,29 @@ public class ElevatorImpl extends Elevator {
         backMotor.configure(Motors.Elevator.backMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         encoder = frontMotor.getEncoder();
+        encoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
 
-        targetHeight = new SmartNumber("Elevator/Target Height", Constants.Elevator.MIN_HEIGHT_METERS);
+        targetHeight = Constants.Elevator.MIN_HEIGHT_METERS;
 
         MotionProfile motionProfile = new MotionProfile(Settings.Elevator.MAX_VELOCITY_METERS_PER_SECOND, Settings.Elevator.MAX_ACCEL_METERS_PER_SECOND_PER_SECOND);
         
         controller = new MotorFeedforward(Settings.Elevator.FF.kS, Settings.Elevator.FF.kV, Settings.Elevator.FF.kA).position()
             .add(new ElevatorFeedforward(Settings.Elevator.FF.kG))
             .add(new PIDController(Settings.Elevator.PID.kP, Settings.Elevator.PID.kI, Settings.Elevator.PID.kD))
-            .setSetpointFilter(motionProfile);
+            .setSetpointFilter(motionProfile)
+            .setOutputFilter(x -> SLMath.clamp(x, -Settings.Elevator.MAX_VOLTAGE, Settings.Elevator.MAX_VOLTAGE));
         
         hasBeenReset = false;
     }
     
     @Override
     public void setTargetHeight(double height) {
-        targetHeight.set(
-            SLMath.clamp(
-                height, 
-                Constants.Elevator.MIN_HEIGHT_METERS, 
-                Constants.Elevator.MAX_HEIGHT_METERS
-            )
-        );
+        targetHeight = height;
     }
 
     @Override
     public double getTargetHeight() {
-        return targetHeight.getAsDouble();
+        return targetHeight;
     }
 
     @Override
@@ -91,7 +87,7 @@ public class ElevatorImpl extends Elevator {
         super.periodic();
 
         if (!hasBeenReset) {
-            setVoltage(-0.5);
+            setVoltage(-Settings.Elevator.RESET_VOLTAGE);
             if (frontMotor.getOutputCurrent() > Settings.Elevator.RESET_STALL_CURRENT || backMotor.getOutputCurrent() > Settings.Elevator.RESET_STALL_CURRENT) {
                 hasBeenReset = true;
                 encoder.setPosition(Constants.Elevator.MIN_HEIGHT_METERS);
@@ -100,8 +96,15 @@ public class ElevatorImpl extends Elevator {
         else {
             controller.update(getTargetHeight(), getCurrentHeight());
             setVoltage(controller.getOutput());
+            SmartDashboard.putNumber("Elevator/Voltage", controller.getOutput());
         }
 
+        SmartDashboard.putNumber("Elevator/Target Height", getTargetHeight());
         SmartDashboard.putNumber("Elevator/Current Height", getCurrentHeight());
+
+        SmartDashboard.putNumber("Elevator/Current Setpoint", controller.getSetpoint());
+
+        SmartDashboard.putNumber("Elevator/Front Motor Current", frontMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Elevator/Back Motor Current", backMotor.getOutputCurrent());
     }
 }

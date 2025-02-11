@@ -7,6 +7,8 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,6 +17,8 @@ public class ShooterImpl extends Shooter{
     
     private final SparkMax topMotor;
     private final SparkMax bottomMotor;
+
+    private final BStream hasCoral;
     private final DigitalInput IR_Sensor;
 
     public ShooterImpl() {
@@ -25,6 +29,8 @@ public class ShooterImpl extends Shooter{
         bottomMotor.configure(Motors.Shooter.bottomMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         IR_Sensor = new DigitalInput(Ports.Shooter.IR_SENSOR);
+        hasCoral = BStream.create(IR_Sensor).not()
+            .filtered(new BDebounce.Rising(Settings.Shooter.HAS_CORAL_DEBOUNCE));
     }
 
     @Override
@@ -47,7 +53,7 @@ public class ShooterImpl extends Shooter{
 
     @Override
     public boolean hasCoral() {
-        return IR_Sensor.get();
+        return hasCoral.get();
     }
 
     @Override

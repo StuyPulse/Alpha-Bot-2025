@@ -9,11 +9,7 @@ public abstract class Elevator extends SubsystemBase {
     private static final Elevator instance;
 
     static {
-        if (Robot.isReal()) {
-            instance = new ElevatorImpl();
-        } else {
-            instance = new ElevatorSimu();
-        }
+        instance = new ElevatorImpl();
     }
 
     private final ElevatorVisualizer visualizer;

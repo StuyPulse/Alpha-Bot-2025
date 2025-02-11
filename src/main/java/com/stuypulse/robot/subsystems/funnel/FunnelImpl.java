@@ -7,16 +7,23 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class FunnelImpl extends Funnel{
     
     private SparkMax motor;
+    private BStream shouldReverse;
 
     public FunnelImpl() {
         motor = new SparkMax(Ports.Funnel.MOTOR, MotorType.kBrushless);
         motor.configure(Motors.Funnel.motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        shouldReverse = BStream.create(() -> motor.getOutputCurrent() > Settings.Funnel.STALL_CURRENT)
+            .filtered(new BDebounce.Rising(Settings.Funnel.STALL_DETECTION_TIME))
+            .filtered(new BDebounce.Falling(Settings.Funnel.MIN_REVERSE_TIME));
     }
 
     @Override
@@ -25,8 +32,8 @@ public class FunnelImpl extends Funnel{
     }
 
     @Override
-    public void deacquire() {
-        motor.set(-Settings.Funnel.DEACQUIRE_SPEED.get());
+    public void reverse() {
+        motor.set(-Settings.Funnel.REVERSE_SPEED.get());
     }
 
     @Override
@@ -35,7 +42,13 @@ public class FunnelImpl extends Funnel{
     }
 
     @Override
+    public boolean shouldReverse() {
+        return this.shouldReverse.get();
+    }
+
+    @Override
     public void periodic() {
-        SmartDashboard.putNumber("Funnel/Speed", motor.get());
+        SmartDashboard.putNumber("Funnel/Current Speed", motor.get());
+        SmartDashboard.putNumber("Funnel/Current Amps", motor.getOutputCurrent());
     }
 }

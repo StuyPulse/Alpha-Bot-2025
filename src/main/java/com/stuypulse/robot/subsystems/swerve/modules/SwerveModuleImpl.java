@@ -36,7 +36,7 @@ public class SwerveModuleImpl extends SwerveModule {
 
         pivotMotor = new SparkMax(pivotMotorID, MotorType.kBrushless);
         pivotMotor.configure(Motors.Swerve.Turn.motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        pivotEncoder = new CANcoder(pivotEncoderID);
+        pivotEncoder = new CANcoder(pivotEncoderID, Settings.Swerve.DRIVE_CANBUS);
         
         driveMotor = new TalonFX(driveMotorID, Settings.Swerve.DRIVE_CANBUS);
 

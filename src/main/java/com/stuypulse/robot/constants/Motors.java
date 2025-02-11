@@ -31,15 +31,15 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 public interface Motors {
 
     public interface Elevator {
-        SparkBaseConfig frontMotor = new SparkMaxConfig().inverted(false).smartCurrentLimit(100).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
-        SparkBaseConfig backMotor = new SparkMaxConfig().inverted(false).smartCurrentLimit(100).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
+        SparkBaseConfig frontMotor = new SparkMaxConfig().inverted(true).smartCurrentLimit(75).openLoopRampRate(0.75).idleMode(IdleMode.kBrake);
+        SparkBaseConfig backMotor = new SparkMaxConfig().inverted(false).smartCurrentLimit(75).openLoopRampRate(0.75).idleMode(IdleMode.kBrake);
 
         EncoderConfig encoderConfig = new EncoderConfig().positionConversionFactor(Constants.Elevator.Encoders.POSITION_CONVERSION_FACTOR).velocityConversionFactor(Constants.Elevator.Encoders.VELOCITY_CONVERSION_FACTOR);
     }
 
     public interface Shooter {
         SparkBaseConfig topMotorConfig = new SparkMaxConfig().inverted(false).smartCurrentLimit(50).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
-        SparkBaseConfig bottomMotorConfig = new SparkMaxConfig().inverted(false).smartCurrentLimit(50).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
+        SparkBaseConfig bottomMotorConfig = new SparkMaxConfig().inverted(true).smartCurrentLimit(50).openLoopRampRate(0.5).idleMode(IdleMode.kBrake);
     }
 
     public interface Funnel {
@@ -48,7 +48,7 @@ public interface Motors {
 
     public interface Swerve {
         public interface Turn {
-            SparkBaseConfig motorConfig = new SparkMaxConfig().inverted(false).smartCurrentLimit(200).openLoopRampRate(0.25).idleMode(IdleMode.kBrake);
+            SparkBaseConfig motorConfig = new SparkMaxConfig().inverted(true).smartCurrentLimit(200).openLoopRampRate(0.25).idleMode(IdleMode.kBrake);
         }
         public interface Drive {
             Slot0Configs slot0Configs = new Slot0Configs()
@@ -69,11 +69,6 @@ public interface Motors {
             CurrentLimitsConfigs currentLimitsConfigs = new CurrentLimitsConfigs()
                 .withStatorCurrentLimit(65);
 
-            TorqueCurrentConfigs torqueCurrentConfigs = new TorqueCurrentConfigs()
-                .withPeakForwardTorqueCurrent(+400)
-                .withPeakReverseTorqueCurrent(-400)
-                .withTorqueNeutralDeadband(0.05);
-
             FeedbackConfigs feedbackConfigs = new FeedbackConfigs().withSensorToMechanismRatio(1/Constants.Swerve.Encoder.Drive.POSITION_CONVERSION);
 
             TalonFXConfiguration motorConfig = new TalonFXConfiguration()
@@ -81,7 +76,6 @@ public interface Motors {
                 .withMotorOutput(motorOutputConfigs)
                 .withClosedLoopRamps(closedLoopRampsConfigs)
                 .withCurrentLimits(currentLimitsConfigs)
-                .withTorqueCurrent(torqueCurrentConfigs)
                 .withFeedback(feedbackConfigs);
         }
     }
