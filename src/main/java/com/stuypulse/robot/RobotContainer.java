@@ -40,6 +40,7 @@ import com.stuypulse.robot.commands.swerve.SwerveDrivePIDToNearestBranch;
 import com.stuypulse.robot.commands.swerve.SwerveDrivePIDToPose;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.elevator.Elevator;
 import com.stuypulse.robot.subsystems.funnel.Funnel;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
@@ -55,7 +56,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-
 
 public class RobotContainer {
 
@@ -88,8 +88,8 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-        // funnel.setDefaultCommand(new FunnelDefaultCommand());
-        // shooter.setDefaultCommand(new ShooterAcquire().onlyIf(() -> !shooter.hasCoral()));
+        funnel.setDefaultCommand(new FunnelDefaultCommand());
+        shooter.setDefaultCommand(new ShooterAcquire().onlyIf(() -> !shooter.hasCoral() && elevator.getTargetHeight() == Settings.Elevator.FEED_HEIGHT_METERS));
     }
 
     /***************/

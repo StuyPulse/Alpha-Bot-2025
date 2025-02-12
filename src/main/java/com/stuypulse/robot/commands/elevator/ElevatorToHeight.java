@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class ElevatorToHeight extends InstantCommand {
     private final Elevator elevator;
-    private final double targetHeight;
+    private final Number targetHeight;
 
     public ElevatorToHeight(double targetHeight){
         elevator = Elevator.getInstance();
@@ -15,7 +15,8 @@ public class ElevatorToHeight extends InstantCommand {
         addRequirements(elevator);
     }
 
+    @Override
     public void initialize(){
-        elevator.setTargetHeight(targetHeight);
+        elevator.setTargetHeight(targetHeight.doubleValue());
     }
 }

@@ -6,8 +6,4 @@ public class ElevatorToFeed extends ElevatorToHeight{
     public ElevatorToFeed(){
         super(Elevator.FEED_HEIGHT_METERS);
     }
-
-    public void initialize() {
-        super.initialize();
-    }
 }

@@ -64,9 +64,9 @@ public interface Settings {
         double RESET_VOLTAGE = 3;
         double MAX_VOLTAGE = 6;
 
-        double L2_HEIGHT_METERS = 1.302004;
-        double L3_HEIGHT_METERS = 1.805820;
-        double L4_HEIGHT_METERS = 2.627014;
+        SmartNumber L2_HEIGHT_METERS = new SmartNumber("Elevator/L2 Height (m)", 1.302004);
+        SmartNumber L3_HEIGHT_METERS = new SmartNumber("Elevator/L3 Height (m)", 1.805820);
+        SmartNumber L4_HEIGHT_METERS = new SmartNumber("Elevator/L4 Height (m)", 2.627014);
 
         double FEED_HEIGHT_METERS = Constants.Elevator.MIN_HEIGHT_METERS;
 
