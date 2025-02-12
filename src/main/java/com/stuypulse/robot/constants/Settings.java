@@ -62,13 +62,15 @@ public interface Settings {
     }
 
     public interface Elevator {
-        SmartNumber MAX_VELOCITY_METERS_PER_SECOND = new SmartNumber("Elevator/Max Velocity (m per s)", 2.5);
-        SmartNumber MAX_ACCEL_METERS_PER_SECOND_PER_SECOND = new SmartNumber("Elevator/Max Accel (m per s^2)", 5.0);
+        SmartNumber MAX_VELOCITY_METERS_PER_SECOND = new SmartNumber("Elevator/Max Velocity (m per s)", 1.5);
+        SmartNumber MAX_ACCEL_METERS_PER_SECOND_PER_SECOND = new SmartNumber("Elevator/Max Accel (m per s^2)", 3.0);
 
         double RESET_STALL_CURRENT = 30;
 
         double RESET_VOLTAGE = 3;
+
         double MAX_VOLTAGE = 6;
+        double MIN_VOLTAGE = -4;
 
         SmartNumber L2_HEIGHT_METERS = new SmartNumber("Elevator/L2 Height (m)", 1.302004);
         SmartNumber L3_HEIGHT_METERS = new SmartNumber("Elevator/L3 Height (m)", 1.805820);

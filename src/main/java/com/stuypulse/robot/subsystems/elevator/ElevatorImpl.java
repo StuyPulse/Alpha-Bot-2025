@@ -53,7 +53,7 @@ public class ElevatorImpl extends Elevator {
             .add(new ElevatorFeedforward(Gains.Elevator.FF.kG))
             .add(new PIDController(Gains.Elevator.PID.kP, Gains.Elevator.PID.kI, Gains.Elevator.PID.kD))
             .setSetpointFilter(motionProfile)
-            .setOutputFilter(x -> SLMath.clamp(x, -Settings.Elevator.MAX_VOLTAGE, Settings.Elevator.MAX_VOLTAGE));
+            .setOutputFilter(x -> SLMath.clamp(x, Settings.Elevator.MIN_VOLTAGE, Settings.Elevator.MAX_VOLTAGE));
         
         hasBeenReset = false;
     }

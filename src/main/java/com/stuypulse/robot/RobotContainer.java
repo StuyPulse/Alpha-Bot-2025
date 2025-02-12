@@ -32,6 +32,7 @@ import com.stuypulse.robot.commands.elevator.ElevatorToLvl4;
 import com.stuypulse.robot.commands.elevator.ElevatorWaitUntilAtTargetHeight;
 import com.stuypulse.robot.commands.funnel.FunnelDefaultCommand;
 import com.stuypulse.robot.commands.shooter.ShooterAcquire;
+import com.stuypulse.robot.commands.shooter.ShooterSetAcquire;
 import com.stuypulse.robot.commands.shooter.ShooterShoot;
 import com.stuypulse.robot.commands.shooter.ShooterStop;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
@@ -56,6 +57,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
@@ -90,7 +92,10 @@ public class RobotContainer {
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
         funnel.setDefaultCommand(new FunnelDefaultCommand());
-        shooter.setDefaultCommand(new ShooterAcquire().onlyIf(() -> !shooter.hasCoral() && elevator.getTargetHeight() == Settings.Elevator.FEED_HEIGHT_METERS));
+        shooter.setDefaultCommand(new ShooterSetAcquire()
+            .onlyIf(() -> !shooter.hasCoral() && Math.abs(elevator.getTargetHeight()-Settings.Elevator.FEED_HEIGHT_METERS) < 0.01)
+            .andThen(new WaitUntilCommand(() -> shooter.hasCoral()))
+            .andThen(new ShooterStop()));
     }
 
     /***************/
@@ -100,6 +105,14 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         driver.getDPadUp().onTrue(new SeedFieldRelative());
+
+        driver.getLeftTriggerButton()
+            .whileTrue(new ElevatorToLvl4()
+                .andThen(new ElevatorWaitUntilAtTargetHeight())
+                .andThen(new ShooterShoot())
+            )
+            .onFalse(new ElevatorToFeed())
+            .onFalse(new ShooterStop());
 
         driver.getRightTriggerButton()
             .whileTrue(new SwerveDriveDriveAlignedToNearestCoralStation(driver));
@@ -113,7 +126,6 @@ public class RobotContainer {
         driver.getTopButton()
             .whileTrue(new ElevatorToLvl4()
                 .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
-                .andThen(new ElevatorWaitUntilAtTargetHeight())
                 .andThen(new ShooterShoot())
             )
             .onFalse(new ElevatorToFeed())
@@ -123,7 +135,6 @@ public class RobotContainer {
         driver.getRightButton()
             .whileTrue(new ElevatorToLvl3()
                 .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
-                .andThen(new ElevatorWaitUntilAtTargetHeight())
                 .andThen(new ShooterShoot())
             )
             .onFalse(new ElevatorToFeed())
@@ -133,7 +144,6 @@ public class RobotContainer {
         driver.getBottomButton()
             .whileTrue(new ElevatorToLvl2()
                 .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
-                .andThen(new ElevatorWaitUntilAtTargetHeight())
                 .andThen(new ShooterShoot())
             )
             .onFalse(new ElevatorToFeed())

@@ -31,16 +31,16 @@ public interface Gains {
 
     public interface Elevator {
         public interface PID {
-            SmartNumber kP = new SmartNumber("Elevator/Controller/kP", 10.0);
+            SmartNumber kP = new SmartNumber("Elevator/Controller/kP", 5.0);
             SmartNumber kI = new SmartNumber("Elevator/Controller/kI",0.0);
-            SmartNumber kD = new SmartNumber("Elevator/Controller/kD",0.01);
+            SmartNumber kD = new SmartNumber("Elevator/Controller/kD",0.1);
         }
 
         public interface FF {
             SmartNumber kS = new SmartNumber("Elevator/Controller/kS",0.0);
             SmartNumber kV = new SmartNumber("Elevator/Controller/kV",0.0);
             SmartNumber kA = new SmartNumber("Elevator/Controller/kA", 0.0);
-            SmartNumber kG = new SmartNumber("Elevator/Controller/kG", 0.9);
+            SmartNumber kG = new SmartNumber("Elevator/Controller/kG", 1.0);
         }
     }
 }
