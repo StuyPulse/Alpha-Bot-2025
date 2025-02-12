@@ -77,7 +77,7 @@ public class LimelightVision extends AprilTagVision{
 
                     LimelightHelpers.SetRobotOrientation(
                         limelightName, 
-                        Odometry.getInstance().getRotation().getDegrees() * (Robot.isBlue() ? 1 : -1), 
+                        (Odometry.getInstance().getRotation().getDegrees() + (Robot.isBlue() ? 0 : 180)) % 360, 
                         0, 
                         0, 
                         0, 
