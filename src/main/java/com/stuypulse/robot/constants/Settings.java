@@ -50,7 +50,8 @@ public interface Settings {
         }
     }
 
-    public interface Vision {        
+    public interface Vision {
+        double MIN_DATAPOINTS_BEFORE_MT2 = 500;
         Vector<N3> MIN_STDDEVS = VecBuilder.fill(0.3, 0.3, 5);
     }
 

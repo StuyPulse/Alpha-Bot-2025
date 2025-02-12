@@ -29,6 +29,8 @@ public class LimelightVision extends SubsystemBase{
     private SmartBoolean enabled;
     private SmartBoolean[] camerasEnabled;
 
+    private double totalDataPoints;
+
     public LimelightVision() {
         names = new String[Cameras.LimelightCameras.length];
         for (int i = 0; i < Cameras.LimelightCameras.length; i++) {
@@ -48,13 +50,13 @@ public class LimelightVision extends SubsystemBase{
         camerasEnabled = new SmartBoolean[Cameras.LimelightCameras.length];
         for (int i = 0; i < camerasEnabled.length; i++) {
             camerasEnabled[i] = new SmartBoolean("Vision/" + names[i] + " Is Enabled", true);
-        }
-
-        for (String name : names) {
-            LimelightHelpers.SetIMUMode(name, 0);
+            LimelightHelpers.SetIMUMode(names[i], 0);
+            SmartDashboard.putBoolean("Vision/" + names[i] + " Has Data", false);
         }
 
         enabled = new SmartBoolean("Vision/Is Enabled", true);
+
+        totalDataPoints = 0;
     }
 
     public void setTagWhitelist(int... ids) {
@@ -92,29 +94,35 @@ public class LimelightVision extends SubsystemBase{
                 if (camerasEnabled[i].get()) {
                     String limelightName = names[i];
 
-                    LimelightHelpers.SetRobotOrientation(
-                        limelightName, 
-                        (Odometry.getInstance().getRotation().getDegrees() + (Robot.isBlue() ? 0 : 180)) % 360, 
-                        0, 
-                        0, 
-                        0, 
-                        0, 
-                        0
-                    );
+                    PoseEstimate poseEstimate;
 
-                    PoseEstimate poseEstimate = Robot.isBlue() 
-                        ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName)
-                        : LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(limelightName);
-
-                    // PoseEstimate poseEstimate = Robot.isBlue() 
-                    //     ? LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName)
-                    //     : LimelightHelpers.getBotPoseEstimate_wpiRed(limelightName);
+                    if (totalDataPoints < Settings.Vision.MIN_DATAPOINTS_BEFORE_MT2) {
+                        poseEstimate = Robot.isBlue() 
+                            ? LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName)
+                            : LimelightHelpers.getBotPoseEstimate_wpiRed(limelightName);
+                    }
+                    else {
+                        LimelightHelpers.SetRobotOrientation(
+                            limelightName, 
+                            (Odometry.getInstance().getRotation().getDegrees() + (Robot.isBlue() ? 0 : 180)) % 360, 
+                            0, 
+                            0, 
+                            0, 
+                            0, 
+                            0
+                        );
+    
+                        poseEstimate = Robot.isBlue() 
+                            ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName)
+                            : LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(limelightName);
+                    }
                     
                     if (poseEstimate != null && poseEstimate.tagCount > 0) {
                         Pose2d robotPose = poseEstimate.pose;
                         double timestamp = poseEstimate.timestampSeconds;
                         Odometry.getInstance().addVisionData(robotPose, timestamp, Settings.Vision.MIN_STDDEVS.times(1 + poseEstimate.avgTagDist));
                         SmartDashboard.putBoolean("Vision/" + names[i] + " Has Data", true);
+                        totalDataPoints++;
                     }
                     else {
                         SmartDashboard.putBoolean("Vision/" + names[i] + " Has Data", false);
