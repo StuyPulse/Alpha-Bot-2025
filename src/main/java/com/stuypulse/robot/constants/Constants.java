@@ -18,6 +18,8 @@ public interface Constants {
     double LENGTH_WITH_BUMPERS_METERS = Units.inchesToMeters(30);
     double WIDTH_WITH_BUMPERS_METERS = Units.inchesToMeters(30);
 
+    double SHOOTER_Y_OFFSET = Units.inchesToMeters(8.5); // ESTIMATE
+
     public interface Swerve {
         double WIDTH = Units.inchesToMeters(18.75);
         double LENGTH = Units.inchesToMeters(18.75);
@@ -57,7 +59,7 @@ public interface Constants {
         }
     }
 
-    public interface Elevator {
+    public interface Elevator {        
         double MIN_HEIGHT_METERS = Units.inchesToMeters(18 + 1.0/16.0); // FROM THE FLOOR TO TOP OF CARRAIGE
         double MAX_HEIGHT_METERS = Units.inchesToMeters(90.5); // FROM THE FLOOR TO TOP OF CARRAIGE
 

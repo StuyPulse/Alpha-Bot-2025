@@ -95,7 +95,7 @@ public class SwerveDrivePIDToPose extends Command {
             odometry.getPose(), 
             new ArrayList<Translation2d>(), 
             targetPose, 
-            new TrajectoryConfig(Settings.Swerve.Constraints.MAX_VELOCITY.get(), Settings.Swerve.Constraints.MAX_ACCELERATION.get())
+            new TrajectoryConfig(Settings.Swerve.Alignment.MAX_VELOCITY.get(), Settings.Swerve.Alignment.MAX_ACCELERATION.get())
         );
 
         stopWatch.reset();
@@ -118,7 +118,7 @@ public class SwerveDrivePIDToPose extends Command {
         SmartDashboard.putNumber("Alignment/Setpoint angle", goal.poseMeters.getRotation().getDegrees());
         
         ChassisSpeeds speeds = controller.calculate(odometry.getPose(), goal, targetPose.getRotation());
-        speeds.omegaRadiansPerSecond *= -1;
+        // speeds.omegaRadiansPerSecond *= -1;
         swerve.setChassisSpeeds(speeds);
     }
 

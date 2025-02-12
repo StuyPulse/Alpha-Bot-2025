@@ -18,6 +18,8 @@ public interface Settings {
 
     double DT = 0.020;
 
+    double TARGET_DISTANCE_FROM_REEF = 0.05;
+
     public interface Swerve {
         String DRIVE_CANBUS = "Swerve Drive Drive";
         double MODULE_VELOCITY_DEADBAND = 0.05;
@@ -25,8 +27,8 @@ public interface Settings {
         public interface Constraints {
             double MAX_MODULE_SPEED = 4.9;
 
-            SmartNumber MAX_VELOCITY = new SmartNumber("Swerve/Motion/Max Velocity (m per s)", 3.0);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Swerve/Motion/Max Acceleration (m per s^2)", 5.0);
+            SmartNumber MAX_VELOCITY = new SmartNumber("Swerve/Motion/Max Velocity (m per s)", 2.5);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Swerve/Motion/Max Acceleration (m per s^2)", 3.0);
             SmartNumber MAX_ANGULAR_VELOCITY = new SmartNumber("Swerve/Motion/Max Angular Velocity (rad per s)", Units.degreesToRadians(360));
             SmartNumber MAX_ANGULAR_ACCELERATION = new SmartNumber("Swerve/Motion/Max Angular Acceleration (rad per s^2)", Units.degreesToRadians(720));
 
@@ -39,19 +41,23 @@ public interface Settings {
         }
 
         public interface Alignment {
-            PIDConstants XY = new PIDConstants(2.0, 0, 0.02);
+            PIDConstants XY = new PIDConstants(2.75, 0, 0.05);
             PIDConstants THETA = new PIDConstants(3, 0, 0.1);
+
+            SmartNumber MAX_VELOCITY = new SmartNumber("Swerve/Alignment/Max Velocity (m per s)", 1.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Swerve/Alignment/Max Acceleration (m per s^2)", 2.0);
+            SmartNumber MAX_ANGULAR_VELOCITY = new SmartNumber("Swerve/Alignment/Max Angular Velocity (rad per s)", Units.degreesToRadians(360));
+            SmartNumber MAX_ANGULAR_ACCELERATION = new SmartNumber("Swerve/Alignment/Max Angular Acceleration (rad per s^2)", Units.degreesToRadians(720));
 
             SmartNumber X_TOLERANCE = new SmartNumber("Alignment/X Tolerance (m)", 0.05);
             SmartNumber Y_TOLERANCE = new SmartNumber("Alignment/Y Tolerance (m)", 0.05);
-            SmartNumber THETA_TOLERANCE = new SmartNumber("Alignment/Theta Tolerance (rad)", 0.1);
+            SmartNumber THETA_TOLERANCE = new SmartNumber("Alignment/Theta Tolerance (rad)", Units.degreesToRadians(5));
 
             double ALIGNMENT_DEBOUNCE = 0.05;
         }
     }
 
     public interface Vision {
-        double MIN_DATAPOINTS_BEFORE_MT2 = 500;
         Vector<N3> MIN_STDDEVS = VecBuilder.fill(0.3, 0.3, 5);
     }
 
@@ -70,7 +76,7 @@ public interface Settings {
 
         double FEED_HEIGHT_METERS = Constants.Elevator.MIN_HEIGHT_METERS;
 
-        SmartNumber HEIGHT_TOLERANCE_METERS = new SmartNumber("Elevator/Height Tolerance (m)", 0.03);
+        SmartNumber HEIGHT_TOLERANCE_METERS = new SmartNumber("Elevator/Height Tolerance (m)", 0.05);
         
         public interface Simulation {
             double SCALE_FACTOR = 0.5 + 2.5/77;
@@ -79,8 +85,9 @@ public interface Settings {
 
     public interface Shooter {
         double HAS_CORAL_DEBOUNCE = 0.0;
+
         public interface Top {
-            SmartNumber ACQUIRE_SPEED = new SmartNumber("Shooter/Top Acquire Speed", 0.22);
+            SmartNumber ACQUIRE_SPEED = new SmartNumber("Shooter/Top Acquire Speed", 0.3);
             SmartNumber SHOOT_SPEED = new SmartNumber("Shooter/Top Shoot Speed", 0.7);
         }
         public interface Bottom {

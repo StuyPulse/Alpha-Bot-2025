@@ -2,10 +2,9 @@ package com.stuypulse.robot.commands.shooter;
 
 import com.stuypulse.robot.subsystems.shooter.Shooter;
 
+import edu.wpi.first.wpilibj2.command.Command;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-
-public class ShooterShoot extends InstantCommand {
+public class ShooterShoot extends Command {
     private final Shooter shooter;
 
     public ShooterShoot() {

@@ -176,7 +176,7 @@ public interface Field {
             }
 
             return correspondingAprilTagPose.toPose2d()
-                    .transformBy(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS/2 + 0.15, CENTER_OF_TROUGH_TO_BRANCH * (this.isLeftPeg() ? -1 : 1), Rotation2d.fromDegrees(180)));
+                    .transformBy(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS/2 + Settings.TARGET_DISTANCE_FROM_REEF, CENTER_OF_TROUGH_TO_BRANCH * (this.isLeftPeg() ? -1 : 1) + Constants.SHOOTER_Y_OFFSET, Rotation2d.fromDegrees(180)));
         }
 
         public boolean isLeftPeg() {
