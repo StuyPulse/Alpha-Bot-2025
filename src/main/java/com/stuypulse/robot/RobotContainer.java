@@ -105,14 +105,15 @@ public class RobotContainer {
         
         driver.getRightBumper()
             .onTrue(new ShooterShoot())
-            .onFalse(new ShooterStop());
+            .onFalse(new ShooterStop())
+            .onFalse(new ElevatorToFeed());
         
         // Automated L4
         driver.getTopButton()
             .whileTrue(new ElevatorToLvl4()
                 // .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
-                .andThen(new ElevatorWaitUntilAtTargetHeight())
-                .andThen(new ShooterShoot())
+                // .andThen(new ElevatorWaitUntilAtTargetHeight())
+                // .andThen(new ShooterShoot())
             )
             .onFalse(new ElevatorToFeed())
             .onFalse(new ShooterStop());
@@ -121,8 +122,8 @@ public class RobotContainer {
         driver.getRightButton()
             .whileTrue(new ElevatorToLvl3()
                 // .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
-                .andThen(new ElevatorWaitUntilAtTargetHeight())
-                .andThen(new ShooterShoot())
+                // .andThen(new ElevatorWaitUntilAtTargetHeight())
+                // .andThen(new ShooterShoot())
             )
             .onFalse(new ElevatorToFeed())
             .onFalse(new ShooterStop());
@@ -131,8 +132,8 @@ public class RobotContainer {
         driver.getBottomButton()
             .whileTrue(new ElevatorToLvl2()
                 // .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
-                .andThen(new ElevatorWaitUntilAtTargetHeight())
-                .andThen(new ShooterShoot())
+                // .andThen(new ElevatorWaitUntilAtTargetHeight())
+                // .andThen(new ShooterShoot())
             )
             .onFalse(new ElevatorToFeed())
             .onFalse(new ShooterStop());
