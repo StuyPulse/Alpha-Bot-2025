@@ -92,8 +92,9 @@ public class LimelightVision extends SubsystemBase{
                 if (camerasEnabled[i].get()) {
                     String limelightName = names[i];
 
-                    LimelightHelpers.SetRobotOrientation(limelightName, 
-                        Odometry.getInstance().getRotation().getDegrees() * (Robot.isBlue() ? 1 : -1), 
+                    LimelightHelpers.SetRobotOrientation(
+                        limelightName, 
+                        (Odometry.getInstance().getRotation().getDegrees() + (Robot.isBlue() ? 0 : 180)) % 360, 
                         0, 
                         0, 
                         0, 
