@@ -1,6 +1,6 @@
 package com.stuypulse.robot.commands.vision;
 
-import com.stuypulse.robot.subsystems.vision.AprilTagVision;
+import com.stuypulse.robot.subsystems.vision.LimelightVision;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
@@ -10,6 +10,6 @@ public class VisionEnable extends InstantCommand {
   
     @Override
     public void initialize() {
-        AprilTagVision.getInstance().enable();
+        LimelightVision.getInstance().enable();
     }
 }

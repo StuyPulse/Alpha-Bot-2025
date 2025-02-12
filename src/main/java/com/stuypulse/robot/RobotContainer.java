@@ -45,7 +45,7 @@ import com.stuypulse.robot.subsystems.funnel.Funnel;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.shooter.Shooter;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
-import com.stuypulse.robot.subsystems.vision.AprilTagVision;
+import com.stuypulse.robot.subsystems.vision.LimelightVision;
 import com.stuypulse.robot.util.PathUtil.AutonConfig;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
@@ -66,7 +66,7 @@ public class RobotContainer {
     // Subsystems
     public final Elevator elevator = Elevator.getInstance();
     public final SwerveDrive swerve = SwerveDrive.getInstance();
-    public final AprilTagVision vision = AprilTagVision.getInstance();
+    public final LimelightVision vision = LimelightVision.getInstance();
     public final Odometry odometry = Odometry.getInstance();
     public final Shooter shooter = Shooter.getInstance();
     public final Funnel funnel = Funnel.getInstance();
@@ -88,8 +88,8 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-        funnel.setDefaultCommand(new FunnelDefaultCommand());
-        shooter.setDefaultCommand(new ShooterAcquire().onlyIf(() -> !shooter.hasCoral()));
+        // funnel.setDefaultCommand(new FunnelDefaultCommand());
+        // shooter.setDefaultCommand(new ShooterAcquire().onlyIf(() -> !shooter.hasCoral()));
     }
 
     /***************/

@@ -4,19 +4,30 @@ import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Cameras;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
-import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 import com.stuypulse.robot.util.vision.LimelightHelpers;
 import com.stuypulse.robot.util.vision.LimelightHelpers.PoseEstimate;
+import com.stuypulse.stuylib.network.SmartBoolean;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class LimelightVision extends AprilTagVision{
+public class LimelightVision extends SubsystemBase{
+
+    private static final LimelightVision instance;
+
+    static {
+        instance = new LimelightVision();
+    }
+
+    public static LimelightVision getInstance() {
+        return instance;
+    }
 
     private String[] names;
-    private boolean enabled;
-    private boolean[] camerasEnabled;
+    private SmartBoolean enabled;
+    private SmartBoolean[] camerasEnabled;
 
     public LimelightVision() {
         names = new String[Cameras.LimelightCameras.length];
@@ -34,49 +45,54 @@ public class LimelightVision extends AprilTagVision{
             );
         }
 
-        camerasEnabled = new boolean[Cameras.LimelightCameras.length];
+        camerasEnabled = new SmartBoolean[Cameras.LimelightCameras.length];
         for (int i = 0; i < camerasEnabled.length; i++) {
-            camerasEnabled[i] = true;
+            camerasEnabled[i] = new SmartBoolean("Vision/" + names[i] + " Is Enabled", true);
         }
 
-        enabled = true;
+        for (String name : names) {
+            LimelightHelpers.SetIMUMode(name, 0);
+        }
+
+        enabled = new SmartBoolean("Vision/Is Enabled", true);
     }
 
-    @Override
     public void setTagWhitelist(int... ids) {
         for (String name : names) {
             LimelightHelpers.SetFiducialIDFiltersOverride(name, ids);
         }
     }
 
-    @Override
     public void enable() {
-        enabled = true;
+        enabled.set(true);
     }
 
-    @Override
     public void disable() {
-        enabled = false;
+        enabled.set(false);
     }
 
-    @Override
     public void setCameraEnabled(String name, boolean enabled) {
         for (int i = 0; i < names.length; i++) {
             if (names[i].equals(name)) {
-                camerasEnabled[i] = enabled;
+                camerasEnabled[i].set(enabled);
             }
+        }
+    }
+
+    public void setIMUMode(int mode) {
+        for (String name : names) {
+            LimelightHelpers.SetIMUMode(name, mode);
         }
     }
 
     @Override
     public void periodic() {
-        if (enabled) {
+        if (enabled.get()) {
             for (int i = 0; i < names.length; i++) {
-                if (camerasEnabled[i]) {
+                if (camerasEnabled[i].get()) {
                     String limelightName = names[i];
 
-                    LimelightHelpers.SetRobotOrientation(
-                        limelightName, 
+                    LimelightHelpers.SetRobotOrientation(limelightName, 
                         Odometry.getInstance().getRotation().getDegrees() * (Robot.isBlue() ? 1 : -1), 
                         0, 
                         0, 
@@ -88,6 +104,10 @@ public class LimelightVision extends AprilTagVision{
                     PoseEstimate poseEstimate = Robot.isBlue() 
                         ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName)
                         : LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(limelightName);
+
+                    // PoseEstimate poseEstimate = Robot.isBlue() 
+                    //     ? LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName)
+                    //     : LimelightHelpers.getBotPoseEstimate_wpiRed(limelightName);
                     
                     if (poseEstimate != null && poseEstimate.tagCount > 0) {
                         Pose2d robotPose = poseEstimate.pose;
@@ -100,11 +120,6 @@ public class LimelightVision extends AprilTagVision{
                     }
                 }
             }
-        }
-
-        SmartDashboard.putBoolean("Vision/Is Enabled", enabled);
-        for (int i = 0; i < names.length; i++) {
-            SmartDashboard.putBoolean("Vision/" + names[i] + " Is Enabled", camerasEnabled[i]);
         }
     }
 }

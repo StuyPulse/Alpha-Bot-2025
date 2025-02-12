@@ -4,12 +4,12 @@ import com.stuypulse.robot.subsystems.vision.LimelightVision;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class VisionDisable extends InstantCommand {
+public class VisionSetIMUMode0 extends InstantCommand {
 
-    public VisionDisable() {}
-    
+    public VisionSetIMUMode0() {}
+  
     @Override
     public void initialize() {
-        LimelightVision.getInstance().disable();
+        LimelightVision.getInstance().setIMUMode(0);
     }
 }

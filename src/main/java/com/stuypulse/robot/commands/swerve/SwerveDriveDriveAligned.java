@@ -43,9 +43,8 @@ public class SwerveDriveDriveAligned extends Command {
                 new VRateLimit(Drive.MAX_TELEOP_ACCEL.get()),
                 new VLowPassFilter(Drive.RC.get()));
 
-        controller = new AnglePIDController(Alignment.THETA.kP, Alignment.THETA.kI, Alignment.THETA.kD)
-            .setOutputFilter(x -> -x);
-        
+        controller = new AnglePIDController(Alignment.THETA.kP, Alignment.THETA.kI, Alignment.THETA.kD);
+                
         addRequirements(swerve);
     }
 
