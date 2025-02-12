@@ -8,7 +8,7 @@ public class ElevatorToHeight extends InstantCommand {
     private final Elevator elevator;
     private final Number targetHeight;
 
-    public ElevatorToHeight(double targetHeight){
+    public ElevatorToHeight(Number targetHeight){
         elevator = Elevator.getInstance();
         this.targetHeight = targetHeight;
         
