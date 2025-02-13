@@ -18,8 +18,7 @@ public interface Settings {
 
     double DT = 0.020;
 
-    double TARGET_DISTANCE_FROM_REEF = 0.05;
-
+    double TARGET_DISTANCE_FROM_REEF = 0.03;
     public interface Swerve {
         String DRIVE_CANBUS = "Swerve Drive Drive";
         double MODULE_VELOCITY_DEADBAND = 0.05;
@@ -41,19 +40,16 @@ public interface Settings {
         }
 
         public interface Alignment {
-            PIDConstants XY = new PIDConstants(2.75, 0, 0.05);
-            PIDConstants THETA = new PIDConstants(3, 0, 0.1);
-
             SmartNumber MAX_VELOCITY = new SmartNumber("Swerve/Alignment/Max Velocity (m per s)", 1.0);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Swerve/Alignment/Max Acceleration (m per s^2)", 2.0);
             SmartNumber MAX_ANGULAR_VELOCITY = new SmartNumber("Swerve/Alignment/Max Angular Velocity (rad per s)", Units.degreesToRadians(360));
             SmartNumber MAX_ANGULAR_ACCELERATION = new SmartNumber("Swerve/Alignment/Max Angular Acceleration (rad per s^2)", Units.degreesToRadians(720));
 
-            SmartNumber X_TOLERANCE = new SmartNumber("Alignment/X Tolerance (m)", 0.05);
-            SmartNumber Y_TOLERANCE = new SmartNumber("Alignment/Y Tolerance (m)", 0.05);
-            SmartNumber THETA_TOLERANCE = new SmartNumber("Alignment/Theta Tolerance (rad)", Units.degreesToRadians(5));
+            SmartNumber X_TOLERANCE = new SmartNumber("Alignment/X Tolerance (m)", 0.02);
+            SmartNumber Y_TOLERANCE = new SmartNumber("Alignment/Y Tolerance (m)", 0.02);
+            SmartNumber THETA_TOLERANCE = new SmartNumber("Alignment/Theta Tolerance (rad)", Units.degreesToRadians(4));
 
-            double ALIGNMENT_DEBOUNCE = 0.05;
+            double ALIGNMENT_DEBOUNCE = 0.15;
         }
     }
 
@@ -72,9 +68,9 @@ public interface Settings {
         double MAX_VOLTAGE = 6;
         double MIN_VOLTAGE = -4;
 
-        SmartNumber L2_HEIGHT_METERS = new SmartNumber("Elevator/L2 Height (m)", 1.302004);
-        SmartNumber L3_HEIGHT_METERS = new SmartNumber("Elevator/L3 Height (m)", 1.805820);
-        SmartNumber L4_HEIGHT_METERS = new SmartNumber("Elevator/L4 Height (m)", 2.627014);
+        SmartNumber L2_HEIGHT_METERS = new SmartNumber("Elevator/L2 Height (m)", 1.352004);
+        SmartNumber L3_HEIGHT_METERS = new SmartNumber("Elevator/L3 Height (m)", 1.855820);
+        SmartNumber L4_HEIGHT_METERS = new SmartNumber("Elevator/L4 Height (m)", 2.657014);
 
         double FEED_HEIGHT_METERS = Constants.Elevator.MIN_HEIGHT_METERS;
 
@@ -90,11 +86,11 @@ public interface Settings {
 
         public interface Top {
             SmartNumber ACQUIRE_SPEED = new SmartNumber("Shooter/Top Acquire Speed", 0.3);
-            SmartNumber SHOOT_SPEED = new SmartNumber("Shooter/Top Shoot Speed", 0.7);
+            SmartNumber SHOOT_SPEED = new SmartNumber("Shooter/Top Shoot Speed", 0.9);
         }
         public interface Bottom {
             SmartNumber ACQUIRE_SPEED = new SmartNumber("Shooter/Bottom Acquire Speed", 0.22);
-            SmartNumber SHOOT_SPEED = new SmartNumber("Shooter/Bottom Shoot Speed", 0.7);
+            SmartNumber SHOOT_SPEED = new SmartNumber("Shooter/Bottom Shoot Speed", 0.9);
         }
     }
 

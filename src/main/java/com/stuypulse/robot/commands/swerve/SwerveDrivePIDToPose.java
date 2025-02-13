@@ -1,30 +1,28 @@
 package com.stuypulse.robot.commands.swerve;
 
-import java.util.ArrayList;
 import java.util.function.Supplier;
 
+import com.pathplanner.lib.config.PIDConstants;
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.Swerve.Alignment;
+import com.stuypulse.robot.constants.Settings.Swerve;
+import com.stuypulse.robot.constants.Gains.Swerve.Alignment;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
-import com.stuypulse.stuylib.math.Angle;
+import com.stuypulse.robot.util.HolonomicController;
+import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
+import com.stuypulse.stuylib.control.feedback.PIDController;
+import com.stuypulse.stuylib.math.SLMath;
+import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounceRC;
-import com.stuypulse.stuylib.util.StopWatch;
+import com.stuypulse.stuylib.streams.numbers.IStream;
+import com.stuypulse.stuylib.streams.numbers.filters.LowPassFilter;
 
-import edu.wpi.first.math.controller.HolonomicDriveController;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,17 +32,19 @@ public class SwerveDrivePIDToPose extends Command {
     private final SwerveDrive swerve;
     private final Odometry odometry;
 
-    private final HolonomicDriveController controller;
+    private final HolonomicController controller;
     private final Supplier<Pose2d> poseSupplier;
     private final BStream isAligned;
-
-    private final StopWatch stopWatch;
+    private final IStream velocityError;
 
     private final FieldObject2d targetPose2d;
-    private final FieldObject2d setpointPose2d;
+
+    private Number xTolerance;
+    private Number yTolerance;
+    private Number thetaTolerance;
+    private Number velocityTolerance;
 
     private Pose2d targetPose;
-    private Trajectory trajectory;
 
     public SwerveDrivePIDToPose(Pose2d targetPose) {
         this(() -> targetPose);
@@ -57,50 +57,69 @@ public class SwerveDrivePIDToPose extends Command {
         this.poseSupplier = poseSupplier;
 
         targetPose2d = Odometry.getInstance().getField().getObject("Target Pose");
-        setpointPose2d = Odometry.getInstance().getField().getObject("Setpoint Pose");
 
-        controller = new HolonomicDriveController(
-            new PIDController(Alignment.XY.kP, Alignment.XY.kI, Alignment.XY.kD), 
-            new PIDController(Alignment.XY.kP, Alignment.XY.kI, Alignment.XY.kD), 
-            new ProfiledPIDController(Alignment.THETA.kP, Alignment.THETA.kI, Alignment.THETA.kD, new Constraints(Settings.Swerve.Constraints.MAX_ANGULAR_VELOCITY.get(), Settings.Swerve.Constraints.MAX_ANGULAR_ACCELERATION.get()))
-        );
-
-        controller.setTolerance(new Pose2d(
-            Settings.Swerve.Alignment.X_TOLERANCE.get(), 
-            Settings.Swerve.Alignment.Y_TOLERANCE.get(), 
-            Rotation2d.fromDegrees(Settings.Swerve.Alignment.THETA_TOLERANCE.get())
-        ));
+        controller = new HolonomicController(
+            new PIDController(Alignment.XY.kP, Alignment.XY.kI, Alignment.XY.kD),
+            new PIDController(Alignment.XY.kP, Alignment.XY.kI, Alignment.XY.kD),
+            new AnglePIDController(Alignment.THETA.kP, Alignment.THETA.kI, Alignment.THETA.kD));
 
         isAligned = BStream.create(this::isAligned)
-            .filtered(new BDebounceRC.Both(Alignment.ALIGNMENT_DEBOUNCE));
+            .filtered(new BDebounceRC.Both(Settings.Swerve.Alignment.ALIGNMENT_DEBOUNCE));
 
-        stopWatch = new StopWatch();
+        velocityError = IStream.create(() -> {
+            ChassisSpeeds speeds = controller.getError();
+
+            return new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond).getNorm();
+        })
+        .filtered(new LowPassFilter(0.05))
+        .filtered(x -> Math.abs(x));
+
+        xTolerance = Settings.Swerve.Alignment.X_TOLERANCE;
+        yTolerance = Settings.Swerve.Alignment.Y_TOLERANCE;
+        thetaTolerance = Settings.Swerve.Alignment.THETA_TOLERANCE;
+        velocityTolerance = 0.15;
 
         addRequirements(swerve);
     }
 
-    private boolean isAligned() {
-        Pose2d pose = odometry.getPose();
+    public SwerveDrivePIDToPose withTranslationConstants(PIDConstants pid) {
+        controller.setTranslationConstants(pid.kP, pid.kI, pid.kD);
+        return this;
+    }
+    
+    public SwerveDrivePIDToPose withRotationConstants(PIDConstants pid) {
+        controller.setRotationConstants(pid.kP, pid.kI, pid.kD);
+        return this;
+    }
 
-        return Math.abs(targetPose.getX() - pose.getX()) < Settings.Swerve.Alignment.X_TOLERANCE.get()
-            && Math.abs(targetPose.getY() - pose.getX()) < Settings.Swerve.Alignment.Y_TOLERANCE.get()
-            && Math.abs(Angle.fromRotation2d(targetPose.getRotation()).sub(Angle.fromRotation2d(pose.getRotation())).toRadians()) < Settings.Swerve.Alignment.THETA_TOLERANCE.get();
+    public SwerveDrivePIDToPose withTranslationConstants(double p, double i, double d) {
+        controller.setTranslationConstants(p, i, d);
+        return this;
+    }
+    
+    public SwerveDrivePIDToPose withRotationConstants(double p, double i, double d) {
+        controller.setRotationConstants(p, i, d);
+        return this;
+    }
+
+    public SwerveDrivePIDToPose withTolerance(Number x, Number y, Number theta) {
+        xTolerance = x;
+        yTolerance = y;
+        thetaTolerance = theta;
+        return this;
     }
 
     @Override
     public void initialize() {
         targetPose = poseSupplier.get();
-
-        trajectory = TrajectoryGenerator.generateTrajectory(
-            odometry.getPose(), 
-            new ArrayList<Translation2d>(), 
-            targetPose, 
-            new TrajectoryConfig(Settings.Swerve.Alignment.MAX_VELOCITY.get(), Settings.Swerve.Alignment.MAX_ACCELERATION.get())
-        );
-
-        stopWatch.reset();
     }
 
+    private boolean isAligned() {
+        return controller.isDone(xTolerance.doubleValue(), yTolerance.doubleValue(), Math.toDegrees(thetaTolerance.doubleValue()))
+            && velocityError.get() < velocityTolerance.doubleValue();
+    }
+
+    
     @Override
     public void execute() {
         targetPose2d.setPose(Robot.isBlue() ? targetPose : Field.transformToOppositeAlliance(targetPose));
@@ -108,18 +127,21 @@ public class SwerveDrivePIDToPose extends Command {
         SmartDashboard.putNumber("Alignment/Target x", targetPose.getX());
         SmartDashboard.putNumber("Alignment/Target y", targetPose.getY());
         SmartDashboard.putNumber("Alignment/Target angle", targetPose.getRotation().getDegrees());
+        controller.update(targetPose, odometry.getPose());
 
-        Trajectory.State goal = trajectory.sample(stopWatch.getTime());
-
-        targetPose2d.setPose(Robot.isBlue() ? goal.poseMeters : Field.transformToOppositeAlliance(goal.poseMeters));
-
-        SmartDashboard.putNumber("Alignment/Setpoint x", goal.poseMeters.getX());
-        SmartDashboard.putNumber("Alignment/Setpoint y", goal.poseMeters.getY());
-        SmartDashboard.putNumber("Alignment/Setpoint angle", goal.poseMeters.getRotation().getDegrees());
+        Vector2D speed = new Vector2D(controller.getOutput().vxMetersPerSecond, controller.getOutput().vyMetersPerSecond)
+            .clamp(Swerve.Constraints.MAX_VELOCITY.get());
+        double rotation = SLMath.clamp(controller.getOutput().omegaRadiansPerSecond, Swerve.Constraints.MAX_ANGULAR_VELOCITY.get());
         
-        ChassisSpeeds speeds = controller.calculate(odometry.getPose(), goal, targetPose.getRotation());
-        // speeds.omegaRadiansPerSecond *= -1;
-        swerve.setChassisSpeeds(speeds);
+        SmartDashboard.putNumber("Alignment/Translation Target Speed", speed.distance());
+
+        if (Math.abs(rotation) < Swerve.Alignment.THETA_TOLERANCE.get())
+            rotation = 0;
+
+        ChassisSpeeds clamped = new ChassisSpeeds(
+            speed.x, speed.y, rotation);
+        
+        swerve.setChassisSpeeds(clamped);
     }
 
     @Override
@@ -130,7 +152,6 @@ public class SwerveDrivePIDToPose extends Command {
     @Override
     public void end(boolean interrupted) {
         swerve.setChassisSpeeds(new ChassisSpeeds());
-        Field.clearFieldObject(setpointPose2d);
         Field.clearFieldObject(targetPose2d);
     }
 

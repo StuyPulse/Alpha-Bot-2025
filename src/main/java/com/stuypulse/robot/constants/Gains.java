@@ -8,7 +8,7 @@ public interface Gains {
     public interface Swerve {
 
         public interface Alignment {
-            PIDConstants XY = new PIDConstants(2.0, 0, 0.02);
+            PIDConstants XY = new PIDConstants(2.5, 0, 0.1);
             PIDConstants THETA = new PIDConstants(3, 0, 0.1);
         }
 
@@ -24,14 +24,14 @@ public interface Gains {
             double kD = 0.0;
 
             double kS = 0.2825;
-            double kV = 2.3716;
+            double kV = 1.7516;
             double kA = 0.075654;
         }
     }
 
     public interface Elevator {
         public interface PID {
-            SmartNumber kP = new SmartNumber("Elevator/Controller/kP", 5.0);
+            SmartNumber kP = new SmartNumber("Elevator/Controller/kP", 6.25);
             SmartNumber kI = new SmartNumber("Elevator/Controller/kI",0.0);
             SmartNumber kD = new SmartNumber("Elevator/Controller/kD",0.1);
         }

@@ -52,6 +52,8 @@ import com.stuypulse.robot.util.PathUtil.AutonConfig;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -91,11 +93,11 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-        funnel.setDefaultCommand(new FunnelDefaultCommand());
-        shooter.setDefaultCommand(new ShooterSetAcquire()
-            .onlyIf(() -> !shooter.hasCoral() && Math.abs(elevator.getTargetHeight()-Settings.Elevator.FEED_HEIGHT_METERS) < 0.01)
-            .andThen(new WaitUntilCommand(() -> shooter.hasCoral()))
-            .andThen(new ShooterStop()));
+        // funnel.setDefaultCommand(new FunnelDefaultCommand());
+        // shooter.setDefaultCommand(new ShooterSetAcquire()
+        //     .onlyIf(() -> !shooter.hasCoral() && Math.abs(elevator.getTargetHeight()-Settings.Elevator.FEED_HEIGHT_METERS) < 0.01)
+        //     .andThen(new WaitUntilCommand(() -> shooter.hasCoral()))
+        //     .andThen(new ShooterStop()));
     }
 
     /***************/
@@ -113,6 +115,9 @@ public class RobotContainer {
             )
             .onFalse(new ElevatorToFeed())
             .onFalse(new ShooterStop());
+
+        driver.getLeftBumper()
+            .whileTrue(new SwerveDrivePIDToPose(new Pose2d(1, 1, new Rotation2d())));
 
         driver.getRightTriggerButton()
             .whileTrue(new SwerveDriveDriveAlignedToNearestCoralStation(driver));

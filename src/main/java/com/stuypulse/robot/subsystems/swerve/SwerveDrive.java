@@ -13,6 +13,7 @@ import com.stuypulse.robot.constants.Constants.Swerve.BackRight;
 import com.stuypulse.robot.constants.Constants.Swerve.FrontLeft;
 import com.stuypulse.robot.constants.Constants.Swerve.FrontRight;
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.Swerve;
@@ -228,8 +229,8 @@ public class SwerveDrive extends SubsystemBase {
                 this::getChassisSpeeds,
                 (speeds, feedforwards) -> setChassisSpeeds(speeds),
                 new PPHolonomicDriveController(
-                    Settings.Swerve.Alignment.XY,
-                    Settings.Swerve.Alignment.THETA
+                    Gains.Swerve.Alignment.XY,
+                    Gains.Swerve.Alignment.THETA
                 ),
                 RobotConfig.fromGUISettings(),
                 () -> false,
