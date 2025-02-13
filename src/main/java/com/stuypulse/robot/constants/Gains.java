@@ -23,7 +23,7 @@ public interface Gains {
             double kI = 0.0;
             double kD = 0.0;
 
-            double kS = 0.2825;
+            double kS = 0.4825;
             double kV = 1.7516;
             double kA = 0.075654;
         }

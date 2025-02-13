@@ -24,7 +24,8 @@ public interface Settings {
         double MODULE_VELOCITY_DEADBAND = 0.05;
 
         public interface Constraints {
-            double MAX_MODULE_SPEED = 4.9;
+            double MAX_MODULE_SPEED = 3.0;
+            double MAX_MODULE_ACCEL = 4.0;
 
             SmartNumber MAX_VELOCITY = new SmartNumber("Swerve/Motion/Max Velocity (m per s)", 2.5);
             SmartNumber MAX_ACCELERATION = new SmartNumber("Swerve/Motion/Max Acceleration (m per s^2)", 3.0);
@@ -40,13 +41,8 @@ public interface Settings {
         }
 
         public interface Alignment {
-            SmartNumber MAX_VELOCITY = new SmartNumber("Swerve/Alignment/Max Velocity (m per s)", 1.0);
-            SmartNumber MAX_ACCELERATION = new SmartNumber("Swerve/Alignment/Max Acceleration (m per s^2)", 2.0);
-            SmartNumber MAX_ANGULAR_VELOCITY = new SmartNumber("Swerve/Alignment/Max Angular Velocity (rad per s)", Units.degreesToRadians(360));
-            SmartNumber MAX_ANGULAR_ACCELERATION = new SmartNumber("Swerve/Alignment/Max Angular Acceleration (rad per s^2)", Units.degreesToRadians(720));
-
-            SmartNumber X_TOLERANCE = new SmartNumber("Alignment/X Tolerance (m)", 0.02);
-            SmartNumber Y_TOLERANCE = new SmartNumber("Alignment/Y Tolerance (m)", 0.02);
+            SmartNumber X_TOLERANCE = new SmartNumber("Alignment/X Tolerance (m)", 0.035);
+            SmartNumber Y_TOLERANCE = new SmartNumber("Alignment/Y Tolerance (m)", 0.035);
             SmartNumber THETA_TOLERANCE = new SmartNumber("Alignment/Theta Tolerance (rad)", Units.degreesToRadians(4));
 
             double ALIGNMENT_DEBOUNCE = 0.15;

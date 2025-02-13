@@ -8,6 +8,7 @@ package com.stuypulse.robot.constants;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -71,12 +72,17 @@ public interface Motors {
 
             FeedbackConfigs feedbackConfigs = new FeedbackConfigs().withSensorToMechanismRatio(1/Constants.Swerve.Encoder.Drive.POSITION_CONVERSION);
 
+            MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs()
+                .withMotionMagicAcceleration(Settings.Swerve.Constraints.MAX_MODULE_SPEED)
+                .withMotionMagicCruiseVelocity(Settings.Swerve.Constraints.MAX_MODULE_ACCEL);
+
             TalonFXConfiguration motorConfig = new TalonFXConfiguration()
                 .withSlot0(slot0Configs)
                 .withMotorOutput(motorOutputConfigs)
                 .withClosedLoopRamps(closedLoopRampsConfigs)
                 .withCurrentLimits(currentLimitsConfigs)
-                .withFeedback(feedbackConfigs);
+                .withFeedback(feedbackConfigs)
+                .withMotionMagic(motionMagicConfigs);
         }
     }
 }

@@ -107,5 +107,7 @@ public class ElevatorImpl extends Elevator {
 
         SmartDashboard.putNumber("Elevator/Front Motor Current", frontMotor.getOutputCurrent());
         SmartDashboard.putNumber("Elevator/Back Motor Current", backMotor.getOutputCurrent());
+
+        SmartDashboard.putBoolean("Elevator/At Target Height", atTargetHeight());
     }
 }
