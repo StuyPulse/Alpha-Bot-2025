@@ -73,8 +73,8 @@ public interface Motors {
             FeedbackConfigs feedbackConfigs = new FeedbackConfigs().withSensorToMechanismRatio(1/Constants.Swerve.Encoder.Drive.POSITION_CONVERSION);
 
             MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs()
-                .withMotionMagicAcceleration(Settings.Swerve.Constraints.MAX_MODULE_SPEED)
-                .withMotionMagicCruiseVelocity(Settings.Swerve.Constraints.MAX_MODULE_ACCEL);
+                .withMotionMagicAcceleration(Settings.Swerve.Constraints.MAX_MODULE_ACCEL)
+                .withMotionMagicCruiseVelocity(Settings.Swerve.Constraints.MAX_MODULE_SPEED);
 
             TalonFXConfiguration motorConfig = new TalonFXConfiguration()
                 .withSlot0(slot0Configs)

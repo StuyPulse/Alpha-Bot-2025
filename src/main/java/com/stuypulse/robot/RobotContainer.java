@@ -54,6 +54,7 @@ import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -93,11 +94,11 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-        // funnel.setDefaultCommand(new FunnelDefaultCommand());
-        // shooter.setDefaultCommand(new ShooterSetAcquire()
-        //     .onlyIf(() -> !shooter.hasCoral() && Math.abs(elevator.getTargetHeight()-Settings.Elevator.FEED_HEIGHT_METERS) < 0.01)
-        //     .andThen(new WaitUntilCommand(() -> shooter.hasCoral()))
-        //     .andThen(new ShooterStop()));
+        funnel.setDefaultCommand(new FunnelDefaultCommand(driver));
+        shooter.setDefaultCommand(new ShooterSetAcquire()
+             .onlyIf(() -> !shooter.hasCoral() && Math.abs(elevator.getTargetHeight()-Settings.Elevator.FEED_HEIGHT_METERS) < 0.01)
+             .andThen(new WaitUntilCommand(() -> shooter.hasCoral()))
+             .andThen(new ShooterStop()));
     }
 
     /***************/
@@ -108,13 +109,16 @@ public class RobotContainer {
 
         driver.getDPadUp().onTrue(new SeedFieldRelative());
 
+        driver.getDPadLeft().onTrue(new FunnelDefaultCommand(driver));
+
         driver.getLeftTriggerButton()
-            .whileTrue(new ElevatorToLvl4()
-                .andThen(new ElevatorWaitUntilAtTargetHeight())
-                .andThen(new ShooterShoot())
-            )
-            .onFalse(new ElevatorToFeed())
-            .onFalse(new ShooterStop());
+            // .whileTrue(new ElevatorToLvl4()
+            //     .andThen(new ElevatorWaitUntilAtTargetHeight())
+            //     .andThen(new ShooterShoot())
+            // )
+            // .onFalse(new ElevatorToFeed())
+            // .onFalse(new ShooterStop());\[]\[]
+            .whileTrue(new SwerveDrivePIDToNearestBranch());
 
         driver.getLeftBumper()
             .whileTrue(new SwerveDrivePIDToPose(new Pose2d(1, 1, new Rotation2d())));
@@ -129,6 +133,7 @@ public class RobotContainer {
         
         // Automated L4
         driver.getTopButton()
+
             .whileTrue(new ElevatorToLvl4()
                 .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
                 .andThen(new ShooterShoot())
@@ -154,7 +159,11 @@ public class RobotContainer {
             .onFalse(new ElevatorToFeed())
             .onFalse(new ShooterStop());
         
+        //driver.getRawDPadUp().whileTrue(new FunnelDefaultCommand()
+
         driver.getLeftButton().whileTrue(new SwerveDrivePIDToNearestBranch());
+
+        driver.getLeftMenuButton().whileTrue(new SwerveDrivePIDToPose(new Pose2d(new Translation2d(Field.getClosestBranch().getTargetPose().getX()-1, Field.getClosestBranch().getTargetPose().getY()), Field.getClosestBranch().getTargetPose().getRotation())));
     }
 
     /**************/

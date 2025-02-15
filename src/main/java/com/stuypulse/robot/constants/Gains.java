@@ -8,14 +8,14 @@ public interface Gains {
     public interface Swerve {
 
         public interface Alignment {
-            PIDConstants XY = new PIDConstants(2.5, 0, 0.1);
-            PIDConstants THETA = new PIDConstants(3, 0, 0.1);
+            PIDConstants XY = new PIDConstants(3, 0, 0);
+            PIDConstants THETA = new PIDConstants(3, 0, 0.2);
         }
 
         public interface Turn {
             double kP = 3.596;
             double kI = 0.0;
-            double kD = 0.05;
+            double kD = 0.075;
         }
 
         public interface Drive {

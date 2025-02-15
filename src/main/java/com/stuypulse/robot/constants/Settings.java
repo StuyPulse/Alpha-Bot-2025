@@ -18,13 +18,13 @@ public interface Settings {
 
     double DT = 0.020;
 
-    double TARGET_DISTANCE_FROM_REEF = 0.03;
+    double TARGET_DISTANCE_FROM_REEF = 0.00;
     public interface Swerve {
         String DRIVE_CANBUS = "Swerve Drive Drive";
         double MODULE_VELOCITY_DEADBAND = 0.05;
 
         public interface Constraints {
-            double MAX_MODULE_SPEED = 3.0;
+            double MAX_MODULE_SPEED = 4.9;
             double MAX_MODULE_ACCEL = 4.0;
 
             SmartNumber MAX_VELOCITY = new SmartNumber("Swerve/Motion/Max Velocity (m per s)", 2.5);
@@ -41,8 +41,14 @@ public interface Settings {
         }
 
         public interface Alignment {
-            SmartNumber X_TOLERANCE = new SmartNumber("Alignment/X Tolerance (m)", 0.035);
-            SmartNumber Y_TOLERANCE = new SmartNumber("Alignment/Y Tolerance (m)", 0.035);
+            SmartNumber MAX_VELOCITY = new SmartNumber("Swerve/Alignment/Max Velocity (m per s)", 1.0);
+            SmartNumber MAX_ACCELERATION = new SmartNumber("Swerve/Alignment/Max Acceleration (m per s^2)", 2.0);
+            SmartNumber MAX_ANGULAR_VELOCITY = new SmartNumber("Swerve/Alignment/Max Angular Velocity (rad per s)", Units.degreesToRadians(360));
+            SmartNumber MAX_ANGULAR_ACCELERATION = new SmartNumber("Swerve/Alignment/Max Angular Acceleration (rad per s^2)", Units.degreesToRadians(720));
+
+            SmartNumber X_TOLERANCE = new SmartNumber("Alignment/X Tolerance (m)", 0.01);
+            
+            SmartNumber Y_TOLERANCE = new SmartNumber("Alignment/Y Tolerance (m)", 0.01);
             SmartNumber THETA_TOLERANCE = new SmartNumber("Alignment/Theta Tolerance (rad)", Units.degreesToRadians(4));
 
             double ALIGNMENT_DEBOUNCE = 0.15;

@@ -3,6 +3,7 @@ package com.stuypulse.robot.subsystems.odometry;
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Field.CoralBranch;
 import com.stuypulse.robot.subsystems.swerve.SwerveDrive;
 
 import edu.wpi.first.math.VecBuilder;
@@ -84,5 +85,13 @@ public class OdometryImpl extends Odometry {
         SmartDashboard.putNumber("Odometry/Pose Estimator Pose X", poseEstimator.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Odometry/Pose Estimator Pose Y", poseEstimator.getEstimatedPosition().getY());
         SmartDashboard.putNumber("Odometry/Pose Estimator Rotation", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+
+        SmartDashboard.putNumber("Swerve/Alignment Error Y (m)", poseEstimator.getEstimatedPosition().getY() - Field.getClosestBranch().getTargetPose().getY());
+        SmartDashboard.putNumber("Swerve/Alignment Error X (m)", poseEstimator.getEstimatedPosition().getX() - Field.getClosestBranch().getTargetPose().getX());
+        SmartDashboard.putNumber("Swerve/Alignment Error Theta (m)", poseEstimator.getEstimatedPosition().getRotation().minus(Field.getClosestBranch().getTargetPose().getRotation()).getDegrees());
+        SmartDashboard.putNumber("Swerve/Alignment Target Y (m)", Field.getClosestBranch().getTargetPose().getY());
+        SmartDashboard.putNumber("Swerve/Alignment Target X (m)", Field.getClosestBranch().getTargetPose().getX());
+
+
     }
 }
