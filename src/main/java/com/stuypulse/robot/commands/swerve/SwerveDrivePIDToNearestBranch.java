@@ -4,6 +4,6 @@ import com.stuypulse.robot.constants.Field;
 
 public class SwerveDrivePIDToNearestBranch extends SwerveDrivePIDToPose{
     public SwerveDrivePIDToNearestBranch() {
-        super(() -> Field.getClosestBranch().getTargetPose());
+        super(Field.getClosestBranch().getTargetPose());
     }
 }

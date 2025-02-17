@@ -33,28 +33,23 @@ public class SwerveDrivePIDToPose extends Command {
     private final Odometry odometry;
 
     private final HolonomicController controller;
-    private final Supplier<Pose2d> poseSupplier;
+    // private final Supplier<Pose2d> poseSupplier;
+
     private final BStream isAligned;
     private final IStream velocityError;
 
     private final FieldObject2d targetPose2d;
+
+    private Pose2d targetPose;
 
     private Number xTolerance;
     private Number yTolerance;
     private Number thetaTolerance;
     private Number velocityTolerance;
 
-    private Pose2d targetPose;
-
-    public SwerveDrivePIDToPose(Pose2d targetPose) {
-        this(() -> targetPose);
-    }
-
-    public SwerveDrivePIDToPose(Supplier<Pose2d> poseSupplier) {
-        swerve = SwerveDrive.getInstance();
+    public SwerveDrivePIDToPose(Pose2d pose) {
+        swerve = SwerveDrive.getInstance();             
         odometry = Odometry.getInstance();
-
-        this.poseSupplier = poseSupplier;
 
         targetPose2d = Odometry.getInstance().getField().getObject("Target Pose");
 
@@ -73,6 +68,8 @@ public class SwerveDrivePIDToPose extends Command {
         })
         .filtered(new LowPassFilter(0.05))
         .filtered(x -> Math.abs(x));
+
+        targetPose = pose;
 
         xTolerance = Settings.Swerve.Alignment.X_TOLERANCE;
         yTolerance = Settings.Swerve.Alignment.Y_TOLERANCE;
@@ -109,21 +106,15 @@ public class SwerveDrivePIDToPose extends Command {
         return this;
     }
 
-    @Override
-    public void initialize() {
-        targetPose = poseSupplier.get();
-    }
-
     private boolean isAligned() {
         return controller.isDone(xTolerance.doubleValue(), yTolerance.doubleValue(), Math.toDegrees(thetaTolerance.doubleValue()))
             && velocityError.get() < velocityTolerance.doubleValue();
     }
 
-    
     @Override
     public void execute() {
         targetPose2d.setPose(Robot.isBlue() ? targetPose : Field.transformToOppositeAlliance(targetPose));
-
+        
         SmartDashboard.putNumber("Alignment/Target x", targetPose.getX());
         SmartDashboard.putNumber("Alignment/Target y", targetPose.getY());
         SmartDashboard.putNumber("Alignment/Target angle", targetPose.getRotation().getDegrees());
