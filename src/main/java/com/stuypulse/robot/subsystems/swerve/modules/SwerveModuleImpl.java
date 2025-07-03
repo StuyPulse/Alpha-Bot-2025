@@ -34,7 +34,7 @@ public class SwerveModuleImpl extends SwerveModule {
 
         this.angleOffset = angleOffset;
 
-        pivotMotor = new SparkMax(pivotMotorID, MotorType.kBrushless);
+        pivotMotor = new SparkMax(0, pivotMotorID, MotorType.kBrushless);
         pivotMotor.configure(Motors.Swerve.Turn.motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         pivotEncoder = new CANcoder(pivotEncoderID, Settings.Swerve.DRIVE_CANBUS);
         
@@ -72,11 +72,11 @@ public class SwerveModuleImpl extends SwerveModule {
 
         pivotController.update(Angle.fromRotation2d(getTargetState().angle), Angle.fromRotation2d(getAngle()));
 
-        if (Math.abs(getTargetState().speedMetersPerSecond) < Settings.Swerve.MODULE_VELOCITY_DEADBAND) {
+        if (Math.abs(getTargetState().speed) < Settings.Swerve.MODULE_VELOCITY_DEADBAND) {
             driveMotor.setControl(new VelocityVoltage(0));
             pivotMotor.setVoltage(0);
         } else {
-            driveMotor.setControl(new VelocityVoltage(getTargetState().speedMetersPerSecond).withEnableFOC(true));
+            driveMotor.setControl(new VelocityVoltage(getTargetState().speed).withEnableFOC(true));
             pivotMotor.setVoltage(pivotController.getOutput());
         }
 

@@ -52,6 +52,10 @@ public interface Settings {
             SmartNumber THETA_TOLERANCE = new SmartNumber("Alignment/Theta Tolerance (rad)", Units.degreesToRadians(4));
 
             double ALIGNMENT_DEBOUNCE = 0.15;
+
+            PIDConstants XY = new PIDConstants(2.5, 0, 0.02);
+            PIDConstants THETA = new PIDConstants(4, 0, 0.1);
+
         }
     }
 

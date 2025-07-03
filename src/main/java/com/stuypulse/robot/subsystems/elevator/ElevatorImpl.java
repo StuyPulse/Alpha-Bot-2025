@@ -34,11 +34,11 @@ public class ElevatorImpl extends Elevator {
     private boolean hasBeenReset;
 
     public ElevatorImpl() {
-        frontMotor = new SparkMax(Ports.Elevator.FRONT, MotorType.kBrushless);
+        frontMotor = new SparkMax(4, Ports.Elevator.FRONT, MotorType.kBrushless);
         Motors.Elevator.frontMotor.encoder.apply(Motors.Elevator.encoderConfig);
         frontMotor.configure(Motors.Elevator.frontMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        backMotor = new SparkMax(Ports.Elevator.BACK, MotorType.kBrushless);
+        backMotor = new SparkMax(5, Ports.Elevator.BACK, MotorType.kBrushless);
         Motors.Elevator.backMotor.encoder.apply(Motors.Elevator.encoderConfig);
         backMotor.configure(Motors.Elevator.backMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

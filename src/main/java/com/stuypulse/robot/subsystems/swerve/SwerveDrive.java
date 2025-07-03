@@ -1,7 +1,6 @@
 package com.stuypulse.robot.subsystems.swerve;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
-import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -33,7 +32,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.OnboardIMU;
+import edu.wpi.first.wpilibj.OnboardIMU.MountOrientation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -68,14 +68,16 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     private final SwerveModule[] modules;
-    private final Pigeon2 gyro;
+    private final OnboardIMU imu; 
+    private Rotation2d startHeading;
     private final SwerveDriveKinematics kinematics;
     private final FieldObject2d[] module2ds;
 
     protected SwerveDrive(SwerveModule... modules) {
         this.modules = modules;
 
-        gyro = new Pigeon2(9, Settings.Swerve.DRIVE_CANBUS);
+        imu = new OnboardIMU(MountOrientation.kFlat);
+        startHeading = imu.getRotation2d();
 
         kinematics = new SwerveDriveKinematics(getModuleOffsets());
 
@@ -130,17 +132,17 @@ public class SwerveDrive extends SubsystemBase {
 
     /** MODULE STATES API **/
     public void drive(Vector2D velocity, double omega) {
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+        ChassisSpeeds speeds = new ChassisSpeeds(
                 velocity.x,
                 velocity.y,
-                omega,
-                Odometry.getInstance().getRotation());
-
+                omega);
+        speeds = speeds.toRobotRelative(getHeading());
+        // speeds = speeds.toFieldRelative(imu.getRotation2d());
         Pose2d robotVel = new Pose2d(
-            Settings.DT * speeds.vxMetersPerSecond,
-            Settings.DT * speeds.vyMetersPerSecond,
-            Rotation2d.fromRadians(Settings.DT * speeds.omegaRadiansPerSecond));
-        Twist2d twistVel = new Pose2d().log(robotVel);
+            Settings.DT * speeds.vx,
+            Settings.DT * speeds.vy,
+            Rotation2d.fromRadians(Settings.DT * speeds.omega));
+            Twist2d twistVel = new Pose2d().log(robotVel);
 
         setChassisSpeeds(new ChassisSpeeds(
             twistVel.dx / Settings.DT,
@@ -150,13 +152,13 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public void setChassisSpeeds(ChassisSpeeds robotSpeed) {
-        Vector2D xy = new Vector2D(robotSpeed.vxMetersPerSecond, robotSpeed.vyMetersPerSecond);
+        Vector2D xy = new Vector2D(robotSpeed.vx, robotSpeed.vy);
         xy = xy.clamp(Settings.Swerve.Constraints.MAX_VELOCITY.get());
-        robotSpeed.vxMetersPerSecond = xy.x;
-        robotSpeed.vyMetersPerSecond = xy.y;
+        robotSpeed.vx = xy.x;
+        robotSpeed.vy = xy.y;
 
-        robotSpeed.omegaRadiansPerSecond = SLMath.clamp(
-            robotSpeed.omegaRadiansPerSecond, 
+        robotSpeed.omega = SLMath.clamp(
+            robotSpeed.omega, 
             -Settings.Swerve.Constraints.MAX_ANGULAR_VELOCITY.get(),
             Settings.Swerve.Constraints.MAX_ANGULAR_VELOCITY.get()
         );
@@ -165,7 +167,7 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     private static SwerveModuleState filterModuleState(SwerveModuleState state) {
-        if (Math.abs(state.speedMetersPerSecond) > Swerve.MODULE_VELOCITY_DEADBAND)
+        if (Math.abs(state.speed) > Swerve.MODULE_VELOCITY_DEADBAND)
             return state;
 
         return new SwerveModuleState(0, state.angle);
@@ -188,21 +190,25 @@ public class SwerveDrive extends SubsystemBase {
         return AutoBuilder.followPath(path);
     }
 
-    /** GYRO API **/
+    /** imu API **/
+    public Rotation2d getHeading() {
+        return imu.getRotation2d().minus(startHeading);
+    }
+
     public Rotation2d getGyroAngle() {
-        return gyro.getRotation2d();
+        return imu.getRotation2d();
     }
 
     public double getGyroYaw() {
-        return gyro.getYaw().getValueAsDouble();
+        return imu.getAngleX();
     }
 
     public double getGyroPitch() {
-        return gyro.getPitch().getValueAsDouble();
+        return imu.getAngleX();
     }
 
     public double getGyroRoll() {
-        return gyro.getRoll().getValueAsDouble();
+        return imu.getAngleX();
     }
 
     /** KINEMATICS **/
@@ -256,20 +262,20 @@ public class SwerveDrive extends SubsystemBase {
             module2ds[i].setPose(Robot.isBlue() ? modulePose : Field.transformToOppositeAlliance(modulePose));
         }
 
-        SmartDashboard.putNumber("Swerve/Gyro Angle (deg)", getGyroPitch());
-        SmartDashboard.putNumber("Swerve/Gyro Pitch (deg)", getGyroPitch());
-        SmartDashboard.putNumber("Swerve/Gyro Roll (deg)", getGyroRoll());
+        SmartDashboard.putNumber("Swerve/imu Angle (deg)", getGyroPitch());
+        SmartDashboard.putNumber("Swerve/imu Pitch (deg)", getGyroPitch());
+        SmartDashboard.putNumber("Swerve/imu Roll (deg)", getGyroRoll());
 
-        SmartDashboard.putNumber("Swerve/X Acceleration (Gs)", gyro.getAccelerationX().getValueAsDouble());
-        SmartDashboard.putNumber("Swerve/Y Acceleration (Gs)", gyro.getAccelerationY().getValueAsDouble());
-        SmartDashboard.putNumber("Swerve/Z Acceleration (Gs)", gyro.getAccelerationZ().getValueAsDouble());
+        SmartDashboard.putNumber("Swerve/X Acceleration (Gs)", imu.getAccelX());
+        SmartDashboard.putNumber("Swerve/Y Acceleration (Gs)", imu.getAccelY());
+        SmartDashboard.putNumber("Swerve/Z Acceleration (Gs)", imu.getAccelZ());
     }
 
     @Override
     public void simulationPeriodic() {
-        // Integrate omega in simulation and store in gyro
-        var speeds = getKinematics().toChassisSpeeds(getModuleStates());
-        gyro.setYaw(gyro.getYaw().getValueAsDouble() - Math.toDegrees(speeds.omegaRadiansPerSecond * Settings.DT));
+        // Integrate omega in simulation and store in imu
+        // var speeds = getKinematics().toChassisSpeeds(getModuleStates());
+        // imu.setYaw(imu.getYaw().getValueAsDouble() - Math.toDegrees(speeds.omega * Settings.DT));
     }
 
 }

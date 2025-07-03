@@ -64,7 +64,7 @@ public class SwerveDrivePIDToPose extends Command {
         velocityError = IStream.create(() -> {
             ChassisSpeeds speeds = controller.getError();
 
-            return new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond).getNorm();
+            return new Translation2d(speeds.vx, speeds.vy).getNorm();
         })
         .filtered(new LowPassFilter(0.05))
         .filtered(x -> Math.abs(x));
@@ -121,9 +121,9 @@ public class SwerveDrivePIDToPose extends Command {
         SmartDashboard.putBoolean("Alignment/Is aligned?", isAligned());
         controller.update(targetPose, odometry.getPose());
 
-        Vector2D speed = new Vector2D(controller.getOutput().vxMetersPerSecond, controller.getOutput().vyMetersPerSecond)
+        Vector2D speed = new Vector2D(controller.getOutput().vx, controller.getOutput().vy)
             .clamp(Swerve.Constraints.MAX_VELOCITY.get());
-        double rotation = SLMath.clamp(controller.getOutput().omegaRadiansPerSecond, Swerve.Constraints.MAX_ANGULAR_VELOCITY.get());
+        double rotation = SLMath.clamp(controller.getOutput().omega, Swerve.Constraints.MAX_ANGULAR_VELOCITY.get());
         
         SmartDashboard.putNumber("Alignment/Translation Target Speed", speed.distance());
 

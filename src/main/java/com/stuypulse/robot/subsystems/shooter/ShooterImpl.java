@@ -22,10 +22,10 @@ public class ShooterImpl extends Shooter{
     private final DigitalInput IR_Sensor;
 
     public ShooterImpl() {
-        topMotor = new SparkMax(Ports.Shooter.TOP_MOTOR, MotorType.kBrushless);
+        topMotor = new SparkMax(1, Ports.Shooter.TOP_MOTOR, MotorType.kBrushless);
         topMotor.configure(Motors.Shooter.topMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        bottomMotor = new SparkMax(Ports.Shooter.BOTTOM_MOTOR, MotorType.kBrushless);
+        bottomMotor = new SparkMax(2, Ports.Shooter.BOTTOM_MOTOR, MotorType.kBrushless);
         bottomMotor.configure(Motors.Shooter.bottomMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         IR_Sensor = new DigitalInput(Ports.Shooter.IR_SENSOR);

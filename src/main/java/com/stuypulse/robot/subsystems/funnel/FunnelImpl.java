@@ -18,7 +18,7 @@ public class FunnelImpl extends Funnel{
     private BStream shouldReverse;
 
     public FunnelImpl() {
-        motor = new SparkMax(Ports.Funnel.MOTOR, MotorType.kBrushless);
+        motor = new SparkMax(3, Ports.Funnel.MOTOR, MotorType.kBrushless);
         motor.configure(Motors.Funnel.motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         shouldReverse = BStream.create(() -> motor.getOutputCurrent() > Settings.Funnel.STALL_CURRENT)

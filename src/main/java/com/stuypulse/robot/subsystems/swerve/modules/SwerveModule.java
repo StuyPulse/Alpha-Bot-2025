@@ -60,7 +60,7 @@ public abstract class SwerveModule extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Target Angle", targetState.angle.getDegrees());
         SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Angle", getAngle().getDegrees());
-        SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Target Velocity", targetState.speedMetersPerSecond);
+        SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Target Velocity", targetState.speed);
         SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Velocity", getVelocity());
     }
 }
