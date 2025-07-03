@@ -10,9 +10,9 @@ import com.stuypulse.stuylib.control.angle.AngleController;
 import com.stuypulse.stuylib.control.angle.feedback.AnglePIDController;
 import com.stuypulse.stuylib.control.feedforward.MotorFeedforward;
 import com.stuypulse.stuylib.math.Angle;
-import com.stuypulse.robot.constants.Gains.Swerve.Drive;
-import com.stuypulse.robot.constants.Gains.Swerve.Turn;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Settings.Swerve.Drive;
+import com.stuypulse.robot.constants.Settings.Swerve.Turn;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
@@ -104,7 +104,7 @@ public class SimModule extends SwerveModule {
             Angle.fromRotation2d(getAngle()));
 
         driveController.update(
-            getTargetState().speedMetersPerSecond,
+            getTargetState().speed,
             getVelocity());
 
         SmartDashboard.putNumber("Swerve/Modules/" + getName() + "/Angle Voltage", turnController.getOutput());

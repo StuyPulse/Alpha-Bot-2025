@@ -107,63 +107,63 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
-        driver.getDPadUp().onTrue(new SeedFieldRelative());
+        // driver.getDPadUp().onTrue(new SeedFieldRelative());
 
-        driver.getDPadLeft().onTrue(new FunnelDefaultCommand(driver));
+        // driver.getDPadLeft().onTrue(new FunnelDefaultCommand(driver));
 
-        driver.getLeftTriggerButton()
-            // .whileTrue(new ElevatorToLvl4()
-            //     .andThen(new ElevatorWaitUntilAtTargetHeight())
-            //     .andThen(new ShooterShoot())
-            // )
-            // .onFalse(new ElevatorToFeed())
-            // .onFalse(new ShooterStop());\[]\[]
-            .whileTrue(new SwerveDrivePIDToNearestBranch());
+        // driver.getLeftTriggerButton()
+        //     // .whileTrue(new ElevatorToLvl4()
+        //     //     .andThen(new ElevatorWaitUntilAtTargetHeight())
+        //     //     .andThen(new ShooterShoot())
+        //     // )
+        //     // .onFalse(new ElevatorToFeed())
+        //     // .onFalse(new ShooterStop());\[]\[]
+        //     .whileTrue(new SwerveDrivePIDToNearestBranch());
 
-        driver.getLeftBumper()
-            .whileTrue(new SwerveDrivePIDToPose(new Pose2d(1, 1, new Rotation2d())));
+        // driver.getLeftBumper()
+        //     .whileTrue(new SwerveDrivePIDToPose(new Pose2d(1, 1, new Rotation2d())));
 
-        driver.getRightTriggerButton()
-            .whileTrue(new SwerveDriveDriveAlignedToNearestCoralStation(driver));
+        // driver.getRightTriggerButton()
+        //     .whileTrue(new SwerveDriveDriveAlignedToNearestCoralStation(driver));
         
-        driver.getRightBumper()
-            .whileTrue(new ShooterShoot())
-            .onFalse(new ShooterStop())
-            .onFalse(new ElevatorToFeed());
+        // driver.getRightBumper()
+        //     .whileTrue(new ShooterShoot())
+        //     .onFalse(new ShooterStop())
+        //     .onFalse(new ElevatorToFeed());
         
-        // Automated L4
-        driver.getTopButton()
+        // // Automated L4
+        // driver.getTopButton()
 
-            .whileTrue(new ElevatorToLvl4()
-                .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
-                .andThen(new ShooterShoot())
-            )
-            .onFalse(new ElevatorToFeed())
-            .onFalse(new ShooterStop());
+        //     .whileTrue(new ElevatorToLvl4()
+        //         .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
+        //         .andThen(new ShooterShoot())
+        //     )
+        //     .onFalse(new ElevatorToFeed())
+        //     .onFalse(new ShooterStop());
         
-        // Automated L3
-        driver.getRightButton()
-            .whileTrue(new ElevatorToLvl3()
-                .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
-                .andThen(new ShooterShoot())
-            )
-            .onFalse(new ElevatorToFeed())
-            .onFalse(new ShooterStop());
+        // // Automated L3
+        // driver.getRightButton()
+        //     .whileTrue(new ElevatorToLvl3()
+        //         .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
+        //         .andThen(new ShooterShoot())
+        //     )
+        //     .onFalse(new ElevatorToFeed())
+        //     .onFalse(new ShooterStop());
 
-        // Automated L2
-        driver.getBottomButton()
-            .whileTrue(new ElevatorToLvl2()
-                .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
-                .andThen(new ShooterShoot())
-            )
-            .onFalse(new ElevatorToFeed())
-            .onFalse(new ShooterStop());
+        // // Automated L2
+        // driver.getBottomButton()
+        //     .whileTrue(new ElevatorToLvl2()
+        //         .andThen(new ElevatorWaitUntilAtTargetHeight().alongWith(new SwerveDrivePIDToNearestBranch()))
+        //         .andThen(new ShooterShoot())
+        //     )
+        //     .onFalse(new ElevatorToFeed())
+        //     .onFalse(new ShooterStop());
         
-        //driver.getRawDPadUp().whileTrue(new FunnelDefaultCommand()
+        // //driver.getRawDPadUp().whileTrue(new FunnelDefaultCommand()
 
-        driver.getLeftButton().whileTrue(new SwerveDrivePIDToNearestBranch());
+        // driver.getLeftButton().whileTrue(new SwerveDrivePIDToNearestBranch());
 
-        driver.getLeftMenuButton().whileTrue(new SwerveDrivePIDToPose(new Pose2d(new Translation2d(Field.getClosestBranch().getTargetPose().getX()-1, Field.getClosestBranch().getTargetPose().getY()), Field.getClosestBranch().getTargetPose().getRotation())));
+        // driver.getLeftMenuButton().whileTrue(new SwerveDrivePIDToPose(new Pose2d(new Translation2d(Field.getClosestBranch().getTargetPose().getX()-1, Field.getClosestBranch().getTargetPose().getY()), Field.getClosestBranch().getTargetPose().getRotation())));
     }
 
     /**************/
