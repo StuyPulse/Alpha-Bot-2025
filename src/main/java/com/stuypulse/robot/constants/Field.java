@@ -2,7 +2,6 @@ package com.stuypulse.robot.constants;
 
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.subsystems.odometry.Odometry;
-import com.stuypulse.robot.util.vision.AprilTag;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -38,275 +37,275 @@ public interface Field {
 
     /*** APRILTAGS ***/
 
-    enum NamedTags {
-        RED_KL_CORAL_STATION,
-        RED_CD_CORAL_STATION,
-        RED_PROCESSOR,
-        BLUE_BARGE_RED_SIDE,
-        RED_BARGE_RED_SIDE,
-        RED_KL,
-        RED_AB,
-        RED_CD,
-        RED_EF,
-        RED_GH,
-        RED_IJ,
-        BLUE_CD_CORAL_STATION,
-        BLUE_KL_CORAL_STATION,
-        BLUE_BARGE_BLUE_SIDE,
-        RED_BARGE_BLUE_SIDE,
-        BLUE_PROCESSOR,
-        BLUE_CD,
-        BLUE_AB,
-        BLUE_KL,
-        BLUE_IJ,
-        BLUE_GH,
-        BLUE_EF;
+    // enum NamedTags {
+    //     RED_KL_CORAL_STATION,
+    //     RED_CD_CORAL_STATION,
+    //     RED_PROCESSOR,
+    //     BLUE_BARGE_RED_SIDE,
+    //     RED_BARGE_RED_SIDE,
+    //     RED_KL,
+    //     RED_AB,
+    //     RED_CD,
+    //     RED_EF,
+    //     RED_GH,
+    //     RED_IJ,
+    //     BLUE_CD_CORAL_STATION,
+    //     BLUE_KL_CORAL_STATION,
+    //     BLUE_BARGE_BLUE_SIDE,
+    //     RED_BARGE_BLUE_SIDE,
+    //     BLUE_PROCESSOR,
+    //     BLUE_CD,
+    //     BLUE_AB,
+    //     BLUE_KL,
+    //     BLUE_IJ,
+    //     BLUE_GH,
+    //     BLUE_EF;
 
-        public final AprilTag tag;
+    //     public final AprilTag tag;
 
-        public int getID() {
-            return tag.getID();
-        }
+    //     public int getID() {
+    //         return tag.getID();
+    //     }
 
-        public Pose3d getLocation() {
-            return Robot.isBlue()
-                ? tag.getLocation()
-                : transformToOppositeAlliance(tag.getLocation());
-        }
+    //     public Pose3d getLocation() {
+    //         return Robot.isBlue()
+    //             ? tag.getLocation()
+    //             : transformToOppositeAlliance(tag.getLocation());
+    //     }
 
-        private NamedTags() {
-            tag = APRILTAGS[ordinal()];
-        }
-    }
+    //     private NamedTags() {
+    //         tag = APRILTAGS[ordinal()];
+    //     }
+    // }
 
-    AprilTag APRILTAGS[] = {
-        // 2025 Field AprilTag Layout
-        new AprilTag(1,  new Pose3d(new Translation3d(Units.inchesToMeters(657.37), Units.inchesToMeters(25.80), Units.inchesToMeters(58.50)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(126)))),
-        new AprilTag(2,  new Pose3d(new Translation3d(Units.inchesToMeters(657.37), Units.inchesToMeters(291.20), Units.inchesToMeters(58.50)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(234)))),
-        new AprilTag(3,  new Pose3d(new Translation3d(Units.inchesToMeters(455.15), Units.inchesToMeters(317.15), Units.inchesToMeters(51.25)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(270)))),
-        new AprilTag(4,  new Pose3d(new Translation3d(Units.inchesToMeters(365.20), Units.inchesToMeters(241.64), Units.inchesToMeters(73.54)), new Rotation3d(Units.degreesToRadians(30), Units.degreesToRadians(0), Units.degreesToRadians(0)))),
-        new AprilTag(5,  new Pose3d(new Translation3d(Units.inchesToMeters(365.20), Units.inchesToMeters(75.39), Units.inchesToMeters(73.54)), new Rotation3d(Units.degreesToRadians(30), Units.degreesToRadians(0), Units.degreesToRadians(0)))),
-        new AprilTag(6,  new Pose3d(new Translation3d(Units.inchesToMeters(530.49), Units.inchesToMeters(130.17), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(300)))),
-        new AprilTag(7,  new Pose3d(new Translation3d(Units.inchesToMeters(546.87), Units.inchesToMeters(158.50), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(0)))),
-        new AprilTag(8,  new Pose3d(new Translation3d(Units.inchesToMeters(530.49), Units.inchesToMeters(186.83), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(60)))),
-        new AprilTag(9,  new Pose3d(new Translation3d(Units.inchesToMeters(497.77), Units.inchesToMeters(186.83), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(120)))),
-        new AprilTag(10,  new Pose3d(new Translation3d(Units.inchesToMeters(481.39), Units.inchesToMeters(158.50), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(180)))),
-        new AprilTag(11,  new Pose3d(new Translation3d(Units.inchesToMeters(497.77), Units.inchesToMeters(130.17), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(240)))),
-        new AprilTag(12,  new Pose3d(new Translation3d(Units.inchesToMeters(33.51), Units.inchesToMeters(25.80), Units.inchesToMeters(58.50)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(54)))),
-        new AprilTag(13,  new Pose3d(new Translation3d(Units.inchesToMeters(33.51), Units.inchesToMeters(291.20), Units.inchesToMeters(58.50)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(306)))),
-        new AprilTag(14,  new Pose3d(new Translation3d(Units.inchesToMeters(325.68), Units.inchesToMeters(241.64), Units.inchesToMeters(73.54)), new Rotation3d(Units.degreesToRadians(30), Units.degreesToRadians(0), Units.degreesToRadians(180)))),
-        new AprilTag(15,  new Pose3d(new Translation3d(Units.inchesToMeters(325.68), Units.inchesToMeters(75.39), Units.inchesToMeters(73.54)), new Rotation3d(Units.degreesToRadians(30), Units.degreesToRadians(0), Units.degreesToRadians(180)))),
-        new AprilTag(16,  new Pose3d(new Translation3d(Units.inchesToMeters(235.73), Units.inchesToMeters(-0.15), Units.inchesToMeters(51.25)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(90)))),
-        new AprilTag(17,  new Pose3d(new Translation3d(Units.inchesToMeters(160.39), Units.inchesToMeters(130.17), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(240)))),
-        new AprilTag(18,  new Pose3d(new Translation3d(Units.inchesToMeters(144.0), Units.inchesToMeters(158.50), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(180)))),
-        new AprilTag(19,  new Pose3d(new Translation3d(Units.inchesToMeters(160.39), Units.inchesToMeters(186.83), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(120)))),
-        new AprilTag(20,  new Pose3d(new Translation3d(Units.inchesToMeters(193.10), Units.inchesToMeters(186.83), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(60)))),
-        new AprilTag(21,  new Pose3d(new Translation3d(Units.inchesToMeters(209.49), Units.inchesToMeters(158.50), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(0)))),
-        new AprilTag(22,  new Pose3d(new Translation3d(Units.inchesToMeters(193.10), Units.inchesToMeters(130.17), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(300)))),
-    };
+    // AprilTag APRILTAGS[] = {
+    //     // 2025 Field AprilTag Layout
+    //     new AprilTag(1,  new Pose3d(new Translation3d(Units.inchesToMeters(657.37), Units.inchesToMeters(25.80), Units.inchesToMeters(58.50)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(126)))),
+    //     new AprilTag(2,  new Pose3d(new Translation3d(Units.inchesToMeters(657.37), Units.inchesToMeters(291.20), Units.inchesToMeters(58.50)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(234)))),
+    //     new AprilTag(3,  new Pose3d(new Translation3d(Units.inchesToMeters(455.15), Units.inchesToMeters(317.15), Units.inchesToMeters(51.25)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(270)))),
+    //     new AprilTag(4,  new Pose3d(new Translation3d(Units.inchesToMeters(365.20), Units.inchesToMeters(241.64), Units.inchesToMeters(73.54)), new Rotation3d(Units.degreesToRadians(30), Units.degreesToRadians(0), Units.degreesToRadians(0)))),
+    //     new AprilTag(5,  new Pose3d(new Translation3d(Units.inchesToMeters(365.20), Units.inchesToMeters(75.39), Units.inchesToMeters(73.54)), new Rotation3d(Units.degreesToRadians(30), Units.degreesToRadians(0), Units.degreesToRadians(0)))),
+    //     new AprilTag(6,  new Pose3d(new Translation3d(Units.inchesToMeters(530.49), Units.inchesToMeters(130.17), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(300)))),
+    //     new AprilTag(7,  new Pose3d(new Translation3d(Units.inchesToMeters(546.87), Units.inchesToMeters(158.50), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(0)))),
+    //     new AprilTag(8,  new Pose3d(new Translation3d(Units.inchesToMeters(530.49), Units.inchesToMeters(186.83), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(60)))),
+    //     new AprilTag(9,  new Pose3d(new Translation3d(Units.inchesToMeters(497.77), Units.inchesToMeters(186.83), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(120)))),
+    //     new AprilTag(10,  new Pose3d(new Translation3d(Units.inchesToMeters(481.39), Units.inchesToMeters(158.50), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(180)))),
+    //     new AprilTag(11,  new Pose3d(new Translation3d(Units.inchesToMeters(497.77), Units.inchesToMeters(130.17), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(240)))),
+    //     new AprilTag(12,  new Pose3d(new Translation3d(Units.inchesToMeters(33.51), Units.inchesToMeters(25.80), Units.inchesToMeters(58.50)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(54)))),
+    //     new AprilTag(13,  new Pose3d(new Translation3d(Units.inchesToMeters(33.51), Units.inchesToMeters(291.20), Units.inchesToMeters(58.50)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(306)))),
+    //     new AprilTag(14,  new Pose3d(new Translation3d(Units.inchesToMeters(325.68), Units.inchesToMeters(241.64), Units.inchesToMeters(73.54)), new Rotation3d(Units.degreesToRadians(30), Units.degreesToRadians(0), Units.degreesToRadians(180)))),
+    //     new AprilTag(15,  new Pose3d(new Translation3d(Units.inchesToMeters(325.68), Units.inchesToMeters(75.39), Units.inchesToMeters(73.54)), new Rotation3d(Units.degreesToRadians(30), Units.degreesToRadians(0), Units.degreesToRadians(180)))),
+    //     new AprilTag(16,  new Pose3d(new Translation3d(Units.inchesToMeters(235.73), Units.inchesToMeters(-0.15), Units.inchesToMeters(51.25)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(90)))),
+    //     new AprilTag(17,  new Pose3d(new Translation3d(Units.inchesToMeters(160.39), Units.inchesToMeters(130.17), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(240)))),
+    //     new AprilTag(18,  new Pose3d(new Translation3d(Units.inchesToMeters(144.0), Units.inchesToMeters(158.50), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(180)))),
+    //     new AprilTag(19,  new Pose3d(new Translation3d(Units.inchesToMeters(160.39), Units.inchesToMeters(186.83), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(120)))),
+    //     new AprilTag(20,  new Pose3d(new Translation3d(Units.inchesToMeters(193.10), Units.inchesToMeters(186.83), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(60)))),
+    //     new AprilTag(21,  new Pose3d(new Translation3d(Units.inchesToMeters(209.49), Units.inchesToMeters(158.50), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(0)))),
+    //     new AprilTag(22,  new Pose3d(new Translation3d(Units.inchesToMeters(193.10), Units.inchesToMeters(130.17), Units.inchesToMeters(12.13)), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(300)))),
+    // };
 
-    public static boolean isValidTag(int id) {
-        for (AprilTag tag : APRILTAGS) {
-            if (tag.getID() == id) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // public static boolean isValidTag(int id) {
+    //     for (AprilTag tag : APRILTAGS) {
+    //         if (tag.getID() == id) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
-    public static AprilTag getTag(int id) {
-        for (AprilTag tag : APRILTAGS) {
-            if (tag.getID() == id) {
-                return tag;
-            }
-        }
-        return null;
-    }
+    // public static AprilTag getTag(int id) {
+    //     for (AprilTag tag : APRILTAGS) {
+    //         if (tag.getID() == id) {
+    //             return tag;
+    //         }
+    //     }
+    //     return null;
+    // }
 
-    public static boolean isValidAprilTagId(int id) {
-        return id >= 1 && id <= 22;
-    }
+    // public static boolean isValidAprilTagId(int id) {
+    //     return id >= 1 && id <= 22;
+    // }
 
-    /*** REEF POSITIONS ***/
+    // /*** REEF POSITIONS ***/
 
-    Translation2d REEF_CENTER = new Translation2d(Units.inchesToMeters(144.0 + 93.5 / 2), WIDTH / 2);
-    double CENTER_OF_TROUGH_TO_BRANCH = Units.inchesToMeters(13.0/2.0);
+    // Translation2d REEF_CENTER = new Translation2d(Units.inchesToMeters(144.0 + 93.5 / 2), WIDTH / 2);
+    // double CENTER_OF_TROUGH_TO_BRANCH = Units.inchesToMeters(13.0/2.0);
 
-    public enum CoralBranch {
-        A,
-        B,
-        C,
-        D,
-        E,
-        F,
-        G,
-        H,
-        I,
-        J,
-        K,
-        L;
+    // public enum CoralBranch {
+    //     A,
+    //     B,
+    //     C,
+    //     D,
+    //     E,
+    //     F,
+    //     G,
+    //     H,
+    //     I,
+    //     J,
+    //     K,
+    //     L;
 
-        public Pose2d getTargetPose() {
-            Pose3d correspondingAprilTagPose;
-            switch (this) {
-                case A:
-                case B:
-                    correspondingAprilTagPose = Robot.isBlue() ? NamedTags.BLUE_AB.getLocation() : NamedTags.RED_AB.getLocation();
-                    break;
-                case C:
-                case D:
-                    correspondingAprilTagPose = Robot.isBlue() ? NamedTags.BLUE_CD.getLocation() : NamedTags.RED_CD.getLocation();
-                    break;
-                case E:
-                case F:
-                    correspondingAprilTagPose = Robot.isBlue() ? NamedTags.BLUE_EF.getLocation() : NamedTags.RED_EF.getLocation();
-                    break;
-                case G:
-                case H:
-                    correspondingAprilTagPose = Robot.isBlue() ? NamedTags.BLUE_GH.getLocation() : NamedTags.RED_GH.getLocation();
-                    break;
-                case I:
-                case J:
-                    correspondingAprilTagPose = Robot.isBlue() ? NamedTags.BLUE_IJ.getLocation() : NamedTags.RED_IJ.getLocation();
-                    break;
-                case K:
-                case L:
-                default:
-                    correspondingAprilTagPose = Robot.isBlue() ? NamedTags.BLUE_KL.getLocation() : NamedTags.RED_KL.getLocation();
-            }
+    //     public Pose2d getTargetPose() {
+    //         Pose3d correspondingAprilTagPose;
+    //         switch (this) {
+    //             case A:
+    //             case B:
+    //                 correspondingAprilTagPose = Robot.isBlue() ? NamedTags.BLUE_AB.getLocation() : NamedTags.RED_AB.getLocation();
+    //                 break;
+    //             case C:
+    //             case D:
+    //                 correspondingAprilTagPose = Robot.isBlue() ? NamedTags.BLUE_CD.getLocation() : NamedTags.RED_CD.getLocation();
+    //                 break;
+    //             case E:
+    //             case F:
+    //                 correspondingAprilTagPose = Robot.isBlue() ? NamedTags.BLUE_EF.getLocation() : NamedTags.RED_EF.getLocation();
+    //                 break;
+    //             case G:
+    //             case H:
+    //                 correspondingAprilTagPose = Robot.isBlue() ? NamedTags.BLUE_GH.getLocation() : NamedTags.RED_GH.getLocation();
+    //                 break;
+    //             case I:
+    //             case J:
+    //                 correspondingAprilTagPose = Robot.isBlue() ? NamedTags.BLUE_IJ.getLocation() : NamedTags.RED_IJ.getLocation();
+    //                 break;
+    //             case K:
+    //             case L:
+    //             default:
+    //                 correspondingAprilTagPose = Robot.isBlue() ? NamedTags.BLUE_KL.getLocation() : NamedTags.RED_KL.getLocation();
+    //         }
 
-            return correspondingAprilTagPose.toPose2d()
-                    .transformBy
-                    (new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS/2 + Settings.TARGET_DISTANCE_FROM_REEF, CENTER_OF_TROUGH_TO_BRANCH * (this.isLeftPeg() ? -1 : 1) + Constants.SHOOTER_Y_OFFSET + 0.08, Rotation2d.fromDegrees(180)));
-        }
+    //         return correspondingAprilTagPose.toPose2d()
+    //                 .transformBy
+    //                 (new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS/2 + Settings.TARGET_DISTANCE_FROM_REEF, CENTER_OF_TROUGH_TO_BRANCH * (this.isLeftPeg() ? -1 : 1) + Constants.SHOOTER_Y_OFFSET + 0.08, Rotation2d.fromDegrees(180)));
+    //     }
 
-        public boolean isLeftPeg() {
-            return switch (this) {
-                case A, C, E, G, I, K -> true;
-                default -> false;
-            };
-        }
+    //     public boolean isLeftPeg() {
+    //         return switch (this) {
+    //             case A, C, E, G, I, K -> true;
+    //             default -> false;
+    //         };
+    //     }
 
-        /**  
-         * Represents the half of the reef facing the driver station.
-         * The other half is facing the barge / the opposite alliance
-        */
-        public boolean onDriverStationSide() {
-            return switch (this) {
-                case A, B, C, D, L, K -> true;
-                default -> false;
-            };
-        }
-    }
+    //     /**  
+    //      * Represents the half of the reef facing the driver station.
+    //      * The other half is facing the barge / the opposite alliance
+    //     */
+    //     public boolean onDriverStationSide() {
+    //         return switch (this) {
+    //             case A, B, C, D, L, K -> true;
+    //             default -> false;
+    //         };
+    //     }
+    // }
 
-    public static CoralBranch getClosestBranch() {
-        CoralBranch nearestBranch = CoralBranch.A;
-        double closestDistance = Double.MAX_VALUE;
+    // public static CoralBranch getClosestBranch() {
+    //     CoralBranch nearestBranch = CoralBranch.A;
+    //     double closestDistance = Double.MAX_VALUE;
 
-        for (CoralBranch branch : CoralBranch.values()) {
-            double distance = Odometry.getInstance().getPose().minus(branch.getTargetPose()).getTranslation().getNorm();
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                nearestBranch = branch;
-            }
-        }
+    //     for (CoralBranch branch : CoralBranch.values()) {
+    //         double distance = Odometry.getInstance().getPose().minus(branch.getTargetPose()).getTranslation().getNorm();
+    //         if (distance < closestDistance) {
+    //             closestDistance = distance;
+    //             nearestBranch = branch;
+    //         }
+    //     }
 
-        return nearestBranch;
-    }
+    //     return nearestBranch;
+    // }
 
-    public static void setTargetPosesForCoralBranchesToField() {
-        for (CoralBranch branch : CoralBranch.values()) {
-            Field2d field = Odometry.getInstance().getField();
-            field.getObject("Coral Branch " + branch.toString()).setPose(Robot.isBlue() ? branch.getTargetPose() : transformToOppositeAlliance(branch.getTargetPose()));
-        }
-    }
+    // public static void setTargetPosesForCoralBranchesToField() {
+    //     for (CoralBranch branch : CoralBranch.values()) {
+    //         Field2d field = Odometry.getInstance().getField();
+    //         field.getObject("Coral Branch " + branch.toString()).setPose(Robot.isBlue() ? branch.getTargetPose() : transformToOppositeAlliance(branch.getTargetPose()));
+    //     }
+    // }
 
-    /*** REEF ALGAE ***/
+    // /*** REEF ALGAE ***/
 
-    public enum Algae {
-        AB,
-        CD,
-        EF,
-        GH,
-        IJ,
-        KL;
+    // public enum Algae {
+    //     AB,
+    //     CD,
+    //     EF,
+    //     GH,
+    //     IJ,
+    //     KL;
 
-        public boolean isHighAlgae() {
-            return switch (this) {
-                case AB, EF, IJ -> true;
-                default -> false;
-            };
-        }
+    //     public boolean isHighAlgae() {
+    //         return switch (this) {
+    //             case AB, EF, IJ -> true;
+    //             default -> false;
+    //         };
+    //     }
 
-        public Pose2d getTargetPose() {
-            Pose3d correspondingAprilTag;
-            switch (this) {
-                case AB:
-                    correspondingAprilTag = Robot.isBlue() ? NamedTags.BLUE_AB.getLocation() : NamedTags.RED_AB.getLocation();
-                    break;
-                case CD:
-                    correspondingAprilTag = Robot.isBlue() ? NamedTags.BLUE_CD.getLocation() : NamedTags.RED_CD.getLocation();
-                    break;
-                case EF:
-                    correspondingAprilTag = Robot.isBlue() ? NamedTags.BLUE_EF.getLocation() : NamedTags.RED_EF.getLocation();
-                    break;
-                case GH:
-                    correspondingAprilTag = Robot.isBlue() ? NamedTags.BLUE_GH.getLocation() : NamedTags.RED_GH.getLocation();
-                    break;
-                case IJ:
-                    correspondingAprilTag = Robot.isBlue() ? NamedTags.BLUE_IJ.getLocation() : NamedTags.RED_IJ.getLocation();
-                    break;
-                case KL:
-                default:
-                    correspondingAprilTag = Robot.isBlue() ? NamedTags.BLUE_KL.getLocation() : NamedTags.RED_KL.getLocation();
-                    break;
-            }
-            return correspondingAprilTag.toPose2d()
-                    .transformBy(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, Rotation2d.fromDegrees(180)));
-        }
-    }
+    //     public Pose2d getTargetPose() {
+    //         Pose3d correspondingAprilTag;
+    //         switch (this) {
+    //             case AB:
+    //                 correspondingAprilTag = Robot.isBlue() ? NamedTags.BLUE_AB.getLocation() : NamedTags.RED_AB.getLocation();
+    //                 break;
+    //             case CD:
+    //                 correspondingAprilTag = Robot.isBlue() ? NamedTags.BLUE_CD.getLocation() : NamedTags.RED_CD.getLocation();
+    //                 break;
+    //             case EF:
+    //                 correspondingAprilTag = Robot.isBlue() ? NamedTags.BLUE_EF.getLocation() : NamedTags.RED_EF.getLocation();
+    //                 break;
+    //             case GH:
+    //                 correspondingAprilTag = Robot.isBlue() ? NamedTags.BLUE_GH.getLocation() : NamedTags.RED_GH.getLocation();
+    //                 break;
+    //             case IJ:
+    //                 correspondingAprilTag = Robot.isBlue() ? NamedTags.BLUE_IJ.getLocation() : NamedTags.RED_IJ.getLocation();
+    //                 break;
+    //             case KL:
+    //             default:
+    //                 correspondingAprilTag = Robot.isBlue() ? NamedTags.BLUE_KL.getLocation() : NamedTags.RED_KL.getLocation();
+    //                 break;
+    //         }
+    //         return correspondingAprilTag.toPose2d()
+    //                 .transformBy(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, Rotation2d.fromDegrees(180)));
+    //     }
+    // }
 
-    public static Algae getClosestAlgaeBranch() {
-        Algae nearestAlgaeBranch = Algae.AB;
-        double closestDistance = Double.MAX_VALUE;
+    // public static Algae getClosestAlgaeBranch() {
+    //     Algae nearestAlgaeBranch = Algae.AB;
+    //     double closestDistance = Double.MAX_VALUE;
 
-        for (Algae algaeBranch : Algae.values()) {
-            double distance = Odometry.getInstance().getPose().minus(algaeBranch.getTargetPose()).getTranslation().getNorm();
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                nearestAlgaeBranch = algaeBranch;
-            }
-        }
+    //     for (Algae algaeBranch : Algae.values()) {
+    //         double distance = Odometry.getInstance().getPose().minus(algaeBranch.getTargetPose()).getTranslation().getNorm();
+    //         if (distance < closestDistance) {
+    //             closestDistance = distance;
+    //             nearestAlgaeBranch = algaeBranch;
+    //         }
+    //     }
 
-        return nearestAlgaeBranch;
-    }
+    //     return nearestAlgaeBranch;
+    // }
 
-    /*** CORAL STATIONS ***/
-    public static Pose2d getTargetPoseForCDCoralStation() {
-        return Robot.isBlue()
-            ? NamedTags.BLUE_CD_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()))
-            : NamedTags.RED_CD_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()));
-    }
+    // /*** CORAL STATIONS ***/
+    // public static Pose2d getTargetPoseForCDCoralStation() {
+    //     return Robot.isBlue()
+    //         ? NamedTags.BLUE_CD_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()))
+    //         : NamedTags.RED_CD_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()));
+    // }
 
-    public static Pose2d getTargetPoseForKLCoralStation() {
-        return Robot.isBlue()
-            ? NamedTags.BLUE_KL_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()))
-            : NamedTags.RED_KL_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()));
-    }
+    // public static Pose2d getTargetPoseForKLCoralStation() {
+    //     return Robot.isBlue()
+    //         ? NamedTags.BLUE_KL_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()))
+    //         : NamedTags.RED_KL_CORAL_STATION.getLocation().toPose2d().plus(new Transform2d(Constants.LENGTH_WITH_BUMPERS_METERS / 2, 0, new Rotation2d()));
+    // }
 
-    public static Pose2d getClosestCoralStationTargetPose() {
-        Pose2d robot = Odometry.getInstance().getPose();
+    // public static Pose2d getClosestCoralStationTargetPose() {
+    //     Pose2d robot = Odometry.getInstance().getPose();
 
-        Pose2d cdCoralStation = getTargetPoseForCDCoralStation();
-        Pose2d klCoralStation = getTargetPoseForKLCoralStation();
+    //     Pose2d cdCoralStation = getTargetPoseForCDCoralStation();
+    //     Pose2d klCoralStation = getTargetPoseForKLCoralStation();
 
-        if (robot.minus(cdCoralStation).getTranslation().getNorm() < robot.minus(klCoralStation).getTranslation().getNorm()) {
-            return cdCoralStation;
-        }
-        else {
-            return klCoralStation;
-        }
-    }
+    //     if (robot.minus(cdCoralStation).getTranslation().getNorm() < robot.minus(klCoralStation).getTranslation().getNorm()) {
+    //         return cdCoralStation;
+    //     }
+    //     else {
+    //         return klCoralStation;
+    //     }
+    // }
 
     /**** EMPTY FIELD POSES ****/
 
