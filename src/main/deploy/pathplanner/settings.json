@@ -2,22 +2,8 @@
   "robotWidth": 0.9,
   "robotLength": 0.9,
   "holonomicMode": true,
-  "pathFolders": [
-    "Blue To HP",
-    "Blue To Reef",
-    "Blue Utilities",
-    "Red Utilities",
-    "Tests",
-    "Red to HP",
-    "Red to Reef"
-  ],
-  "autoFolders": [
-    "Blue Bottom Autons",
-    "Blue Top Autons",
-    "Tests",
-    "Red Bottom Autons",
-    "Red Top Autons"
-  ],
+  "pathFolders": [],
+  "autoFolders": [],
   "defaultMaxVel": 5.0,
   "defaultMaxAccel": 5.0,
   "defaultMaxAngVel": 540.0,

@@ -247,13 +247,13 @@ public class SwerveDrive extends SubsystemBase {
         Pose2d pose = odometry.getPose();
         Rotation2d angle = odometry.getRotation();
 
-        for (int i = 0; i < modules.length; ++i) {
-            Pose2d modulePose = new Pose2d(
-                pose.getTranslation().plus(modules[i].getModuleOffset().rotateBy(angle)),
-                modules[i].getState().angle.plus(angle)
-            );
-            module2ds[i].setPose(Robot.isBlue() ? modulePose : Field.transformToOppositeAlliance(modulePose));
-        }
+        // for (int i = 0; i < modules.length; ++i) {
+        //     Pose2d modulePose = new Pose2d(
+        //         pose.getTranslation().plus(modules[i].getModuleOffset().rotateBy(angle)),
+        //         modules[i].getState().angle.plus(angle)
+        //     );
+        //     module2ds[i].setPose(Robot.isBlue() ? modulePose : Field.transformToOppositeAlliance(modulePose));
+        // }
 
         SmartDashboard.putNumber("Swerve/Gyro Angle (deg)", getGyroPitch());
         SmartDashboard.putNumber("Swerve/Gyro Pitch (deg)", getGyroPitch());

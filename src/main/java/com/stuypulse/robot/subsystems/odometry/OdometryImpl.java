@@ -44,7 +44,7 @@ public class OdometryImpl extends Odometry {
         poseEstimatorPose2d = field.getRobotObject();
         poseEstimatorPose2d.setPose(Robot.isBlue() ? new Pose2d() : Field.transformToOppositeAlliance(new Pose2d()));
 
-        swerve.initFieldObjects(field);
+        // swerve.initFieldObjects(field);
         SmartDashboard.putData("Field", field);
     }
 
