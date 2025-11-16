@@ -17,31 +17,26 @@ public class ExampleShooterSim extends SubsystemBase {
 
     private static final double MAX_VOLTAGE = 12.0;
     private static final double MIN_VOLTAGE = -12.0;
-    private static final double GEAR_RATIO = 2.0;
+    private static final double GEAR_RATIO = 1.0;
 
     public static final ExampleShooterSim instance;
 
     public ExampleShooterSim() {
         LinearSystem<N1, N1, N1> system = LinearSystemId.createFlywheelSystem(
             DCMotor.getNEO(1), 
-            0.05,
+            0.01,
             GEAR_RATIO
         );
 
-        shooter = new FlywheelSim(system, DCMotor.getNEO(1), GEAR_RATIO);
+        shooter = new FlywheelSim(system, DCMotor.getNEO(1), 0.01);
         targetRPM = 5000.0;
-
-        double kS = 0.05;
-        double kV = 0.002;
-        double kA = 0.01;
 
         // ROOKIES: Tune these values below and see how your controller performs!
 
-        double kP = 0.01;
-        double kI = 0.1;
-        double kD = 0.002;
+        double kP = 0.2;
+        double kI = 0.0;
+        double kD = 0.005;
 
-        ffController = new ExampleFFController(kS, kV, kA);
         pidController = new ExamplePIDController(kP, kI, kD);
     }
 
