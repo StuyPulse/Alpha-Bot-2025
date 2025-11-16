@@ -33,9 +33,9 @@ public class ExampleShooterSim extends SubsystemBase {
 
         // ROOKIES: Tune these values below and see how your controller performs!
 
-        double kP = 0.2;
+        double kP = 0.0;
         double kI = 0.0;
-        double kD = 0.005;
+        double kD = 0.0;
 
         pidController = new ExamplePIDController(kP, kI, kD);
     }
