@@ -18,9 +18,15 @@ public class ExamplePIDController {
         double dt = 0.02;
 
         integral += error * dt * kI;
-        double output = (kP * error) + (integral) + (kD * (lastError - error) / dt);
+        double output = (kP * error) + (integral) + (kD * (error - lastError) / dt);
 
         lastError = error;
         return output;
+    }
+
+    public void setPID(double kP, double kI, double kD) {
+        this.kP = kP;
+        this.kI = kI;
+        this.kD = kD;
     }
 }

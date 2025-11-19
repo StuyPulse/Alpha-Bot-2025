@@ -47,7 +47,7 @@ public class RobotContainer {
     public final Odometry odometry = Odometry.getInstance();
     public final Shooter shooter = Shooter.getInstance();
     public final Funnel funnel = Funnel.getInstance();
-    public final ExampleShooterSim rookie_ed_sim = ExampleShooterSim.getInstance();
+    public final SimpleSubsystem simple_subsystem = SimpleSubsystem.getInstance();
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -103,11 +103,10 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
-        driver.getLeftButton().onTrue(new ExampleShooterCommand(4000.0));
-        driver.getRightButton().onTrue(new ExampleShooterCommand(3000.0));
-        driver.getTopButton().onTrue(new ExampleShooterCommand(1000.0));
-        driver.getBottomButton().onTrue(new ExampleShooterCommand(0.0));
-
+        driver.getLeftButton().onTrue(new IncrementSimpleTarget(100)); // Z
+        driver.getBottomButton().onTrue(new IncrementSimpleTarget(-100)); // X
+        driver.getLeftButton();
+        driver.getRightButton();
 
         driver.getDPadUp().onTrue(new SeedFieldRelative());
 
