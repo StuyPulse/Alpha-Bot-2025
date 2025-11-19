@@ -10,10 +10,10 @@ public class SimpleSubsystem extends SubsystemBase {
     private double targetValue;
     private double velocity;
 
-    // ROOKIES: Tune kP, kI, and kD on Glass!
-    double kP = 30.0; // 30
+    // ROOKIES: Tune kP, kI, and kD here and simulate on Glass!
+    double kP = 0.0; 
     double kI = 0.0;
-    double kD = 4.0; // 4
+    double kD = 0.0; 
 
     public static final SimpleSubsystem instance;
 
