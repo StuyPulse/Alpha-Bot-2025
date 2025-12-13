@@ -1,5 +1,7 @@
 package com.stuypulse.robot;
 
+import com.stuypulse.stuylib.network.SmartNumber;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,9 +13,9 @@ public class SimpleSubsystem extends SubsystemBase {
     private double velocity;
 
     // ROOKIES: Tune kP, kI, and kD on Glass!
-    double kP = 30.0; // 30
-    double kI = 0.0;
-    double kD = 4.0; // 4
+    SmartNumber kP; // 30
+    SmartNumber kI;
+    SmartNumber kD; // 4
 
     public static final SimpleSubsystem instance;
 
@@ -22,7 +24,11 @@ public class SimpleSubsystem extends SubsystemBase {
         targetValue = 100.0;
         velocity = 0.0;
 
-        pidController = new ExamplePIDController(kP, kI, kD);
+        kP = new SmartNumber("kP", 0.0);
+        kI = new SmartNumber("kI", 0.0);
+        kD = new SmartNumber("kD", 0.0);
+
+        pidController = new ExamplePIDController(kP.getAsDouble(), kI.getAsDouble(), kD.getAsDouble());
     }
 
     static {
@@ -58,8 +64,10 @@ public class SimpleSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Rookie Ed: Control Theory/Current Value", currentValue);
         SmartDashboard.putNumber("Rookie Ed: Control Theory/Rate of Change of Value", velocity);
 
-        SmartDashboard.putNumber("Rookie Ed: Control Theory/kP", kP);
-        SmartDashboard.putNumber("Rookie Ed: Control Theory/kI", kI);
-        SmartDashboard.putNumber("Rookie Ed: Control Theory/kD", kD);
+        pidController.setPID(kP.getAsDouble(), kI.getAsDouble(), kD.getAsDouble());
+
+        // SmartDashboard.putNumber("Rookie Ed: Control Theory/kP", kP.getAsDouble());
+        // SmartDashboard.putNumber("Rookie Ed: Control Theory/kI", kI.getAsDouble());
+        // SmartDashboard.putNumber("Rookie Ed: Control Theory/kD", kD.getAsDouble());
     }
 }
